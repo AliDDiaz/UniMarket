@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="UniMarket.Datos/UniMarket.Datos.csproj" />
+  <Project Path="UniMarket.Entidades/UniMarket.Entidades.csproj" />
+  <Project Path="UniMarket.Logica/UniMarket.Logica.csproj" />
+  <Project Path="UniMarket.Presentacion/UniMarket.Presentacion.csproj" />
+</Solution>

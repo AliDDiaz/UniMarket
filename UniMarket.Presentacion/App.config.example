@@ -1,5 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <configuration>
+	<connectionStrings>
+		<add name="UniMarketDB"
+			 connectionString="Host=localhost;Port=5432;Database=UniMarketDB;Username=postgres;Password=CAMBIAR_POR_TU_CLAVE;"
+			 providerName="Npgsql" />
+	</connectionStrings>
     <startup> 
         <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.8" />
     </startup>

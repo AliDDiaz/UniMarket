@@ -35,11 +35,7 @@ namespace UniMarket.Datos.DAO
                     using(var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", usuario.Id);
-                        cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                        cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
-                        cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-                        cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
-                        cmd.Parameters.AddWithValue("@Rol", usuario.Rol);
+                        AgregarParams(cmd, usuario);
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -92,11 +88,7 @@ namespace UniMarket.Datos.DAO
 
                     using(var cmd = new NpgsqlCommand(sql, con))
                     {
-                        cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                        cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
-                        cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-                        cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
-                        cmd.Parameters.AddWithValue("@Rol", usuario.Rol);
+                        AgregarParams(cmd, usuario);
                         con.Open();
                         return Convert.ToInt32(cmd.ExecuteScalar());
                     }
@@ -193,7 +185,9 @@ namespace UniMarket.Datos.DAO
                     {
                         con.Open();
                         using (var r = cmd.ExecuteReader())
-                            while (r.Read()) lista.Add(Mapear(r));
+                            while (r.Read())
+                            { lista.Add(Mapear(r));
+                            }
                     }
                 }
 
@@ -219,5 +213,17 @@ namespace UniMarket.Datos.DAO
             Activo = Convert.ToBoolean(r["activo"])
 
         };
+
+        private void AgregarParams(NpgsqlCommand cmd, Usuario usuario)
+        {
+
+            cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+            cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+            cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
+            cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
+            cmd.Parameters.AddWithValue("@Rol", usuario.Rol);
+
+        }
+
     }
 }

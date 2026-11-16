@@ -16,7 +16,12 @@ namespace UniMarket.Presentacion
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmRegistro());
+            using (var login = new FrmLogin())
+            {
+                if (login.ShowDialog() != DialogResult.OK) return;
+            }
+
+            Application.Run(new Form1());
         }
     }
 }

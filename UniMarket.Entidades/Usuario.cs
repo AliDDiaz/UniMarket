@@ -14,7 +14,7 @@ namespace UniMarket.Entidades
         public string Correo { get; set; }
         public string Telefono { get; set; }
         public string Contrasena { get; set; }
-        public string Rol { get; set; }
+        public RolUsuario Rol { get; set; }
         public bool Activo { get; set; }
     }
 }

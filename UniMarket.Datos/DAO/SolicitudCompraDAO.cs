@@ -226,7 +226,7 @@ namespace UniMarket.Datos.DAO
             Titulo = r["titulo"].ToString(),
             Cantidad = Convert.ToInt32(r["cantidad"]),
             PrecioUnitario = Convert.ToDecimal(r["precio"]),
-            Estado = r["estado"].ToString(),
+            Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"]),
             NombreContraparte = TextoONulo(r, "contraparte"),
             TelefonoContacto = TextoONulo(r, "telefono")
@@ -244,7 +244,7 @@ namespace UniMarket.Datos.DAO
             PublicacionId = Convert.ToInt32(r["publicacion_id"]),
             CompradorId = Convert.ToInt32(r["comprador_id"]),
             Cantidad = Convert.ToInt32(r["cantidad"]),
-            Estado = r["estado"].ToString(),
+            Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"])
         };
     }

@@ -209,7 +209,7 @@ namespace UniMarket.Datos.DAO
             Correo = r["Correo"].ToString(),
             Telefono = r["telefono"].ToString(),
             Contrasena = r["contrasena"].ToString(),
-            Rol = r["rol"].ToString(),
+            Rol = (RolUsuario)Enum.Parse(typeof(RolUsuario), r["rol"].ToString()),
             Activo = Convert.ToBoolean(r["activo"])
 
         };
@@ -221,7 +221,7 @@ namespace UniMarket.Datos.DAO
             cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
             cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
             cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
-            cmd.Parameters.AddWithValue("@Rol", usuario.Rol);
+            cmd.Parameters.AddWithValue("@Rol", usuario.Rol.ToString());
 
         }
 

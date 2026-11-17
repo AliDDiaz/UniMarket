@@ -8,7 +8,6 @@ namespace UniMarket.Logica
 {
     public class SolicitudService
     {
-        private const string EstadoPendiente = "Pendiente";
 
         private readonly ISolicitudCompraRepository _solicitudes;
         private readonly IPublicacionRepository _publicaciones;
@@ -39,13 +38,13 @@ namespace UniMarket.Logica
             if (publicacion == null || !publicacion.Activo)
                 throw new Exception("La publicación no existe.");
 
-            if (publicacion.VendedorId == compradorId)
+            if (publicacion.PerteneceA(compradorId))
                 throw new Exception("No puedes comprar tu propia publicación.");
 
             if (publicacion.Stock <= 0)
                 throw new Exception("Esta publicación está agotada.");
 
-            if (cantidad > publicacion.Stock)
+            if (!publicacion.TieneStockPara(cantidad))
                 throw new Exception($"Solo hay {publicacion.Stock} unidad(es) disponible(s).");
 
             if (_solicitudes.HasPending(publicacionId, compradorId))
@@ -112,10 +111,10 @@ namespace UniMarket.Logica
 
             publicacion = _publicaciones.GetById(solicitud.PublicacionId);
 
-            if (publicacion == null || publicacion.VendedorId != usuarioId)
+            if (publicacion == null || !publicacion.PerteneceA(usuarioId))
                 throw new Exception("Solo el vendedor puede atender esta solicitud.");
 
-            if (solicitud.Estado != EstadoPendiente)
+            if (!solicitud.EstaPendiente)
                 throw new Exception("Esta solicitud ya fue atendida.");
 
             return solicitud;

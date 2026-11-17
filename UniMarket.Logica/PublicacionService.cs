@@ -78,7 +78,7 @@ namespace UniMarket.Logica
             if (existente == null || !existente.Activo)
                 throw new Exception("La publicación no existe.");
 
-            if (existente.VendedorId != usuarioId)
+            if (!existente.PerteneceA(usuarioId))
                 throw new Exception("Solo el vendedor puede modificar esta publicación.");
 
             return existente;

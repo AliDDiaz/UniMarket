@@ -1,5 +1,6 @@
-﻿using System;
-using Npgsql;
+﻿using Npgsql;
+using System;
+using System.Collections.Generic;
 using UniMarket.Entidades;
 
 namespace UniMarket.Datos.DAO
@@ -165,6 +166,76 @@ namespace UniMarket.Datos.DAO
             {
                 throw new Exception($"Error BD al rechazar solicitud: {ex.Message}", ex);
             }
+        }
+
+        public List<SolicitudDetalle> ObtenerRecibidas(int vendedorId)
+        {
+            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, p.precio,
+                          s.estado, s.fecha,
+                          c.nombre AS contraparte,
+                          NULL::varchar AS telefono
+                   FROM solicitudes_compra s
+                   JOIN publicaciones p ON p.id = s.publicacion_id
+                   JOIN usuarios c ON c.id = s.comprador_id
+                   WHERE p.vendedor_id = @UsuarioId
+                   ORDER BY s.id DESC";
+
+            return ListarDetalle(sql, vendedorId);
+        }
+
+        public List<SolicitudDetalle> ObtenerEnviadas(int compradorId)
+        {
+            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, p.precio,
+                          s.estado, s.fecha,
+                          CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
+                          CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
+                   FROM solicitudes_compra s
+                   JOIN publicaciones p ON p.id = s.publicacion_id
+                   JOIN usuarios v ON v.id = p.vendedor_id
+                   WHERE s.comprador_id = @UsuarioId
+                   ORDER BY s.id DESC";
+
+            return ListarDetalle(sql, compradorId);
+        }
+
+        private List<SolicitudDetalle> ListarDetalle(string sql, int usuarioId)
+        {
+            var lista = new List<SolicitudDetalle>();
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                using (var cmd = new NpgsqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
+                    con.Open();
+                    using (var r = cmd.ExecuteReader())
+                        while (r.Read()) lista.Add(MapearDetalle(r));
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al listar solicitudes: {ex.Message}", ex);
+            }
+            return lista;
+        }
+
+        private SolicitudDetalle MapearDetalle(NpgsqlDataReader r) => new SolicitudDetalle
+        {
+            Id = Convert.ToInt32(r["id"]),
+            PublicacionId = Convert.ToInt32(r["publicacion_id"]),
+            Titulo = r["titulo"].ToString(),
+            Cantidad = Convert.ToInt32(r["cantidad"]),
+            PrecioUnitario = Convert.ToDecimal(r["precio"]),
+            Estado = r["estado"].ToString(),
+            Fecha = Convert.ToDateTime(r["fecha"]),
+            NombreContraparte = TextoONulo(r, "contraparte"),
+            TelefonoContacto = TextoONulo(r, "telefono")
+        };
+
+        private string TextoONulo(NpgsqlDataReader r, string columna)
+        {
+            int posicion = r.GetOrdinal(columna);
+            return r.IsDBNull(posicion) ? null : r.GetString(posicion);
         }
 
         private SolicitudCompra Mapear(NpgsqlDataReader r) => new SolicitudCompra

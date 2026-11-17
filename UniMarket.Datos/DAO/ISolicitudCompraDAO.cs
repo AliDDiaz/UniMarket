@@ -1,4 +1,5 @@
-﻿using UniMarket.Entidades;
+﻿using System.Collections.Generic;
+using UniMarket.Entidades;
 
 namespace UniMarket.Datos.DAO
 {
@@ -9,5 +10,7 @@ namespace UniMarket.Datos.DAO
         bool ExistePendiente(int publicacionId, int compradorId);
         bool Aceptar(int id);
         bool Rechazar(int id);
+        List<SolicitudDetalle> ObtenerRecibidas(int vendedorId);
+        List<SolicitudDetalle> ObtenerEnviadas(int compradorId);
     }
 }

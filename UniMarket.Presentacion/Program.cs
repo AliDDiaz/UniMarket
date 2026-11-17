@@ -24,7 +24,7 @@ namespace UniMarket.Presentacion
                 usuario = login.UsuarioLogueado;
             }
 
-            Application.Run(new FrmPublicacion(usuario.Id));
+            Application.Run(new FrmPrincipal(usuario));
         }
     }
 }

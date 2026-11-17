@@ -107,6 +107,12 @@
     <Compile Include="FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPublicacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPublicacion.Designer.cs">
+      <DependentUpon>FrmPublicacion.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmRegistro.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +123,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPublicacion.resx">
+      <DependentUpon>FrmPublicacion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmRegistro.resx">
       <DependentUpon>FrmRegistro.cs</DependentUpon>

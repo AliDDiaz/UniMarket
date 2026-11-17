@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UniMarket.Entidades;
 
 namespace UniMarket.Presentacion
 {
@@ -16,12 +17,14 @@ namespace UniMarket.Presentacion
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Usuario usuario;
             using (var login = new FrmLogin())
             {
                 if (login.ShowDialog() != DialogResult.OK) return;
+                usuario = login.UsuarioLogueado;
             }
 
-            Application.Run(new Form1());
+            Application.Run(new FrmPublicacion(usuario.Id));
         }
     }
 }

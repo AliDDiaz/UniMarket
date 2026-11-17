@@ -149,5 +149,23 @@ namespace UniMarket.Presentacion
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private void btnSolicitar_Click(object sender, EventArgs e)
+        {
+            var p = ObtenerSeleccionada();
+            if (p == null) return;
+
+            if (p.PerteneceA(_usuario.Id))
+            {
+                MessageBox.Show("No puedes comprar tu propia publicación.", "Atención",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var frm = new FrmSolicitud(p, _usuario.Id))
+            {
+                frm.ShowDialog();
+            }
+        }
     }
 }

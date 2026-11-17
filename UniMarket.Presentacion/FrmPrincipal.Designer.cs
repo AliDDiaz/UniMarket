@@ -37,6 +37,7 @@
             this.btnNueva = new System.Windows.Forms.Button();
             this.dgvPublicaciones = new System.Windows.Forms.DataGridView();
             this.chkMisPublicaciones = new System.Windows.Forms.CheckBox();
+            this.btnSolicitar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPublicaciones)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,7 +78,7 @@
             // 
             // btnEliminar
             // 
-            this.btnEliminar.Location = new System.Drawing.Point(730, 447);
+            this.btnEliminar.Location = new System.Drawing.Point(353, 447);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Size = new System.Drawing.Size(93, 46);
             this.btnEliminar.TabIndex = 4;
@@ -87,7 +88,7 @@
             // 
             // btnEditar
             // 
-            this.btnEditar.Location = new System.Drawing.Point(420, 447);
+            this.btnEditar.Location = new System.Drawing.Point(243, 447);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(93, 46);
             this.btnEditar.TabIndex = 5;
@@ -134,12 +135,24 @@
             this.chkMisPublicaciones.UseVisualStyleBackColor = true;
             this.chkMisPublicaciones.CheckedChanged += new System.EventHandler(this.chkMisPublicaciones_CheckedChanged);
             // 
+            // btnSolicitar
+            // 
+            this.btnSolicitar.Location = new System.Drawing.Point(774, 447);
+            this.btnSolicitar.Name = "btnSolicitar";
+            this.btnSolicitar.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.btnSolicitar.Size = new System.Drawing.Size(93, 46);
+            this.btnSolicitar.TabIndex = 9;
+            this.btnSolicitar.Text = "Solicitar compra";
+            this.btnSolicitar.UseVisualStyleBackColor = true;
+            this.btnSolicitar.Click += new System.EventHandler(this.btnSolicitar_Click);
+            // 
             // FrmPrincipal
             // 
             this.AcceptButton = this.btnBuscar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(940, 542);
+            this.Controls.Add(this.btnSolicitar);
             this.Controls.Add(this.chkMisPublicaciones);
             this.Controls.Add(this.dgvPublicaciones);
             this.Controls.Add(this.btnNueva);
@@ -169,5 +182,6 @@
         private System.Windows.Forms.Button btnNueva;
         private System.Windows.Forms.DataGridView dgvPublicaciones;
         private System.Windows.Forms.CheckBox chkMisPublicaciones;
+        private System.Windows.Forms.Button btnSolicitar;
     }
 }

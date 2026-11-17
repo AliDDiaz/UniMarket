@@ -42,6 +42,33 @@ namespace UniMarket.Datos.DAO
             return lista;
         }
 
+        public List<Publicacion> Buscar(string texto)
+        {
+            var lista = new List<Publicacion>();
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    string sql = $@"SELECT {Columnas} FROM publicaciones
+                            WHERE activo = TRUE AND stock > 0
+                              AND titulo ILIKE @Texto
+                            ORDER BY id DESC";
+                    using (var cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Texto", "%" + texto + "%");
+                        con.Open();
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read()) lista.Add(Mapear(r));
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al buscar publicaciones: {ex.Message}", ex);
+            }
+            return lista;
+        }
+
         public List<Publicacion> ObtenerPorVendedor(int vendedorId)
         {
             var lista = new List<Publicacion>();

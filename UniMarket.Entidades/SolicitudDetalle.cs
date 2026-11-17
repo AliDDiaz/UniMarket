@@ -15,5 +15,6 @@ namespace UniMarket.Entidades
         public string TelefonoContacto { get; set; }
 
         public decimal Total => Cantidad * PrecioUnitario;
+        public bool EstaPendiente => Estado == EstadoSolicitud.Pendiente;
     }
 }

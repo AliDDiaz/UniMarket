@@ -38,6 +38,7 @@
             this.dgvPublicaciones = new System.Windows.Forms.DataGridView();
             this.chkMisPublicaciones = new System.Windows.Forms.CheckBox();
             this.btnSolicitar = new System.Windows.Forms.Button();
+            this.btnSolicitudes = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPublicaciones)).BeginInit();
             this.SuspendLayout();
             // 
@@ -146,12 +147,23 @@
             this.btnSolicitar.UseVisualStyleBackColor = true;
             this.btnSolicitar.Click += new System.EventHandler(this.btnSolicitar_Click);
             // 
+            // btnSolicitudes
+            // 
+            this.btnSolicitudes.Location = new System.Drawing.Point(533, 447);
+            this.btnSolicitudes.Name = "btnSolicitudes";
+            this.btnSolicitudes.Size = new System.Drawing.Size(93, 46);
+            this.btnSolicitudes.TabIndex = 10;
+            this.btnSolicitudes.Text = "Mis solicitudes";
+            this.btnSolicitudes.UseVisualStyleBackColor = true;
+            this.btnSolicitudes.Click += new System.EventHandler(this.btnSolicitudes_Click);
+            // 
             // FrmPrincipal
             // 
             this.AcceptButton = this.btnBuscar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(940, 542);
+            this.Controls.Add(this.btnSolicitudes);
             this.Controls.Add(this.btnSolicitar);
             this.Controls.Add(this.chkMisPublicaciones);
             this.Controls.Add(this.dgvPublicaciones);
@@ -183,5 +195,6 @@
         private System.Windows.Forms.DataGridView dgvPublicaciones;
         private System.Windows.Forms.CheckBox chkMisPublicaciones;
         private System.Windows.Forms.Button btnSolicitar;
+        private System.Windows.Forms.Button btnSolicitudes;
     }
 }

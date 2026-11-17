@@ -167,5 +167,15 @@ namespace UniMarket.Presentacion
                 frm.ShowDialog();
             }
         }
+
+        private void btnSolicitudes_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FrmSolicitudes(_usuario))
+            {
+                frm.ShowDialog();
+            }
+
+            CargarPublicaciones();
+        }
     }
 }

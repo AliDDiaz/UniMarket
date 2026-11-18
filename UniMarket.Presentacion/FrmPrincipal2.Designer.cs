@@ -37,9 +37,9 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelContenedor = new System.Windows.Forms.Panel();
@@ -60,7 +60,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(210, 669);
+            this.panel1.Size = new System.Drawing.Size(204, 669);
             this.panel1.TabIndex = 0;
             // 
             // btnSalir
@@ -72,9 +72,9 @@
             this.btnSalir.ForeColor = System.Drawing.Color.White;
             this.btnSalir.Location = new System.Drawing.Point(3, 360);
             this.btnSalir.Name = "btnSalir";
-            this.btnSalir.Size = new System.Drawing.Size(208, 54);
+            this.btnSalir.Size = new System.Drawing.Size(201, 54);
             this.btnSalir.TabIndex = 5;
-            this.btnSalir.Text = "SALIR";
+            this.btnSalir.Text = "CERRAR SESIÓN";
             this.btnSalir.UseVisualStyleBackColor = true;
             this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
             this.btnSalir.MouseEnter += new System.EventHandler(this.btnSalir_MouseEnter_1);
@@ -174,10 +174,22 @@
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(210, 0);
+            this.panel2.Location = new System.Drawing.Point(204, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(820, 112);
+            this.panel2.Size = new System.Drawing.Size(826, 112);
             this.panel2.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(215)))), ((int)(((byte)(250)))));
+            this.label3.Location = new System.Drawing.Point(314, 81);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(208, 28);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Tu tienda de confianza";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // label5
             // 
@@ -204,18 +216,6 @@
             this.label4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(215)))), ((int)(((byte)(250)))));
-            this.label3.Location = new System.Drawing.Point(314, 81);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(208, 28);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Tu tienda de confianza";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -234,10 +234,10 @@
             this.flowLayoutPanel1.BackColor = System.Drawing.Color.White;
             this.flowLayoutPanel1.Controls.Add(this.panelContenedor);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(210, 112);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(204, 112);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(24, 8, 4, 8);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(820, 557);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(826, 557);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // panelContenedor

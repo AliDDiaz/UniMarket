@@ -140,9 +140,9 @@
             // 
             // txtConfirmar
             // 
-            this.txtConfirmar.Location = new System.Drawing.Point(191, 18);
+            this.txtConfirmar.Location = new System.Drawing.Point(210, 18);
             this.txtConfirmar.Name = "txtConfirmar";
-            this.txtConfirmar.Size = new System.Drawing.Size(145, 22);
+            this.txtConfirmar.Size = new System.Drawing.Size(155, 22);
             this.txtConfirmar.TabIndex = 9;
             this.txtConfirmar.UseSystemPasswordChar = true;
             // 
@@ -208,7 +208,7 @@
             this.panel1.Controls.Add(this.txtNombre);
             this.panel1.Location = new System.Drawing.Point(416, 116);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(329, 50);
+            this.panel1.Size = new System.Drawing.Size(368, 50);
             this.panel1.TabIndex = 15;
             // 
             // panel2
@@ -218,7 +218,7 @@
             this.panel2.Controls.Add(this.txtTelefono);
             this.panel2.Location = new System.Drawing.Point(416, 189);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(329, 50);
+            this.panel2.Size = new System.Drawing.Size(368, 50);
             this.panel2.TabIndex = 16;
             // 
             // panel3
@@ -228,7 +228,7 @@
             this.panel3.Controls.Add(this.txtCorreo);
             this.panel3.Location = new System.Drawing.Point(416, 266);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(329, 50);
+            this.panel3.Size = new System.Drawing.Size(368, 50);
             this.panel3.TabIndex = 16;
             // 
             // panel4
@@ -238,7 +238,7 @@
             this.panel4.Controls.Add(this.txtContrasena);
             this.panel4.Location = new System.Drawing.Point(416, 340);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(329, 50);
+            this.panel4.Size = new System.Drawing.Size(368, 50);
             this.panel4.TabIndex = 16;
             // 
             // panel5
@@ -248,7 +248,7 @@
             this.panel5.Controls.Add(this.txtConfirmar);
             this.panel5.Location = new System.Drawing.Point(416, 410);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(339, 50);
+            this.panel5.Size = new System.Drawing.Size(368, 50);
             this.panel5.TabIndex = 16;
             // 
             // pictureBox2

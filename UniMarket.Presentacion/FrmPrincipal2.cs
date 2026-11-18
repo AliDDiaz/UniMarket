@@ -50,7 +50,17 @@ namespace UniMarket.Presentacion
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-           Dispose();
+
+            var confirmar = MessageBox.Show("¿Deseas cerrar sesión?", "Cerrar sesión",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirmar == DialogResult.Yes)
+            {
+                // Le avisa a Program.cs que debe volver a abrir el Login y cierra FrmPrincipal2
+                this.DialogResult = DialogResult.Retry;
+                this.Close();
+            }
+
         }
         private void btnSalir_MouseEnter(object sender, EventArgs e)
         {

@@ -52,7 +52,7 @@
             // 
             this.lblCorreo.AutoSize = true;
             this.lblCorreo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCorreo.Location = new System.Drawing.Point(103, 35);
+            this.lblCorreo.Location = new System.Drawing.Point(94, 35);
             this.lblCorreo.Name = "lblCorreo";
             this.lblCorreo.Size = new System.Drawing.Size(75, 28);
             this.lblCorreo.TabIndex = 0;
@@ -62,11 +62,12 @@
             // 
             this.lblContrasena.AutoSize = true;
             this.lblContrasena.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblContrasena.Location = new System.Drawing.Point(82, 77);
+            this.lblContrasena.Location = new System.Drawing.Point(68, 77);
             this.lblContrasena.Name = "lblContrasena";
             this.lblContrasena.Size = new System.Drawing.Size(118, 28);
             this.lblContrasena.TabIndex = 1;
             this.lblContrasena.Text = "Contraseña";
+            this.lblContrasena.Click += new System.EventHandler(this.lblContrasena_Click);
             // 
             // txtCorreo
             // 

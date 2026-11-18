@@ -54,5 +54,10 @@ namespace UniMarket.Presentacion
         {
 
         }
+
+        private void lblContrasena_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

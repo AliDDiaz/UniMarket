@@ -94,15 +94,6 @@ namespace UniMarket.Presentacion
             CargarPublicaciones();
         }
 
-        private void btnNueva_Click(object sender, EventArgs e)
-        {
-            using (var frm = new FrmPublicacion(_usuario.Id))
-            {
-                if (frm.ShowDialog() == DialogResult.OK)
-                    CargarPublicaciones();
-            }
-        }
-
         private void btnEditar_Click(object sender, EventArgs e)
         {
             var publicacion = ObtenerSeleccionada();
@@ -176,6 +167,11 @@ namespace UniMarket.Presentacion
             }
 
             CargarPublicaciones();
+        }
+
+        private void dgvPublicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

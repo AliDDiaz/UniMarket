@@ -62,7 +62,7 @@
             // 
             this.lblCorreo.AutoSize = true;
             this.lblCorreo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCorreo.Location = new System.Drawing.Point(14, 18);
+            this.lblCorreo.Location = new System.Drawing.Point(4, 17);
             this.lblCorreo.Name = "lblCorreo";
             this.lblCorreo.Size = new System.Drawing.Size(64, 23);
             this.lblCorreo.TabIndex = 0;
@@ -72,7 +72,7 @@
             // 
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombre.Location = new System.Drawing.Point(13, 18);
+            this.lblNombre.Location = new System.Drawing.Point(3, 18);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(76, 23);
             this.lblNombre.TabIndex = 1;
@@ -82,7 +82,7 @@
             // 
             this.lblTelefono.AutoSize = true;
             this.lblTelefono.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTelefono.Location = new System.Drawing.Point(14, 16);
+            this.lblTelefono.Location = new System.Drawing.Point(3, 16);
             this.lblTelefono.Name = "lblTelefono";
             this.lblTelefono.Size = new System.Drawing.Size(78, 23);
             this.lblTelefono.TabIndex = 2;
@@ -92,7 +92,7 @@
             // 
             this.lblContrasena.AutoSize = true;
             this.lblContrasena.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblContrasena.Location = new System.Drawing.Point(13, 20);
+            this.lblContrasena.Location = new System.Drawing.Point(3, 20);
             this.lblContrasena.Name = "lblContrasena";
             this.lblContrasena.Size = new System.Drawing.Size(99, 23);
             this.lblContrasena.TabIndex = 3;
@@ -110,28 +110,29 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(95, 20);
+            this.txtNombre.Location = new System.Drawing.Point(112, 20);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(203, 22);
             this.txtNombre.TabIndex = 5;
             // 
             // txtCorreo
             // 
-            this.txtCorreo.Location = new System.Drawing.Point(95, 18);
+            this.txtCorreo.Location = new System.Drawing.Point(112, 18);
             this.txtCorreo.Name = "txtCorreo";
             this.txtCorreo.Size = new System.Drawing.Size(203, 22);
             this.txtCorreo.TabIndex = 6;
             // 
             // txtTelefono
             // 
-            this.txtTelefono.Location = new System.Drawing.Point(95, 16);
+            this.txtTelefono.Location = new System.Drawing.Point(112, 16);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(203, 22);
             this.txtTelefono.TabIndex = 7;
+            this.txtTelefono.TextChanged += new System.EventHandler(this.txtTelefono_TextChanged);
             // 
             // txtContrasena
             // 
-            this.txtContrasena.Location = new System.Drawing.Point(95, 20);
+            this.txtContrasena.Location = new System.Drawing.Point(112, 20);
             this.txtContrasena.Name = "txtContrasena";
             this.txtContrasena.Size = new System.Drawing.Size(203, 22);
             this.txtContrasena.TabIndex = 8;
@@ -139,7 +140,7 @@
             // 
             // txtConfirmar
             // 
-            this.txtConfirmar.Location = new System.Drawing.Point(181, 19);
+            this.txtConfirmar.Location = new System.Drawing.Point(191, 18);
             this.txtConfirmar.Name = "txtConfirmar";
             this.txtConfirmar.Size = new System.Drawing.Size(145, 22);
             this.txtConfirmar.TabIndex = 9;
@@ -247,7 +248,7 @@
             this.panel5.Controls.Add(this.txtConfirmar);
             this.panel5.Location = new System.Drawing.Point(416, 410);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(329, 50);
+            this.panel5.Size = new System.Drawing.Size(339, 50);
             this.panel5.TabIndex = 16;
             // 
             // pictureBox2

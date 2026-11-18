@@ -45,7 +45,7 @@
             // lblUsuario
             // 
             this.lblUsuario.AutoSize = true;
-            this.lblUsuario.Location = new System.Drawing.Point(59, 54);
+            this.lblUsuario.Location = new System.Drawing.Point(59, 32);
             this.lblUsuario.Name = "lblUsuario";
             this.lblUsuario.Size = new System.Drawing.Size(36, 16);
             this.lblUsuario.TabIndex = 0;
@@ -115,14 +115,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvPublicaciones.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPublicaciones.Location = new System.Drawing.Point(12, 160);
+            this.dgvPublicaciones.Location = new System.Drawing.Point(682, 335);
             this.dgvPublicaciones.MultiSelect = false;
             this.dgvPublicaciones.Name = "dgvPublicaciones";
             this.dgvPublicaciones.ReadOnly = true;
             this.dgvPublicaciones.RowHeadersWidth = 51;
             this.dgvPublicaciones.RowTemplate.Height = 24;
             this.dgvPublicaciones.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPublicaciones.Size = new System.Drawing.Size(916, 264);
+            this.dgvPublicaciones.Size = new System.Drawing.Size(103, 31);
             this.dgvPublicaciones.TabIndex = 7;
             // 
             // chkMisPublicaciones

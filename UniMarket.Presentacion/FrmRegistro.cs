@@ -51,5 +51,20 @@ namespace UniMarket.Presentacion
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FrmRegistro_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flowLayoutPanel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

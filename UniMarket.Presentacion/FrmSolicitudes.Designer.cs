@@ -64,15 +64,17 @@
             // 
             // tabRecibidas
             // 
+            this.tabRecibidas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.tabRecibidas.Controls.Add(this.dgvRecibidas);
             this.tabRecibidas.Controls.Add(this.pnlAcciones);
+            this.tabRecibidas.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabRecibidas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.tabRecibidas.Location = new System.Drawing.Point(4, 25);
             this.tabRecibidas.Name = "tabRecibidas";
             this.tabRecibidas.Padding = new System.Windows.Forms.Padding(3);
             this.tabRecibidas.Size = new System.Drawing.Size(922, 346);
             this.tabRecibidas.TabIndex = 0;
             this.tabRecibidas.Text = "Recibidas";
-            this.tabRecibidas.UseVisualStyleBackColor = true;
             // 
             // dgvRecibidas
             // 
@@ -97,6 +99,8 @@
             // 
             // btnRechazar
             // 
+            this.btnRechazar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRechazar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnRechazar.Location = new System.Drawing.Point(765, 25);
             this.btnRechazar.Name = "btnRechazar";
             this.btnRechazar.Size = new System.Drawing.Size(99, 43);
@@ -107,6 +111,8 @@
             // 
             // btnAceptar
             // 
+            this.btnAceptar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAceptar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnAceptar.Location = new System.Drawing.Point(66, 25);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(99, 43);
@@ -118,6 +124,8 @@
             // tabEnviadas
             // 
             this.tabEnviadas.Controls.Add(this.dgvEnviadas);
+            this.tabEnviadas.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabEnviadas.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.tabEnviadas.Location = new System.Drawing.Point(4, 25);
             this.tabEnviadas.Name = "tabEnviadas";
             this.tabEnviadas.Padding = new System.Windows.Forms.Padding(3);
@@ -139,6 +147,8 @@
             // 
             // btnActualizar
             // 
+            this.btnActualizar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnActualizar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnActualizar.Location = new System.Drawing.Point(96, 500);
             this.btnActualizar.Name = "btnActualizar";
             this.btnActualizar.Size = new System.Drawing.Size(116, 57);
@@ -150,6 +160,8 @@
             // btnCerrar
             // 
             this.btnCerrar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCerrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCerrar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnCerrar.Location = new System.Drawing.Point(803, 500);
             this.btnCerrar.Name = "btnCerrar";
             this.btnCerrar.Size = new System.Drawing.Size(116, 57);

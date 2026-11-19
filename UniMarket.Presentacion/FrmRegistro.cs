@@ -73,5 +73,10 @@ namespace UniMarket.Presentacion
         {
 
         }
+
+        private void lblConfirmar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

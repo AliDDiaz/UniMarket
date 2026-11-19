@@ -103,14 +103,14 @@ namespace UniMarket.Presentacion
 
         private void button1_MouseEnter_1(object sender, EventArgs e)
         {
-            button1.BackColor = Color.FromArgb(124, 77, 255); // Morado vibrante más luminoso
+            button1.BackColor = Color.FromArgb(124, 77, 255); 
             button1.ForeColor = Color.White;
 
         }
 
         private void button1_MouseLeave_1(object sender, EventArgs e)
         {
-            button1.BackColor = Color.FromArgb(26, 20, 44);   
+            button1.BackColor = Color.Indigo;   
             button1.ForeColor = Color.White;
         }
 
@@ -122,7 +122,7 @@ namespace UniMarket.Presentacion
 
         private void button2_MouseLeave_1(object sender, EventArgs e)
         {
-            button2.BackColor = Color.FromArgb(26, 20, 44);   
+            button2.BackColor = Color.Indigo;   
             button2.ForeColor = Color.White;
         }
 
@@ -134,7 +134,7 @@ namespace UniMarket.Presentacion
 
         private void btnHistorial_MouseLeave(object sender, EventArgs e)
         {
-            btnHistorial.BackColor = Color.FromArgb(26, 20, 44);
+            btnHistorial.BackColor = Color.Indigo;
             btnHistorial.ForeColor = Color.White;
         }
 
@@ -146,7 +146,7 @@ namespace UniMarket.Presentacion
 
         private void btnMycuenta_MouseLeave(object sender, EventArgs e)
         {
-            btnMycuenta.BackColor = Color.FromArgb(26, 20, 44);
+            btnMycuenta.BackColor = Color.Indigo;
             btnMycuenta.ForeColor = Color.White;
         }
 
@@ -158,7 +158,7 @@ namespace UniMarket.Presentacion
 
         private void btnSalir_MouseLeave_1(object sender, EventArgs e)
         {
-            btnSalir.BackColor = Color.FromArgb(26, 20, 44);
+            btnSalir.BackColor = Color.Indigo;
             btnSalir.ForeColor = Color.White;
         }
     }

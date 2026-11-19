@@ -56,22 +56,26 @@
             // lblBuscar
             // 
             this.lblBuscar.AutoSize = true;
-            this.lblBuscar.Location = new System.Drawing.Point(59, 123);
+            this.lblBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBuscar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
+            this.lblBuscar.Location = new System.Drawing.Point(182, 128);
             this.lblBuscar.Name = "lblBuscar";
-            this.lblBuscar.Size = new System.Drawing.Size(49, 16);
+            this.lblBuscar.Size = new System.Drawing.Size(55, 16);
             this.lblBuscar.TabIndex = 1;
             this.lblBuscar.Text = "Buscar";
             // 
             // txtBuscar
             // 
-            this.txtBuscar.Location = new System.Drawing.Point(134, 120);
+            this.txtBuscar.Location = new System.Drawing.Point(237, 125);
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(100, 22);
             this.txtBuscar.TabIndex = 2;
             // 
             // btnBuscar
             // 
-            this.btnBuscar.Location = new System.Drawing.Point(258, 108);
+            this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
+            this.btnBuscar.Location = new System.Drawing.Point(444, 108);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(93, 46);
             this.btnBuscar.TabIndex = 3;
@@ -81,6 +85,8 @@
             // 
             // btnEliminar
             // 
+            this.btnEliminar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEliminar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnEliminar.Location = new System.Drawing.Point(258, 447);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Size = new System.Drawing.Size(93, 46);
@@ -91,12 +97,15 @@
             // 
             // btnEditar
             // 
+            this.btnEditar.BackColor = System.Drawing.Color.GhostWhite;
+            this.btnEditar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnEditar.Location = new System.Drawing.Point(81, 447);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(93, 46);
             this.btnEditar.TabIndex = 5;
             this.btnEditar.Text = "Editar";
-            this.btnEditar.UseVisualStyleBackColor = true;
+            this.btnEditar.UseVisualStyleBackColor = false;
             this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
             // 
             // dgvPublicaciones
@@ -121,9 +130,11 @@
             // chkMisPublicaciones
             // 
             this.chkMisPublicaciones.AutoSize = true;
-            this.chkMisPublicaciones.Location = new System.Drawing.Point(376, 119);
+            this.chkMisPublicaciones.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkMisPublicaciones.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
+            this.chkMisPublicaciones.Location = new System.Drawing.Point(553, 122);
             this.chkMisPublicaciones.Name = "chkMisPublicaciones";
-            this.chkMisPublicaciones.Size = new System.Drawing.Size(168, 20);
+            this.chkMisPublicaciones.Size = new System.Drawing.Size(190, 20);
             this.chkMisPublicaciones.TabIndex = 8;
             this.chkMisPublicaciones.Text = "Solo mis publicaciones";
             this.chkMisPublicaciones.UseVisualStyleBackColor = true;
@@ -131,6 +142,8 @@
             // 
             // btnSolicitar
             // 
+            this.btnSolicitar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSolicitar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnSolicitar.Location = new System.Drawing.Point(653, 447);
             this.btnSolicitar.Name = "btnSolicitar";
             this.btnSolicitar.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -142,6 +155,8 @@
             // 
             // btnSolicitudes
             // 
+            this.btnSolicitudes.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSolicitudes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnSolicitudes.Location = new System.Drawing.Point(494, 447);
             this.btnSolicitudes.Name = "btnSolicitudes";
             this.btnSolicitudes.Size = new System.Drawing.Size(93, 46);

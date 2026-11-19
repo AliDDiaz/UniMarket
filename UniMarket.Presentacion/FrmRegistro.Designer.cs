@@ -102,11 +102,12 @@
             // 
             this.lblConfirmar.AutoSize = true;
             this.lblConfirmar.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblConfirmar.Location = new System.Drawing.Point(-4, 17);
+            this.lblConfirmar.Location = new System.Drawing.Point(4, 17);
             this.lblConfirmar.Name = "lblConfirmar";
             this.lblConfirmar.Size = new System.Drawing.Size(183, 23);
             this.lblConfirmar.TabIndex = 4;
             this.lblConfirmar.Text = "Confirmar contraseña";
+            this.lblConfirmar.Click += new System.EventHandler(this.lblConfirmar_Click);
             // 
             // txtNombre
             // 
@@ -182,7 +183,7 @@
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(-3, -59);
+            this.pictureBox1.Location = new System.Drawing.Point(-10, -58);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(877, 712);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -254,9 +255,9 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(173, 152);
+            this.pictureBox2.Location = new System.Drawing.Point(149, 116);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(233, 298);
+            this.pictureBox2.Size = new System.Drawing.Size(242, 334);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 17;
             this.pictureBox2.TabStop = false;

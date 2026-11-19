@@ -48,13 +48,13 @@
     <Compile Include="UsuarioService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UniMarket.Datos\UniMarket.Datos.csproj">
+    <ProjectReference Include="..\UniMarket.Datos\Trueque.Datos.csproj">
       <Project>{a6cfef0c-510f-45e2-9c49-6f18bf2f6c55}</Project>
-      <Name>UniMarket.Datos</Name>
+      <Name>Trueque.Datos</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UniMarket.Entidades\UniMarket.Entidades.csproj">
+    <ProjectReference Include="..\UniMarket.Entidades\Trueque.Entidades.csproj">
       <Project>{da49840a-3ceb-4289-b988-fc5f2af8107c}</Project>
-      <Name>UniMarket.Entidades</Name>
+      <Name>Trueque.Entidades</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

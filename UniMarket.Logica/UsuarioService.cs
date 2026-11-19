@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using UniMarket.Datos.DAO;
@@ -63,8 +64,8 @@ namespace UniMarket.Logica
 
         private void ValidarDatos(string nombre, string correo, string telefono)
         {
-            if (nombre == "")
-                throw new Exception("El nombre es obligatorio.");
+            if (string.IsNullOrWhiteSpace(nombre) || !nombre.All(c => char.IsLetter(c) || c == ' '))
+                throw new Exception("El nombre es obligatorio y solo puede contener letras y espacios.");
 
             if (!EsCorreoValido(correo))
                 throw new Exception("El correo no es válido.");

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EstadoSolicitud.cs" />
+    <Compile Include="MensajeBot.cs" />
     <Compile Include="Publicacion.cs" />
     <Compile Include="RolUsuario.cs" />
     <Compile Include="SolicitudCompra.cs" />

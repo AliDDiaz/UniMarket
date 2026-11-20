@@ -8,6 +8,7 @@ namespace UniMarket.Presentacion
 {
     public partial class FrmPublicacion : Form
     {
+        
         private readonly PublicacionService _service;
         private readonly int _usuarioId;
         private readonly Publicacion _publicacion;

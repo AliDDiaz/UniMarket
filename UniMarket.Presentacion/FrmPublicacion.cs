@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using UniMarket.Entidades;
 using UniMarket.Logica;
+using System.Drawing;
 
 namespace UniMarket.Presentacion
 {
@@ -10,6 +11,7 @@ namespace UniMarket.Presentacion
         private readonly PublicacionService _service;
         private readonly int _usuarioId;
         private readonly Publicacion _publicacion;
+        private byte[] _imagenSeleccionada = null;
 
         public FrmPublicacion(int usuarioId, Publicacion publicacion = null)
         {
@@ -29,6 +31,16 @@ namespace UniMarket.Presentacion
                 txtDescripcion.Text = _publicacion.Descripcion;
                 txtPrecio.Text = _publicacion.Precio.ToString("0.##");
                 txtStock.Text = _publicacion.Stock.ToString();
+
+                _imagenSeleccionada = _publicacion.Imagen;
+                if (_imagenSeleccionada != null && _imagenSeleccionada.Length > 0)
+                {
+                    using (var ms = new System.IO.MemoryStream(_imagenSeleccionada))
+                    {
+                        pbFoto.Image = System.Drawing.Image.FromStream(ms);
+                        pbFoto.SizeMode = PictureBoxSizeMode.Zoom;
+                    }
+                }
             }
         }
 
@@ -46,7 +58,8 @@ namespace UniMarket.Presentacion
                     Titulo = txtTitulo.Text,
                     Descripcion = txtDescripcion.Text,
                     Precio = precio,
-                    Stock = stock
+                    Stock = stock,
+                    Imagen = _imagenSeleccionada
                 };
 
                 if (_publicacion == null)
@@ -76,6 +89,25 @@ namespace UniMarket.Presentacion
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnSubirFoto_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Selecciona la foto del producto";
+                ofd.Filter = "Imágenes (*.jpg;*.jpeg;*.png;*.webp)|*.jpg;*.jpeg;*.png;*.webp";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    // Muestra la vista previa en el PictureBox izquierdo (cambia pbFoto por el Name de tu PictureBox)
+                    pbFoto.Image = Image.FromFile(ofd.FileName);
+                    pbFoto.SizeMode = PictureBoxSizeMode.Zoom;
+
+                    // Convierte el archivo a bytes para guardarlo en Supabase
+                    _imagenSeleccionada = System.IO.File.ReadAllBytes(ofd.FileName);
+                }
+            }
         }
     }
 }

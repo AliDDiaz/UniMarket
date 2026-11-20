@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using UniMarket.Entidades;
 using UniMarket.Logica;
@@ -9,6 +12,7 @@ namespace UniMarket.Presentacion
     {
         private readonly PublicacionService _service;
         private readonly Usuario _usuario;
+        private Publicacion _publicacionSeleccionada;
 
         public FrmPrincipal(Usuario usuario)
         {
@@ -16,53 +20,22 @@ namespace UniMarket.Presentacion
             _service = new PublicacionService();
             _usuario = usuario;
 
+
             lblUsuario.Text = $"Hola, {_usuario.Nombre}";
-            ConfigurarGrilla();
             CargarPublicaciones();
-        }
-
-        private void ConfigurarGrilla()
-        {
-            dgvPublicaciones.AutoGenerateColumns = false;
-
-            dgvPublicaciones.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Título",
-                DataPropertyName = "Titulo",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 40
-            });
-            dgvPublicaciones.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Descripción",
-                DataPropertyName = "Descripcion",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = 60
-            });
-            dgvPublicaciones.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Precio",
-                DataPropertyName = "Precio",
-                Width = 110,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "#,##0.##" }
-            });
-            dgvPublicaciones.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Unidades",
-                DataPropertyName = "Stock",
-                Width = 80
-            });
         }
 
         private void CargarPublicaciones()
         {
             try
             {
-                dgvPublicaciones.DataSource = null;
+                _publicacionSeleccionada = null;
 
-                dgvPublicaciones.DataSource = chkMisPublicaciones.Checked
+                var lista = chkMisPublicaciones.Checked
                     ? _service.ObtenerMisPublicaciones(_usuario.Id)
                     : _service.ObtenerCatalogo(txtBuscar.Text);
+
+                MostrarCatalogo(lista);
             }
             catch (Exception ex)
             {
@@ -73,13 +46,13 @@ namespace UniMarket.Presentacion
 
         private Publicacion ObtenerSeleccionada()
         {
-            var publicacion = dgvPublicaciones.CurrentRow?.DataBoundItem as Publicacion;
-
-            if (publicacion == null)
-                MessageBox.Show("Selecciona una publicación de la lista.", "Atención",
+            if (_publicacionSeleccionada == null)
+            {
+                MessageBox.Show("Haz clic sobre una tarjeta de producto para seleccionarla.", "Atención",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
-            return publicacion;
+            return _publicacionSeleccionada;
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
@@ -141,24 +114,6 @@ namespace UniMarket.Presentacion
             }
         }
 
-        private void btnSolicitar_Click(object sender, EventArgs e)
-        {
-            var p = ObtenerSeleccionada();
-            if (p == null) return;
-
-            if (p.PerteneceA(_usuario.Id))
-            {
-                MessageBox.Show("No puedes comprar tu propia publicación.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (var frm = new FrmSolicitud(p, _usuario.Id))
-            {
-                frm.ShowDialog();
-            }
-        }
-
         private void btnSolicitudes_Click(object sender, EventArgs e)
         {
             using (var frm = new FrmSolicitudes(_usuario))
@@ -169,9 +124,120 @@ namespace UniMarket.Presentacion
             CargarPublicaciones();
         }
 
-        private void dgvPublicaciones_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void AbrirSolicitudCompra(Publicacion pub)
         {
+            if (pub.PerteneceA(_usuario.Id))
+            {
+                MessageBox.Show("No puedes comprar tu propia publicación.", "Atención",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
+            using (var frm = new FrmSolicitud(pub, _usuario.Id))
+            {
+                frm.ShowDialog();
+            }
+
+            CargarPublicaciones();
+        }
+
+        private void MostrarCatalogo(List<Publicacion> lista)
+        {
+            flpCatalogo.Controls.Clear();
+
+            foreach (var pub in lista)
+            {
+                // 1. Tarjeta blanca
+                Panel card = new Panel
+                {
+                    Width = 220,
+                    Height = 275,
+                    BackColor = Color.White,
+                    Margin = new Padding(12),
+                    Cursor = Cursors.Hand
+                };
+
+                card.Click += (s, e) => SeleccionarTarjeta(card, pub);
+
+                // 2. Foto del producto arriba
+                PictureBox pic = new PictureBox
+                {
+                    Size = new Size(196, 130),
+                    Location = new Point(12, 12),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BackColor = Color.FromArgb(248, 247, 252)
+                };
+                if (pub.Imagen != null && pub.Imagen.Length > 0)
+                {
+                    using (var ms = new MemoryStream(pub.Imagen))
+                        pic.Image = Image.FromStream(ms);
+                }
+                pic.Click += (s, e) => SeleccionarTarjeta(card, pub);
+
+                // 3. Título del producto
+                Label lblTitulo = new Label
+                {
+                    Text = pub.Titulo,
+                    Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(40, 40, 55),
+                    Location = new Point(12, 150),
+                    Size = new Size(196, 22),
+                    AutoEllipsis = true
+                };
+                lblTitulo.Click += (s, e) => SeleccionarTarjeta(card, pub);
+
+                // 4. Precio grande en morado
+                Label lblPrecio = new Label
+                {
+                    Text = $"${pub.Precio:N0}",
+                    Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(103, 58, 183),
+                    Location = new Point(12, 174),
+                    AutoSize = true
+                };
+                lblPrecio.Click += (s, e) => SeleccionarTarjeta(card, pub);
+
+                // 5. Botón morado "Adquirir"
+                Button btnAdquirir = new Button
+                {
+                    Text = "🛒 Adquirir",
+                    Size = new Size(196, 36),
+                    Location = new Point(12, 222),
+                    BackColor = Color.FromArgb(103, 58, 183),
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                    Cursor = Cursors.Hand
+                };
+                btnAdquirir.FlatAppearance.BorderSize = 0;
+
+                if (pub.PerteneceA(_usuario.Id))
+                {
+                    btnAdquirir.Text = "Tu publicación";
+                    btnAdquirir.BackColor = Color.FromArgb(180, 170, 210);
+                    btnAdquirir.Enabled = false;
+                }
+                else
+                {
+                    btnAdquirir.Click += (s, e) => AbrirSolicitudCompra(pub);
+                }
+
+                card.Controls.Add(pic);
+                card.Controls.Add(lblTitulo);
+                card.Controls.Add(lblPrecio);
+                card.Controls.Add(btnAdquirir);
+
+                flpCatalogo.Controls.Add(card);
+            }
+        }
+
+        private void SeleccionarTarjeta(Panel tarjetaElegida, Publicacion pub)
+        {
+            _publicacionSeleccionada = pub;
+            foreach (Control ctrl in flpCatalogo.Controls)
+                ctrl.BackColor = Color.White;
+
+            tarjetaElegida.BackColor = Color.FromArgb(237, 231, 255);
         }
     }
 }

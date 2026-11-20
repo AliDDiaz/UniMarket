@@ -5,9 +5,9 @@ using UniMarket.Entidades;
 
 namespace UniMarket.Logica
 {
-    public class BotService
+    public class NotificacionesService
     {
-        private readonly BotDatos _botDatos = new BotDatos();
+        private readonly NotificacionesDatos _notificaionesDatos = new NotificacionesDatos();
 
         // Avisa al vendedor cuando recibe una oferta de compra
         // En BotService.cs (Capa Logica)
@@ -15,7 +15,7 @@ namespace UniMarket.Logica
         {
             try
             {
-                var aviso = new MensajeBot
+                var aviso = new MensajeNotificaciones
                 {
                     UsuarioId = vendedorId,
                     Titulo = "Nueva solicitud de compra",
@@ -24,7 +24,7 @@ namespace UniMarket.Logica
                     SolicitudId = solicitudId
                 };
 
-                _botDatos.InsertarMensaje(aviso);
+                _notificaionesDatos.InsertarMensaje(aviso);
             }
             catch
             {
@@ -40,7 +40,7 @@ namespace UniMarket.Logica
                     ? $"¡Buenas noticias! El vendedor aceptó tu solicitud por '{tituloProducto}'. Ya puedes coordinar la entrega."
                     : $"El vendedor rechazó tu solicitud por '{tituloProducto}'. Puedes seguir explorando otras publicaciones.";
 
-                var aviso = new MensajeBot
+                var aviso = new MensajeNotificaciones
                 {
                     UsuarioId = compradorId,
                     Titulo = titulo,
@@ -49,26 +49,26 @@ namespace UniMarket.Logica
                     SolicitudId = solicitudId
                 };
 
-                _botDatos.InsertarMensaje(aviso);
+                _notificaionesDatos.InsertarMensaje(aviso);
             }
             catch
             {
             }
         }
 
-        public List<MensajeBot> ObtenerHistorial(int usuarioId)
+        public List<MensajeNotificaciones> ObtenerHistorial(int usuarioId)
         {
-            return _botDatos.ObtenerMensajesPorUsuario(usuarioId);
+            return _notificaionesDatos.ObtenerMensajesPorUsuario(usuarioId);
         }
 
-        public List<MensajeBot> RevisarNuevosMensajes(int usuarioId)
+        public List<MensajeNotificaciones> RevisarNuevosMensajes(int usuarioId)
         {
-            return _botDatos.ObtenerNoLeidos(usuarioId);
+            return _notificaionesDatos.ObtenerNoLeidos(usuarioId);
         }
 
         public void MarcarComoLeidos(int usuarioId)
         {
-            _botDatos.MarcarTodosComoLeidos(usuarioId);
+            _notificaionesDatos.MarcarTodosComoLeidos(usuarioId);
         }
     }
 }

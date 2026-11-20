@@ -6,17 +6,17 @@ using UniMarket.Logica;
 
 namespace UniMarket.Presentacion
 {
-    public partial class FrmBot : Form
+    public partial class FrmNotificaciones : Form
     {
         private readonly int _usuarioId;
-        private readonly BotService _botService = new BotService();
+        private readonly NotificacionesService _botService = new NotificacionesService();
 
-        public FrmBot()
+        public FrmNotificaciones()
         {
             InitializeComponent();
         }
 
-        public FrmBot(int usuarioId) : this()
+        public FrmNotificaciones(int usuarioId) : this()
         {
             _usuarioId = usuarioId;
         }
@@ -57,7 +57,7 @@ namespace UniMarket.Presentacion
                 {
                     flpMensajes.Controls.Add(new Label
                     {
-                        Text = "🤖 ¡Hola! Soy Trueque Bot. Aquí te avisaré cuando recibas ofertas o respondan tus solicitudes.",
+                        Text = "¡Hola! Aquí te avisaremos cuando recibas ofertas o respondan tus solicitudes.",
                         AutoSize = false,
                         Width = Math.Max(280, flpMensajes.ClientSize.Width - 55),
                         Height = 70,
@@ -77,11 +77,11 @@ namespace UniMarket.Presentacion
             catch (Exception ex)
             {
                 MessageBox.Show("No se pudieron cargar las notificaciones: " + ex.Message,
-                    "Trueque Bot", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    "Notificaciones", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        private Panel CrearBurbujaMensaje(MensajeBot msg)
+        private Panel CrearBurbujaMensaje(MensajeNotificaciones msg)
         {
             Color colorBorde = Color.FromArgb(124, 77, 255);
             if (msg.Tipo == "OFERTA_ACEPTADA") colorBorde = Color.FromArgb(46, 204, 113);
@@ -110,7 +110,7 @@ namespace UniMarket.Presentacion
 
             card.Controls.Add(new Label
             {
-                Text = $"🤖 {msg.Titulo}   •   {msg.Fecha:dd/MM/yyyy HH:mm}",
+                Text = $" {msg.Titulo}   •   {msg.Fecha:dd/MM/yyyy HH:mm}",
                 Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(46, 26, 94),
                 Location = new Point(16, 10),

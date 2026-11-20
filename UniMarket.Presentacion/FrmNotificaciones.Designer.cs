@@ -1,6 +1,6 @@
 ﻿namespace UniMarket.Presentacion
 {
-    partial class FrmBot
+    partial class FrmNotificaciones
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -49,7 +49,7 @@
             this.btnActualizar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnActualizar.ForeColor = System.Drawing.Color.White;
             this.btnActualizar.Location = new System.Drawing.Point(843, 18);
-            this.btnActualizar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnActualizar.Margin = new System.Windows.Forms.Padding(4);
             this.btnActualizar.Name = "btnActualizar";
             this.btnActualizar.Size = new System.Drawing.Size(128, 43);
             this.btnActualizar.TabIndex = 2;
@@ -65,14 +65,14 @@
             this.lblTituloBot.Location = new System.Drawing.Point(96, 26);
             this.lblTituloBot.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTituloBot.Name = "lblTituloBot";
-            this.lblTituloBot.Size = new System.Drawing.Size(394, 28);
+            this.lblTituloBot.Size = new System.Drawing.Size(247, 28);
             this.lblTituloBot.TabIndex = 1;
-            this.lblTituloBot.Text = "Trueque Bot — Centro de Notificaciones";
+            this.lblTituloBot.Text = "Centro de Notificaciones";
             // 
             // pbAvatarBot
             // 
             this.pbAvatarBot.Location = new System.Drawing.Point(20, 12);
-            this.pbAvatarBot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pbAvatarBot.Margin = new System.Windows.Forms.Padding(4);
             this.pbAvatarBot.Name = "pbAvatarBot";
             this.pbAvatarBot.Size = new System.Drawing.Size(60, 55);
             this.pbAvatarBot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -94,7 +94,7 @@
             this.flpMensajes.WrapContents = false;
             this.flpMensajes.SizeChanged += new System.EventHandler(this.flpMensajes_SizeChanged);
             // 
-            // FrmBot
+            // FrmNotificaciones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -104,7 +104,7 @@
             this.Controls.Add(this.panelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "FrmBot";
+            this.Name = "FrmNotificaciones";
             this.Text = "Trueque Bot";
             this.Load += new System.EventHandler(this.FrmBot_Load);
             this.panelHeader.ResumeLayout(false);

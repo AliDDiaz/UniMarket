@@ -17,7 +17,7 @@ namespace UniMarket.Presentacion
         private readonly PublicacionService _service;
         private readonly Usuario _usuario;
         private Form formularioActivo = null;
-        private readonly BotService _botService = new BotService();
+        private readonly NotificacionesService _botService = new NotificacionesService();
         private int _ultimoIdNotificado = 0;
 
 
@@ -213,7 +213,7 @@ namespace UniMarket.Presentacion
 
         private void btnBot_Click_1(object sender, EventArgs e)
         {
-            AbrirFormularioEnPanel(new FrmBot(_usuario.Id));
+            AbrirFormularioEnPanel(new FrmNotificaciones(_usuario.Id));
             lblBadgeBot.Visible = false;
         }
 

@@ -137,6 +137,7 @@
             // 
             // btnGuardar
             // 
+            this.btnGuardar.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnGuardar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.btnGuardar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnGuardar.FlatAppearance.BorderSize = 0;
@@ -233,12 +234,14 @@
             // btnSubirFoto
             // 
             this.btnSubirFoto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.btnSubirFoto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnSubirFoto.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSubirFoto.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnSubirFoto.FlatAppearance.BorderSize = 0;
             this.btnSubirFoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSubirFoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubirFoto.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnSubirFoto.Location = new System.Drawing.Point(313, 164);
+            this.btnSubirFoto.Location = new System.Drawing.Point(304, 175);
             this.btnSubirFoto.Name = "btnSubirFoto";
             this.btnSubirFoto.Size = new System.Drawing.Size(118, 40);
             this.btnSubirFoto.TabIndex = 19;

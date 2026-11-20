@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal2));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnBot = new System.Windows.Forms.Button();
             this.btnSalir = new System.Windows.Forms.Button();
             this.btnMycuenta = new System.Windows.Forms.Button();
             this.btnHistorial = new System.Windows.Forms.Button();
@@ -43,6 +45,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelContenedor = new System.Windows.Forms.Panel();
+            this.timerBot = new System.Windows.Forms.Timer(this.components);
+            this.notifyIconBot = new System.Windows.Forms.NotifyIcon(this.components);
+            this.lblBadgeBot = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -51,6 +56,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Indigo;
+            this.panel1.Controls.Add(this.lblBadgeBot);
+            this.panel1.Controls.Add(this.btnBot);
             this.panel1.Controls.Add(this.btnSalir);
             this.panel1.Controls.Add(this.btnMycuenta);
             this.panel1.Controls.Add(this.btnHistorial);
@@ -63,6 +70,21 @@
             this.panel1.Size = new System.Drawing.Size(204, 669);
             this.panel1.TabIndex = 0;
             // 
+            // btnBot
+            // 
+            this.btnBot.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnBot.FlatAppearance.BorderSize = 0;
+            this.btnBot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBot.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBot.ForeColor = System.Drawing.Color.White;
+            this.btnBot.Location = new System.Drawing.Point(3, 372);
+            this.btnBot.Name = "btnBot";
+            this.btnBot.Size = new System.Drawing.Size(201, 54);
+            this.btnBot.TabIndex = 6;
+            this.btnBot.Text = "TRUEQUE BOT";
+            this.btnBot.UseVisualStyleBackColor = true;
+            this.btnBot.Click += new System.EventHandler(this.btnBot_Click_1);
+            // 
             // btnSalir
             // 
             this.btnSalir.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -70,7 +92,7 @@
             this.btnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSalir.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalir.ForeColor = System.Drawing.Color.White;
-            this.btnSalir.Location = new System.Drawing.Point(3, 360);
+            this.btnSalir.Location = new System.Drawing.Point(0, 432);
             this.btnSalir.Name = "btnSalir";
             this.btnSalir.Size = new System.Drawing.Size(201, 54);
             this.btnSalir.TabIndex = 5;
@@ -178,6 +200,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(826, 112);
             this.panel2.TabIndex = 1;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // label3
             // 
@@ -249,6 +272,31 @@
             this.panelContenedor.TabIndex = 0;
             this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
+            // timerBot
+            // 
+            this.timerBot.Enabled = true;
+            this.timerBot.Interval = 8000;
+            this.timerBot.Tick += new System.EventHandler(this.timerBot_Tick);
+            // 
+            // notifyIconBot
+            // 
+            this.notifyIconBot.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIconBot.Icon")));
+            this.notifyIconBot.Text = "notifyIcon1";
+            this.notifyIconBot.Visible = true;
+            // 
+            // lblBadgeBot
+            // 
+            this.lblBadgeBot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.lblBadgeBot.Font = new System.Drawing.Font("Segoe UI Light", 8.5F);
+            this.lblBadgeBot.ForeColor = System.Drawing.Color.White;
+            this.lblBadgeBot.Location = new System.Drawing.Point(168, 372);
+            this.lblBadgeBot.Name = "lblBadgeBot";
+            this.lblBadgeBot.Size = new System.Drawing.Size(22, 22);
+            this.lblBadgeBot.TabIndex = 7;
+            this.lblBadgeBot.Text = "1";
+            this.lblBadgeBot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBadgeBot.Visible = false;
+            // 
             // FrmPrincipal2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -259,6 +307,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "FrmPrincipal2";
             this.Text = "UniMarket";
+            this.Load += new System.EventHandler(this.FrmPrincipal2_Load_1);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -284,5 +333,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Panel panelContenedor;
+        private System.Windows.Forms.Timer timerBot;
+        private System.Windows.Forms.NotifyIcon notifyIconBot;
+        private System.Windows.Forms.Button btnBot;
+        private System.Windows.Forms.Label lblBadgeBot;
     }
 }

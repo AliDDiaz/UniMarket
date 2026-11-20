@@ -8,15 +8,16 @@ namespace UniMarket.Logica
 {
     public class SolicitudService
     {
-
         private readonly ISolicitudCompraRepository _solicitudes;
         private readonly IPublicacionRepository _publicaciones;
+        private readonly BotService _bot;
 
         public SolicitudService(ISolicitudCompraRepository solicitudes,
                                 IPublicacionRepository publicaciones)
         {
             _solicitudes = solicitudes;
             _publicaciones = publicaciones;
+            _bot = new BotService();
         }
 
         // Constructor de conveniencia
@@ -25,7 +26,7 @@ namespace UniMarket.Logica
                    new PublicacionRepository(new PublicacionDAO()))
         { }
 
-        public int Solicitar(int publicacionId, int compradorId, int cantidad)
+        public int Solicitar(int publicacionId, int compradorId, int cantidad, string nombreComprador = "Un usuario")
         {
             if (compradorId <= 0)
                 throw new Exception("Debes iniciar sesión para solicitar una compra.");
@@ -57,12 +58,25 @@ namespace UniMarket.Logica
                 Cantidad = cantidad
             };
 
-            return _solicitudes.Add(solicitud);
+            int nuevaSolicitudId = _solicitudes.Add(solicitud);
+
+            decimal totalOferta = publicacion.Precio * cantidad;
+
+            _bot.NotificarNuevaOferta(
+                vendedorId: publicacion.VendedorId,
+                nombreComprador: nombreComprador,
+                tituloProducto: publicacion.Titulo,
+                cantidad: cantidad,
+                totalOferta: totalOferta,
+                solicitudId: nuevaSolicitudId
+            );
+
+            return nuevaSolicitudId;
         }
 
         public void Aceptar(int solicitudId, int usuarioId)
         {
-            ObtenerPendienteDelVendedor(solicitudId, usuarioId, out Publicacion publicacion);
+            var solicitud = ObtenerPendienteDelVendedor(solicitudId, usuarioId, out Publicacion publicacion);
 
             if (!publicacion.Activo)
                 throw new Exception("La publicación ya no está disponible.");
@@ -70,14 +84,28 @@ namespace UniMarket.Logica
             if (!_solicitudes.Accept(solicitudId))
                 throw new Exception(
                     "No se pudo aceptar: la solicitud ya fue atendida o ya no hay unidades suficientes.");
+
+            _bot.NotificarRespuestaOferta(
+                compradorId: solicitud.CompradorId,
+                tituloProducto: publicacion.Titulo,
+                aceptada: true,
+                solicitudId: solicitudId
+            );
         }
 
         public void Rechazar(int solicitudId, int usuarioId)
         {
-            ObtenerPendienteDelVendedor(solicitudId, usuarioId, out _);
+            var solicitud = ObtenerPendienteDelVendedor(solicitudId, usuarioId, out Publicacion publicacion);
 
             if (!_solicitudes.Reject(solicitudId))
                 throw new Exception("No se pudo rechazar: la solicitud ya fue atendida.");
+
+            _bot.NotificarRespuestaOferta(
+                compradorId: solicitud.CompradorId,
+                tituloProducto: publicacion.Titulo,
+                aceptada: false,
+                solicitudId: solicitudId
+            );
         }
 
         public List<SolicitudDetalle> ObtenerRecibidas(int vendedorId)

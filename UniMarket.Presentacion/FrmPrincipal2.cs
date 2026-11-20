@@ -12,11 +12,14 @@ using UniMarket.Logica;
 
 namespace UniMarket.Presentacion
 {
-    public partial class FrmPrincipal2 : Form
+    public partial class    FrmPrincipal2 : Form
     {
         private readonly PublicacionService _service;
         private readonly Usuario _usuario;
         private Form formularioActivo = null;
+        private readonly BotService _botService = new BotService();
+        private int _ultimoIdNotificado = 0;
+
 
         public FrmPrincipal2(Usuario usuario)
         {
@@ -160,6 +163,69 @@ namespace UniMarket.Presentacion
         {
             btnSalir.BackColor = Color.Indigo;
             btnSalir.ForeColor = Color.White;
+        }
+
+
+
+
+        private void timerBot_Tick(object sender, EventArgs e)
+        {
+            RevisarNotificacionesBot();
+        }
+
+        private void RevisarNotificacionesBot()
+        {
+            try
+            {
+                var noLeidos = _botService.RevisarNuevosMensajes(_usuario.Id);
+
+                if (noLeidos.Count > 0)
+                {
+                    lblBadgeBot.Text = noLeidos.Count.ToString();
+                    lblBadgeBot.Visible = true;
+
+                    var ultimo = noLeidos[noLeidos.Count - 1];
+                    if (ultimo.Id > _ultimoIdNotificado)
+                    {
+                        _ultimoIdNotificado = ultimo.Id;
+                        notifyIconBot.ShowBalloonTip(
+                            4500,
+                            $"Trueque Bot - {ultimo.Titulo}",
+                            ultimo.Mensaje,
+                            ToolTipIcon.Info
+                        );
+                    }
+                }
+                else
+                {
+                    lblBadgeBot.Visible = false;
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnBot_Click_1(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new FrmBot(_usuario.Id));
+            lblBadgeBot.Visible = false;
+        }
+
+        private void FrmPrincipal2_Load_1(object sender, EventArgs e)
+        {
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddEllipse(0, 0, lblBadgeBot.Width, lblBadgeBot.Height);
+            lblBadgeBot.Region = new Region(path);
+            lblBadgeBot.BringToFront();
+
+            RevisarNotificacionesBot();
+            timerBot.Start();
         }
     }
 }

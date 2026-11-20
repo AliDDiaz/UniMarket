@@ -12,7 +12,7 @@ using UniMarket.Logica;
 
 namespace UniMarket.Presentacion
 {
-    public partial class FrmPrincipal2 : Form
+    public partial class    FrmPrincipal2 : Form
     {
         private readonly PublicacionService _service;
         private readonly Usuario _usuario;

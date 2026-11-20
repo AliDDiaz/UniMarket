@@ -33,8 +33,8 @@
             this.btnSalir = new System.Windows.Forms.Button();
             this.btnMycuenta = new System.Windows.Forms.Button();
             this.btnHistorial = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnPublicar = new System.Windows.Forms.Button();
+            this.btnInicio = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
@@ -54,8 +54,8 @@
             this.panel1.Controls.Add(this.btnSalir);
             this.panel1.Controls.Add(this.btnMycuenta);
             this.panel1.Controls.Add(this.btnHistorial);
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnPublicar);
+            this.panel1.Controls.Add(this.btnInicio);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -77,8 +77,6 @@
             this.btnSalir.Text = "CERRAR SESIÓN";
             this.btnSalir.UseVisualStyleBackColor = true;
             this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
-            this.btnSalir.MouseEnter += new System.EventHandler(this.btnSalir_MouseEnter_1);
-            this.btnSalir.MouseLeave += new System.EventHandler(this.btnSalir_MouseLeave_1);
             // 
             // btnMycuenta
             // 
@@ -95,8 +93,7 @@
             this.btnMycuenta.TabIndex = 4;
             this.btnMycuenta.Text = "    MI CUENTA";
             this.btnMycuenta.UseVisualStyleBackColor = true;
-            this.btnMycuenta.MouseEnter += new System.EventHandler(this.btnMycuenta_MouseEnter);
-            this.btnMycuenta.MouseLeave += new System.EventHandler(this.btnMycuenta_MouseLeave);
+            this.btnMycuenta.Click += new System.EventHandler(this.btnMycuenta_Click);
             // 
             // btnHistorial
             // 
@@ -113,47 +110,41 @@
             this.btnHistorial.TabIndex = 2;
             this.btnHistorial.Text = "    HISTORIAL DE COMPRAS";
             this.btnHistorial.UseVisualStyleBackColor = true;
-            this.btnHistorial.MouseEnter += new System.EventHandler(this.btnHistorial_MouseEnter);
-            this.btnHistorial.MouseLeave += new System.EventHandler(this.btnHistorial_MouseLeave);
             // 
-            // button2
+            // btnPublicar
             // 
-            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(3, 145);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(208, 54);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "    PUBLICAR";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            this.button2.MouseEnter += new System.EventHandler(this.button2_MouseEnter_1);
-            this.button2.MouseLeave += new System.EventHandler(this.button2_MouseLeave_1);
+            this.btnPublicar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPublicar.FlatAppearance.BorderSize = 0;
+            this.btnPublicar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPublicar.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPublicar.ForeColor = System.Drawing.Color.White;
+            this.btnPublicar.Image = ((System.Drawing.Image)(resources.GetObject("btnPublicar.Image")));
+            this.btnPublicar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPublicar.Location = new System.Drawing.Point(3, 145);
+            this.btnPublicar.Name = "btnPublicar";
+            this.btnPublicar.Size = new System.Drawing.Size(208, 54);
+            this.btnPublicar.TabIndex = 2;
+            this.btnPublicar.Text = "    PUBLICAR";
+            this.btnPublicar.UseVisualStyleBackColor = true;
+            this.btnPublicar.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button1
+            // btnInicio
             // 
-            this.button1.BackColor = System.Drawing.Color.Indigo;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 85);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(211, 54);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "INICIO";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            this.button1.MouseEnter += new System.EventHandler(this.button1_MouseEnter_1);
-            this.button1.MouseLeave += new System.EventHandler(this.button1_MouseLeave_1);
+            this.btnInicio.BackColor = System.Drawing.Color.Indigo;
+            this.btnInicio.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnInicio.FlatAppearance.BorderSize = 0;
+            this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInicio.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInicio.ForeColor = System.Drawing.Color.White;
+            this.btnInicio.Image = ((System.Drawing.Image)(resources.GetObject("btnInicio.Image")));
+            this.btnInicio.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnInicio.Location = new System.Drawing.Point(0, 85);
+            this.btnInicio.Name = "btnInicio";
+            this.btnInicio.Size = new System.Drawing.Size(211, 54);
+            this.btnInicio.TabIndex = 1;
+            this.btnInicio.Text = "INICIO";
+            this.btnInicio.UseVisualStyleBackColor = false;
+            this.btnInicio.Click += new System.EventHandler(this.button1_Click);
             // 
             // label1
             // 
@@ -214,7 +205,6 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "---------";
             this.label4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label2
             // 
@@ -247,7 +237,6 @@
             this.panelContenedor.Name = "panelContenedor";
             this.panelContenedor.Size = new System.Drawing.Size(801, 571);
             this.panelContenedor.TabIndex = 0;
-            this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
             // FrmPrincipal2
             // 
@@ -271,9 +260,9 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnInicio;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnPublicar;
         private System.Windows.Forms.Button btnSalir;
         private System.Windows.Forms.Button btnMycuenta;
         private System.Windows.Forms.Button btnHistorial;

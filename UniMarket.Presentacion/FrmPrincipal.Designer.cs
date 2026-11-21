@@ -156,18 +156,19 @@
             // 
             this.botAyuda1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.botAyuda1.BackColor = System.Drawing.Color.Transparent;
-            this.botAyuda1.Location = new System.Drawing.Point(722, 447);
+            this.botAyuda1.Location = new System.Drawing.Point(764, 447);
             this.botAyuda1.Name = "botAyuda1";
             this.botAyuda1.Size = new System.Drawing.Size(64, 64);
             this.botAyuda1.TabIndex = 15;
             this.botAyuda1.Text = "botAyuda1";
+            this.botAyuda1.Titulo = "Engel 🦝 - Asistente Trueque";
             // 
             // FrmPrincipal
             // 
             this.AcceptButton = this.btnBuscar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(877, 532);
+            this.ClientSize = new System.Drawing.Size(919, 532);
             this.Controls.Add(this.botAyuda1);
             this.Controls.Add(this.flpCatalogo);
             this.Controls.Add(this.btnSolicitudes);

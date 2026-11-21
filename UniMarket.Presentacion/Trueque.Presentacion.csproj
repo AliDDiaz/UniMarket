@@ -95,6 +95,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmCarrito.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmCarrito.Designer.cs">
+      <DependentUpon>FrmCarrito.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmNotificaciones.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +151,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmCarrito.resx">
+      <DependentUpon>FrmCarrito.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmNotificaciones.resx">
       <DependentUpon>FrmNotificaciones.cs</DependentUpon>
     </EmbeddedResource>

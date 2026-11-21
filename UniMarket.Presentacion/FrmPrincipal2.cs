@@ -21,6 +21,7 @@ namespace UniMarket.Presentacion
         private int _ultimoIdNotificado = 0;
 
 
+
         public FrmPrincipal2(Usuario usuario)
         {
             InitializeComponent();
@@ -226,6 +227,18 @@ namespace UniMarket.Presentacion
 
             RevisarNotificacionesBot();
             timerBot.Start();
+            CarritoService.OnCarritoActualizado += ActualizarBotonCarrito;
+            ActualizarBotonCarrito();
         }
+        private void ActualizarBotonCarrito()
+        {
+            int total = CarritoService.TotalUnidades;
+        }
+
+        private void btnCarrito_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new FrmCarrito(_usuario));
+        }
+
     }
 }

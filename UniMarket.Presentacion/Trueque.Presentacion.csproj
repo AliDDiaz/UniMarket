@@ -95,11 +95,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmBot.cs">
+    <Compile Include="FrmNotificaciones.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmBot.Designer.cs">
-      <DependentUpon>FrmBot.cs</DependentUpon>
+    <Compile Include="FrmNotificaciones.Designer.cs">
+      <DependentUpon>FrmNotificaciones.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
@@ -145,8 +145,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmBot.resx">
-      <DependentUpon>FrmBot.cs</DependentUpon>
+    <EmbeddedResource Include="FrmNotificaciones.resx">
+      <DependentUpon>FrmNotificaciones.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>

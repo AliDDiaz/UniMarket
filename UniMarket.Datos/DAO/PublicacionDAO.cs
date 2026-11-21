@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Npgsql;
+using NpgsqlTypes;
 using UniMarket.Entidades;
 
 namespace UniMarket.Datos.DAO
@@ -8,12 +9,12 @@ namespace UniMarket.Datos.DAO
     public class PublicacionDAO : IPublicacionDAO
     {
         private const string Columnas =
-            "id, vendedor_id, titulo, descripcion, precio, stock, activo";
+            "id, vendedor_id, titulo, descripcion, precio, stock, activo, imagen";
 
         private readonly Conexion _conexion;
 
         public PublicacionDAO()
-        { 
+        {
             _conexion = new Conexion();
         }
 
@@ -124,8 +125,8 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"INSERT INTO publicaciones (vendedor_id, titulo, descripcion, precio, stock)
-                                   VALUES (@VendedorId, @Titulo, @Descripcion, @Precio, @Stock)
+                    string sql = @"INSERT INTO publicaciones (vendedor_id, titulo, descripcion, precio, stock, imagen)
+                                   VALUES (@VendedorId, @Titulo, @Descripcion, @Precio, @Stock, @Imagen)
                                    RETURNING id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -150,7 +151,7 @@ namespace UniMarket.Datos.DAO
                 {
                     string sql = @"UPDATE publicaciones
                                    SET titulo = @Titulo, descripcion = @Descripcion,
-                                       precio = @Precio, stock = @Stock
+                                       precio = @Precio, stock = @Stock, imagen = @Imagen
                                    WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -198,7 +199,10 @@ namespace UniMarket.Datos.DAO
                             : r["descripcion"].ToString(),
             Precio = Convert.ToDecimal(r["precio"]),
             Stock = Convert.ToInt32(r["stock"]),
-            Activo = Convert.ToBoolean(r["activo"])
+            Activo = Convert.ToBoolean(r["activo"]),
+            Imagen = r.IsDBNull(r.GetOrdinal("imagen"))
+                            ? null
+                            : (byte[])r["imagen"]
         };
 
         private void AgregarParams(NpgsqlCommand cmd, Publicacion publicacion)
@@ -207,6 +211,10 @@ namespace UniMarket.Datos.DAO
             cmd.Parameters.AddWithValue("@Descripcion", (object)publicacion.Descripcion ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Precio", publicacion.Precio);
             cmd.Parameters.AddWithValue("@Stock", publicacion.Stock);
+
+            var paramImagen = new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea);
+            paramImagen.Value = (object)publicacion.Imagen ?? DBNull.Value;
+            cmd.Parameters.Add(paramImagen);
         }
     }
 }

@@ -6,18 +6,18 @@ using UniMarket.Entidades;
 
 namespace UniMarket.Datos
 {
-    public class BotDatos
+    public class NotificacionesDatos
     {
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["UniMarketDB"].ConnectionString;
 
         // 1. Guardar un nuevo mensaje del bot
-        public void InsertarMensaje(MensajeBot msg)
+        public void InsertarMensaje(MensajeNotificaciones msg)
         {
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
-                string sql = @"INSERT INTO mensajes_bot (usuario_id, titulo, mensaje, tipo, solicitud_id, leido)
+                string sql = @"INSERT INTO mensajes_notificaciones (usuario_id, titulo, mensaje, tipo, solicitud_id, leido)
                                VALUES (@usuarioId, @titulo, @mensaje, @tipo, @solicitudId, FALSE);";
 
                 using (var cmd = new NpgsqlCommand(sql, conn))
@@ -33,15 +33,15 @@ namespace UniMarket.Datos
         }
 
         // 2. Obtener todos los mensajes de un usuario (para FrmBot)
-        public List<MensajeBot> ObtenerMensajesPorUsuario(int usuarioId)
+        public List<MensajeNotificaciones> ObtenerMensajesPorUsuario(int usuarioId)
         {
-            var lista = new List<MensajeBot>();
+            var lista = new List<MensajeNotificaciones>();
 
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 string sql = @"SELECT id, usuario_id, titulo, mensaje, tipo, solicitud_id, leido, fecha
-                               FROM mensajes_bot
+                               FROM mensajes_notificaciones
                                WHERE usuario_id = @usuarioId
                                ORDER BY fecha DESC;";
 
@@ -52,7 +52,7 @@ namespace UniMarket.Datos
                     {
                         while (reader.Read())
                         {
-                            lista.Add(new MensajeBot
+                            lista.Add(new MensajeNotificaciones
                             {
                                 Id = reader.GetInt32(0),
                                 UsuarioId = reader.GetInt32(1),
@@ -71,15 +71,15 @@ namespace UniMarket.Datos
         }
 
         // 3. Traer solo los mensajes NO leídos (para el Timer de FrmPrincipal2)
-        public List<MensajeBot> ObtenerNoLeidos(int usuarioId)
+        public List<MensajeNotificaciones> ObtenerNoLeidos(int usuarioId)
         {
-            var lista = new List<MensajeBot>();
+            var lista = new List<MensajeNotificaciones>();
 
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
                 string sql = @"SELECT id, usuario_id, titulo, mensaje, tipo, solicitud_id, leido, fecha
-                               FROM mensajes_bot
+                               FROM mensajes_notificaciones
                                WHERE usuario_id = @usuarioId AND leido = FALSE
                                ORDER BY fecha ASC;";
 
@@ -90,7 +90,7 @@ namespace UniMarket.Datos
                     {
                         while (reader.Read())
                         {
-                            lista.Add(new MensajeBot
+                            lista.Add(new MensajeNotificaciones
                             {
                                 Id = reader.GetInt32(0),
                                 UsuarioId = reader.GetInt32(1),
@@ -114,7 +114,7 @@ namespace UniMarket.Datos
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 conn.Open();
-                string sql = "UPDATE mensajes_bot SET leido = TRUE WHERE usuario_id = @usuarioId AND leido = FALSE;";
+                string sql = "UPDATE mensajes_notificaciones SET leido = TRUE WHERE usuario_id = @usuarioId AND leido = FALSE;";
 
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {

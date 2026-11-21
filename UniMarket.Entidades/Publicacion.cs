@@ -16,6 +16,7 @@ namespace UniMarket.Entidades
         public decimal Precio { get; set; }
         public int Stock { get; set; }
         public bool Activo { get; set; }
+        public byte[] Imagen { get; set; }
 
         public bool PerteneceA(int usuarioId) => VendedorId == usuarioId;
 

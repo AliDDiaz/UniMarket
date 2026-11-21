@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UniMarket.Entidades
 {
-    public class MensajeBot
+    public class MensajeNotificaciones
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }

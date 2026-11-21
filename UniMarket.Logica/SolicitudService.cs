@@ -10,14 +10,14 @@ namespace UniMarket.Logica
     {
         private readonly ISolicitudCompraRepository _solicitudes;
         private readonly IPublicacionRepository _publicaciones;
-        private readonly BotService _bot;
+        private readonly NotificacionesService _notificaciones;
 
         public SolicitudService(ISolicitudCompraRepository solicitudes,
                                 IPublicacionRepository publicaciones)
         {
             _solicitudes = solicitudes;
             _publicaciones = publicaciones;
-            _bot = new BotService();
+            _notificaciones = new NotificacionesService();
         }
 
         // Constructor de conveniencia
@@ -62,7 +62,7 @@ namespace UniMarket.Logica
 
             decimal totalOferta = publicacion.Precio * cantidad;
 
-            _bot.NotificarNuevaOferta(
+            _notificaciones.NotificarNuevaOferta(
                 vendedorId: publicacion.VendedorId,
                 nombreComprador: nombreComprador,
                 tituloProducto: publicacion.Titulo,
@@ -85,7 +85,7 @@ namespace UniMarket.Logica
                 throw new Exception(
                     "No se pudo aceptar: la solicitud ya fue atendida o ya no hay unidades suficientes.");
 
-            _bot.NotificarRespuestaOferta(
+            _notificaciones.NotificarRespuestaOferta(
                 compradorId: solicitud.CompradorId,
                 tituloProducto: publicacion.Titulo,
                 aceptada: true,
@@ -100,7 +100,7 @@ namespace UniMarket.Logica
             if (!_solicitudes.Reject(solicitudId))
                 throw new Exception("No se pudo rechazar: la solicitud ya fue atendida.");
 
-            _bot.NotificarRespuestaOferta(
+            _notificaciones.NotificarRespuestaOferta(
                 compradorId: solicitud.CompradorId,
                 tituloProducto: publicacion.Titulo,
                 aceptada: false,

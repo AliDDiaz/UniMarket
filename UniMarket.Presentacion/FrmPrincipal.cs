@@ -13,10 +13,11 @@ namespace UniMarket.Presentacion
         private readonly PublicacionService _service;
         private readonly Usuario _usuario;
         private Publicacion _publicacionSeleccionada;
-
+        private BotAyuda botAyuda = new BotAyuda();
         public FrmPrincipal(Usuario usuario)
         {
             InitializeComponent();
+            this.Controls.Add(botAyuda);
             _service = new PublicacionService();
             _usuario = usuario;
 
@@ -263,6 +264,13 @@ namespace UniMarket.Presentacion
                 ctrl.BackColor = Color.White;
 
             tarjetaElegida.BackColor = Color.FromArgb(237, 231, 255);
+        }
+
+        
+
+        private void picEngel_Click_1(object sender, EventArgs e)
+        {
+            botAyuda.Alternar();
         }
     }
 }

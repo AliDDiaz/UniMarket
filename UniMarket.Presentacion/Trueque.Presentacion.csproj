@@ -95,9 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotAyuda.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Bot.cs" />
     <Compile Include="FrmCarrito.cs">
       <SubType>Form</SubType>
     </Compile>

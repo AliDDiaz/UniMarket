@@ -39,8 +39,9 @@
             this.btnSolicitudes = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flpCatalogo = new System.Windows.Forms.FlowLayoutPanel();
-            this.botAyuda1 = new UniMarket.Presentacion.BotAyuda();
+            this.picEngel = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picEngel)).BeginInit();
             this.SuspendLayout();
             // 
             // lblUsuario
@@ -124,7 +125,7 @@
             // 
             this.btnSolicitudes.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSolicitudes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnSolicitudes.Location = new System.Drawing.Point(588, 465);
+            this.btnSolicitudes.Location = new System.Drawing.Point(548, 447);
             this.btnSolicitudes.Name = "btnSolicitudes";
             this.btnSolicitudes.Size = new System.Drawing.Size(93, 46);
             this.btnSolicitudes.TabIndex = 10;
@@ -152,16 +153,18 @@
             this.flpCatalogo.Size = new System.Drawing.Size(741, 273);
             this.flpCatalogo.TabIndex = 14;
             // 
-            // botAyuda1
+            // picEngel
             // 
-            this.botAyuda1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.botAyuda1.BackColor = System.Drawing.Color.Transparent;
-            this.botAyuda1.Location = new System.Drawing.Point(733, 447);
-            this.botAyuda1.Name = "botAyuda1";
-            this.botAyuda1.Size = new System.Drawing.Size(64, 64);
-            this.botAyuda1.TabIndex = 15;
-            this.botAyuda1.Text = "botAyuda1";
-            this.botAyuda1.Titulo = "Engel 🦝 - Asistente Trueque";
+            this.picEngel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(196)))), ((int)(((byte)(245)))));
+            this.picEngel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picEngel.Image = ((System.Drawing.Image)(resources.GetObject("picEngel.Image")));
+            this.picEngel.Location = new System.Drawing.Point(705, 433);
+            this.picEngel.Name = "picEngel";
+            this.picEngel.Size = new System.Drawing.Size(81, 78);
+            this.picEngel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picEngel.TabIndex = 16;
+            this.picEngel.TabStop = false;
+            this.picEngel.Click += new System.EventHandler(this.picEngel_Click_1);
             // 
             // FrmPrincipal
             // 
@@ -169,7 +172,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(889, 532);
-            this.Controls.Add(this.botAyuda1);
+            this.Controls.Add(this.picEngel);
             this.Controls.Add(this.flpCatalogo);
             this.Controls.Add(this.btnSolicitudes);
             this.Controls.Add(this.chkMisPublicaciones);
@@ -184,6 +187,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "UniMarket";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picEngel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -201,6 +205,6 @@
         private System.Windows.Forms.Button btnSolicitudes;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FlowLayoutPanel flpCatalogo;
-        private BotAyuda botAyuda1;
+        private System.Windows.Forms.PictureBox picEngel;
     }
 }

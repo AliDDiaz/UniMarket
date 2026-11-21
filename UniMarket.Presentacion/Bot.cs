@@ -14,6 +14,7 @@ using System.Windows.Forms;
 namespace UniMarket.Presentacion
 {
   
+    [DesignerCategory("Code")]
     public class BotAyuda : Control
     {
        
@@ -29,7 +30,6 @@ namespace UniMarket.Presentacion
         private const int MaxTextoBurbuja = 235;
 
          
-        private readonly BotonFlotante _fab;
         private readonly Panel _ventana;
         private readonly Panel _cabecera;
         private readonly Label _lblTitulo;
@@ -71,8 +71,6 @@ namespace UniMarket.Presentacion
             CargarBase();
 
              
-            _fab = new BotonFlotante { Dock = DockStyle.Fill };
-            _fab.Click += (s, e) => Abrir();
              
             _ventana = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Visible = false };
             _ventana.SizeChanged += (s, e) => RedondearVentana();
@@ -174,7 +172,7 @@ namespace UniMarket.Presentacion
             _ventana.Controls.Add(_cabecera);
 
             Controls.Add(_ventana);
-            Controls.Add(_fab);
+            Visible = false;
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -184,23 +182,23 @@ namespace UniMarket.Presentacion
         }
 
          
-        private void Abrir()
+        public void Abrir()
         {
             if (_abierto) return;
             _abierto = true;
-
-            int der = Right;
-            int inf = Bottom;
 
             int alto = AltoAbierto;
             if (Parent != null)
                 alto = Math.Max(380, Math.Min(AltoAbierto, Parent.ClientSize.Height - 10));
 
             Size = new Size(AnchoAbierto, alto);
-            Location = new Point(Math.Max(0, der - AnchoAbierto), Math.Max(0, inf - alto));
+            if (Parent != null)
+                Location = new Point(
+                    Math.Max(0, Parent.ClientSize.Width - Width - 12),
+                    Math.Max(0, Parent.ClientSize.Height - Height - 12));
 
-            _fab.Visible = false;
             _ventana.Visible = true;
+            Visible = true;
             BringToFront();
 
             if (_mensajes.Controls.Count == 0)
@@ -209,18 +207,17 @@ namespace UniMarket.Presentacion
             _txt.Focus();
         }
 
-        private void Cerrar()
+        public void Cerrar()
         {
             if (!_abierto) return;
             _abierto = false;
+            Visible = false;
+        }
 
-            int der = Right;
-            int inf = Bottom;
-
-            _ventana.Visible = false;
-            _fab.Visible = true;
-            Size = new Size(Tam, Tam);
-            Location = new Point(der - Tam, inf - Tam);
+        public void Alternar()
+        {
+            if (_abierto) Cerrar();
+            else Abrir();
         }
 
         private void RedondearVentana()
@@ -249,28 +246,23 @@ namespace UniMarket.Presentacion
             if (texto.Length == 0) return;
 
             AgregarMensaje(texto, false);
-            Control escribiendo = AgregarMensaje("Escribiendo\u2026", true);
+            Control escribiendo = AgregarMensaje("Escribiendo....", true);
 
             string respuesta;
             try
             {
-                Entrada hallada = BuscarEntrada(texto);
+                
 
-                if (hallada != null)
+                if (AsistenteIA.Configurado)
                 {
-                    // Pregunta conocida: respuesta fija, sin internet
-                    await Task.Delay(650);
-                    respuesta = hallada.Respuesta;
-                }
-                else if (AsistenteIA.Configurado)
-                {
-                    // No la conocemos: se la preguntamos a la IA
                     respuesta = await AsistenteIA.PreguntarAsync(texto);
                 }
                 else
                 {
-                    await Task.Delay(650);
-                    respuesta = MensajeNoEntendi;
+                    Entrada hallada = BuscarEntrada(texto);
+                    respuesta = hallada != null
+                        ? hallada.Respuesta
+                        : MensajeNoEntendi;
                 }
             }
             catch (Exception)
@@ -349,62 +341,62 @@ namespace UniMarket.Presentacion
 
         private void CargarBase()
         {
-             
-            Agregar("\u00bfC\u00f3mo publico un producto?",
-                "Pulsa \u00abPUBLICAR\u00bb en el men\u00fa de la izquierda. Escribe el t\u00edtulo, el precio y las unidades disponibles " +
-                "(puedes agregar una descripci\u00f3n y una foto) y pulsa \u00abGuardar\u00bb. Tu producto aparece en Inicio para los dem\u00e1s.",
-                true, "publicar", "publico", "vender", "vendo", "subir");
 
-            Agregar("\u00bfC\u00f3mo compro un producto?",
-                "En Inicio pulsa \u00abAgregar al carrito\u00bb en el producto que quieras. Luego abre el carrito (el \u00edcono arriba a la derecha), " +
+            Agregar("¿Cómo publico un producto?",
+        "Pulsa «PUBLICAR» en el menú de la izquierda. Escribe el título, el precio y las unidades disponibles " +
+        "(puedes agregar una descripción y una foto) y pulsa «Guardar». Tu producto aparece en Inicio para los demás.",
+        true, "publicar", "publico", "vender", "vendo", "subir");
+
+            Agregar("¿Cómo compro un producto?",
+                "En Inicio pulsa «Agregar al carrito» en el producto que quieras. Luego abre el carrito (el ícono arriba a la derecha), " +
                 "ajusta las cantidades y confirma la compra.",
                 true, "comprar", "compro", "carrito", "agregar", "adquirir", "pedir");
 
-            Agregar("\u00bfQu\u00e9 pasa al confirmar la compra?",
-                "Se env\u00eda una solicitud a cada vendedor y ellos reciben una notificaci\u00f3n. Tu solicitud queda \u00abPendiente\u00bb " +
-                "hasta que el vendedor la acepte o la rechace. Puedes ver el estado en \u00abHISTORIAL DE COMPRAS\u00bb.",
+            Agregar("¿Qué pasa al confirmar la compra?",
+                "Se envía una solicitud a cada vendedor y ellos reciben una notificación. Tu solicitud queda «Pendiente» " +
+                "hasta que el vendedor la acepte o la rechace. Puedes ver el estado en «HISTORIAL DE COMPRAS».",
                 true, "confirmar", "confirmo", "solicitud", "pendiente", "despues");
 
-            Agregar("\u00bfC\u00f3mo acepto o rechazo una solicitud?",
-                "Cuando alguien te pide un producto te llega una notificaci\u00f3n. Entra a \u00abHISTORIAL DE COMPRAS\u00bb, elige la solicitud " +
-                "pendiente y pulsa \u00abAceptar\u00bb o \u00abRechazar\u00bb. Al aceptar se descuentan las unidades del stock.",
+            Agregar("¿Cómo acepto o rechazo una solicitud?",
+                "Cuando alguien te pide un producto te llega una notificación. Entra a «HISTORIAL DE COMPRAS», elige la solicitud " +
+                "pendiente y pulsa «Aceptar» o «Rechazar». Al aceptar se descuentan las unidades del stock.",
                 true, "aceptar", "acepto", "rechazar", "rechazo");
 
-            Agregar("\u00bfQu\u00e9 hace la campana?",
+            Agregar("¿Qué hace la campana?",
                 "La campana de arriba te avisa cuando alguien te hace una solicitud o cuando atienden la tuya. " +
-                "El n\u00famero rojo indica cu\u00e1ntas notificaciones tienes sin leer.",
+                "El número rojo indica cuántas notificaciones tienes sin leer.",
                 true, "campana", "notificacion", "aviso", "avisa");
 
-            Agregar("\u00bfQu\u00e9 l\u00edmites hay al publicar?",
-                "El t\u00edtulo admite hasta 120 caracteres y la descripci\u00f3n hasta 500. El precio debe ser mayor a cero " +
+            Agregar("¿Qué límites hay al publicar?",
+                "El título admite hasta 120 caracteres y la descripción hasta 500. El precio debe ser mayor a cero " +
                 "y tienes que publicar con al menos 1 unidad.",
                 true, "limite", "maximo", "caracteres", "cuantos", "minimo");
 
-             
-            Agregar("\u00bfPuedo comprar mis propios productos?",
-                "No. En tu propia publicaci\u00f3n el bot\u00f3n aparece desactivado (\u00abTu publicaci\u00f3n\u00bb).",
+            Agregar("¿Puedo comprar mis propios productos?",
+                "No. En tu propia publicación el botón aparece desactivado («Tu publicación»).",
                 false, "propia", "propio", "mi publicacion");
 
-            Agregar("\u00bfPor qu\u00e9 no puedo pedir m\u00e1s unidades?",
-                "No puedes pedir m\u00e1s unidades de las que hay disponibles. El carrito te avisa cu\u00e1ntas quedan.",
+            Agregar("¿Por qué no puedo pedir más unidades?",
+                "No puedes pedir más unidades de las que hay disponibles. El carrito te avisa cuántas quedan.",
                 false, "stock", "mas unidades", "agotado", "disponible");
 
-            Agregar("\u00bfC\u00f3mo veo mis compras?",
-                "\u00abHISTORIAL DE COMPRAS\u00bb muestra las solicitudes que enviaste y las que recibiste, con su estado: Pendiente, Aceptada o Rechazada.",
+            Agregar("¿Cómo veo mis compras?",
+                "«HISTORIAL DE COMPRAS» muestra las solicitudes que enviaste y las que recibiste, con su estado: Pendiente, Aceptada o Rechazada.",
                 false, "historial", "mis compras", "estado", "ver compras");
 
-            Agregar("\u00bfC\u00f3mo contacto al vendedor?",
-                "En \u00abHISTORIAL DE COMPRAS\u00bb aparece la informaci\u00f3n de contacto de la otra persona para ponerse de acuerdo en la entrega.",
+            Agregar("¿Cómo contacto al vendedor?",
+                "En «HISTORIAL DE COMPRAS» aparece la información de contacto de la otra persona para ponerse de acuerdo en la entrega.",
                 false, "contacto", "contactar", "telefono", "comunicar");
 
-            Agregar("\u00bfC\u00f3mo cierro sesi\u00f3n?",
-                "Pulsa \u00abCERRAR SESI\u00d3N\u00bb al final del men\u00fa de la izquierda y confirma.",
+            Agregar("¿Cómo cierro sesión?",
+                "Pulsa «CERRAR SESIÓN» al final del menú de la izquierda y confirma.",
                 false, "cerrar sesion", "salir", "cerrar la sesion");
         }
 
         private const string MensajeNoEntendi =
-            "No encontr\u00e9 una respuesta para eso. Prueba con una de las preguntas sugeridas " +
-            "o escr\u00edbela de otra forma, por ejemplo: \u00abc\u00f3mo publico\u00bb o \u00abc\u00f3mo compro\u00bb.";
+               "¡Ups! 🦝 No pude responder tu pregunta en este momento. " +
+    "Puedes intentar nuevamente o elegir una de las preguntas sugeridas. "
+;
 
         private Entrada BuscarEntrada(string texto)
         {
@@ -508,71 +500,7 @@ namespace UniMarket.Presentacion
             }
         }
          
-        private class BotonFlotante : Control
-        {
-            private bool _hover;
 
-            public BotonFlotante()
-            {
-                SetStyle(ControlStyles.SupportsTransparentBackColor |
-                         ControlStyles.OptimizedDoubleBuffer |
-                         ControlStyles.ResizeRedraw, true);
-                BackColor = Color.Transparent;
-                Cursor = Cursors.Hand;
-            }
-
-            protected override void OnMouseEnter(EventArgs e)
-            {
-                _hover = true;
-                Invalidate();
-                base.OnMouseEnter(e);
-            }
-
-            protected override void OnMouseLeave(EventArgs e)
-            {
-                _hover = false;
-                Invalidate();
-                base.OnMouseLeave(e);
-            }
-
-            protected override void OnPaint(PaintEventArgs e)
-            {
-                base.OnPaint(e);
-
-                var g = e.Graphics;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                var circulo = new Rectangle(2, 2, Width - 6, Height - 6);
-
-                // sombra suave
-                using (var sombra = new SolidBrush(Color.FromArgb(45, 30, 10, 80)))
-                    g.FillEllipse(sombra, circulo.X, circulo.Y + 3, circulo.Width, circulo.Height);
-
-                using (var relleno = new SolidBrush(_hover ? MoradoClaro : Morado))
-                    g.FillEllipse(relleno, circulo);
-
-                // icono: globo de dialogo con tres puntos
-                var cuerpo = new Rectangle(circulo.X + circulo.Width / 2 - 14, circulo.Y + circulo.Height / 2 - 12, 28, 20);
-                using (var blanco = new SolidBrush(Color.White))
-                {
-                    using (var path = RedondeadoPath(cuerpo, 6))
-                        g.FillPath(blanco, path);
-
-                    g.FillPolygon(blanco, new[]
-                    {
-                        new Point(cuerpo.X + 6, cuerpo.Bottom - 2),
-                        new Point(cuerpo.X + 6, cuerpo.Bottom + 7),
-                        new Point(cuerpo.X + 15, cuerpo.Bottom - 2)
-                    });
-                }
-
-                using (var punto = new SolidBrush(Morado))
-                {
-                    for (int i = 0; i < 3; i++)
-                        g.FillEllipse(punto, cuerpo.X + 6 + i * 7, cuerpo.Y + 8, 4, 4);
-                }
-            }
-        }
     }
 
      
@@ -586,11 +514,14 @@ namespace UniMarket.Presentacion
             "Tu nombre es Engel y tu identidad es la de un mapache amigable que ayuda a los estudiantes. " +
             "Cuando te pregunten quién eres o cómo te llamas, responde: Soy Engel, el mapache, asistente virtual oficial de Trueque. " +
             "Preséntate siempre en español. " +
-            "Nunca utilices la palabra raccoon; utiliza únicamente mapache. " +
             "Trueque es una aplicación de escritorio dirigida a estudiantes universitarios, " +
             "donde pueden publicar productos, comprar artículos de otros estudiantes y gestionar sus publicaciones. " +
+            "NUNCA UTILICES LA PALABRA RACCOON " +
+
+
 
             "REGLAS DE COMPORTAMIENTO: " +
+             "NUNCA UTILICES LA PALABRA RACCOON " +
             "Responde siempre en español, de manera amable, clara y sencilla. " +
             "Utiliza un lenguaje cercano, natural y fácil de entender. " +
             "Puedes utilizar ocasionalmente un emoji de mapache para representar tu identidad. " +
@@ -709,7 +640,7 @@ namespace UniMarket.Presentacion
                     if (ganadora != tarea)
                     {
                         wc.CancelAsync();
-                        return "Tard\u00e9 demasiado en responder. Intenta de nuevo en un momento.";
+                        return "Tardo demasiado en responder. Intenta de nuevo en un momento.";
                     }
 
                     string cuerpo = await tarea;
@@ -727,31 +658,38 @@ namespace UniMarket.Presentacion
             }
             catch (Exception)
             {
-                return "No pude conectarme con el asistente. Revisa tu conexi\u00f3n a internet.";
+                return "No pude conectarme con el asistente. Revisa tu conexion a internet.";
             }
         }
+
 
         private static string MensajeError(int codigo)
         {
             switch (codigo)
             {
                 case 0:
-                    return "No pude conectarme con el asistente. Revisa tu conexi\u00f3n a internet.";
+                    return "¡Ups! 🦝 No pude conectarme con el servicio de inteligencia artificial. Revisa tu conexión a internet e inténtalo nuevamente.";
+
                 case 400:
-                    return "Error 400: revisa la clave de API y el modelo configurados (tambi\u00e9n puede que tu pa\u00eds no tenga capa gratuita).";
+                    return "¡Ups! 🦝 Tuve un problema al procesar tu pregunta. Inténtalo nuevamente. Si el problema continúa, es necesario revisar mi configuración.";
+
                 case 403:
-                    return "Error 403: la clave de API no tiene permiso. Rev\u00edsala en Google AI Studio.";
+                    return "¡Lo siento! 🦝 No tengo permiso para acceder al servicio de inteligencia artificial en este momento.";
+
                 case 404:
-                    return "Error 404: el modelo configurado no existe. Cambia la variable GEMINI_MODEL por uno vigente.";
+                    return "¡Ups! 🦝 El modelo de inteligencia artificial que utilizo no está disponible. Es necesario revisar mi configuración.";
+
                 case 429:
-                    return "Se alcanz\u00f3 el l\u00edmite de consultas gratuitas. Espera un minuto e int\u00e9ntalo de nuevo.";
-                case 500:
+                    return "¡He recibido muchas solicitudes! 🦝 Espera un momento y vuelve a intentarlo.";
+
                 case 503:
-                    return "El servicio de IA est\u00e1 saturado. Intenta de nuevo en un momento.";
+                    return "¡Ups! 🦝 Mi servicio de inteligencia artificial está teniendo problemas temporales. Inténtalo nuevamente más tarde.";
+
                 default:
-                    return "El servicio de IA respondi\u00f3 con el error " + codigo + ".";
+                    return "¡Ups! 🦝 Ocurrió un problema al responder tu pregunta. Código de error: " + codigo + ".";
             }
         }
+
 
         private static string Escapar(string s)
         {

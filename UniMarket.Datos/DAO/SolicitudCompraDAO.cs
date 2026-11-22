@@ -17,14 +17,15 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"INSERT INTO solicitudes_compra (publicacion_id, comprador_id, cantidad)
-                                   VALUES (@PublicacionId, @CompradorId, @Cantidad)
+                    string sql = @"INSERT INTO solicitudes_compra (publicacion_id, comprador_id, cantidad, precio_unitario)
+                                   VALUES (@PublicacionId, @CompradorId, @Cantidad, @PrecioUnitario)
                                    RETURNING id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@PublicacionId", s.PublicacionId);
                         cmd.Parameters.AddWithValue("@CompradorId", s.CompradorId);
                         cmd.Parameters.AddWithValue("@Cantidad", s.Cantidad);
+                        cmd.Parameters.AddWithValue("@PrecioUnitario", s.PrecioUnitario);
                         con.Open();
                         return Convert.ToInt32(cmd.ExecuteScalar());
                     }
@@ -42,7 +43,7 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"SELECT id, publicacion_id, comprador_id, cantidad, estado, fecha
+                    string sql = @"SELECT id, publicacion_id, comprador_id, cantidad, precio_unitario, estado, fecha
                                    FROM solicitudes_compra WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -170,7 +171,7 @@ namespace UniMarket.Datos.DAO
 
         public List<SolicitudDetalle> ObtenerRecibidas(int vendedorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, p.precio,
+            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario,
                           s.estado, s.fecha,
                           c.nombre AS contraparte,
                           NULL::varchar AS telefono
@@ -185,7 +186,7 @@ namespace UniMarket.Datos.DAO
 
         public List<SolicitudDetalle> ObtenerEnviadas(int compradorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, p.precio,
+            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario,
                           s.estado, s.fecha,
                           CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
                           CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
@@ -225,7 +226,7 @@ namespace UniMarket.Datos.DAO
             PublicacionId = Convert.ToInt32(r["publicacion_id"]),
             Titulo = r["titulo"].ToString(),
             Cantidad = Convert.ToInt32(r["cantidad"]),
-            PrecioUnitario = Convert.ToDecimal(r["precio"]),
+            PrecioUnitario = Convert.ToDecimal(r["precio_unitario"]),
             Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime(),
             NombreContraparte = TextoONulo(r, "contraparte"),
@@ -244,6 +245,7 @@ namespace UniMarket.Datos.DAO
             PublicacionId = Convert.ToInt32(r["publicacion_id"]),
             CompradorId = Convert.ToInt32(r["comprador_id"]),
             Cantidad = Convert.ToInt32(r["cantidad"]),
+            PrecioUnitario = Convert.ToDecimal(r["precio_unitario"]),
             Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime()
         };

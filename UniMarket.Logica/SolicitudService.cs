@@ -64,7 +64,8 @@ namespace UniMarket.Logica
             {
                 PublicacionId = publicacionId,
                 CompradorId = compradorId,
-                Cantidad = cantidad
+                Cantidad = cantidad,
+                PrecioUnitario = publicacion.Precio
             };
 
             int nuevaSolicitudId = _solicitudes.Add(solicitud);

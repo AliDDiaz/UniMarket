@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using UniMarket.Entidades;
 using UniMarket.Logica;
@@ -16,6 +18,7 @@ namespace UniMarket.Presentacion
         private readonly NotificacionesService _botService = new NotificacionesService();
         private Form formularioActivo = null;
         private int _ultimoIdNotificado = 0;
+        private bool _revisandoNotificaciones = false;
 
         public FrmPrincipal2(Usuario usuario)
         {
@@ -64,14 +67,14 @@ namespace UniMarket.Presentacion
             formularioHijo.Show();
         }
 
-        private void FrmPrincipal2_Load_1(object sender, EventArgs e)
+        private async void FrmPrincipal2_Load_1(object sender, EventArgs e)
         {
             // Contadores (campana y carrito) con forma circular
             HacerCircular(lblBadgeBot);
             HacerCircular(lblBadgeCarrito);
 
-            RevisarNotificacionesBot();
             timerBot.Start();
+            await RevisarNotificacionesBotAsync();
 
             CarritoService.OnCarritoActualizado += ActualizarBotonCarrito;
             ActualizarBotonCarrito();
@@ -87,6 +90,7 @@ namespace UniMarket.Presentacion
 
         private void FrmPrincipal2_FormClosed(object sender, FormClosedEventArgs e)
         {
+            timerBot.Stop();
             // El carrito es estático: se limpia para que no pase al siguiente usuario
             CarritoService.OnCarritoActualizado -= ActualizarBotonCarrito;
             CarritoService.Vaciar();
@@ -141,16 +145,25 @@ namespace UniMarket.Presentacion
             lblBadgeBot.Visible = false;
         }
 
-        private void timerBot_Tick(object sender, EventArgs e)
+        private async void timerBot_Tick(object sender, EventArgs e)
         {
-            RevisarNotificacionesBot();
+            await RevisarNotificacionesBotAsync();
         }
 
-        private void RevisarNotificacionesBot()
+        private async Task RevisarNotificacionesBotAsync()
         {
+            if (_revisandoNotificaciones) return;   // ya hay una consulta en curso
+            _revisandoNotificaciones = true;
+
             try
             {
-                var noLeidos = _botService.RevisarNuevosMensajes(_usuario.Id);
+                int usuarioId = _usuario.Id;
+
+                // La consulta a la base de datos corre en otro hilo
+                var noLeidos = await Task.Run(() => _botService.RevisarNuevosMensajes(usuarioId));
+
+                // De aquí en adelante estamos de vuelta en el hilo de la interfaz
+                if (IsDisposed) return;   // el usuario pudo cerrar la ventana mientras esperaba
 
                 if (noLeidos.Count > 0)
                 {
@@ -174,12 +187,15 @@ namespace UniMarket.Presentacion
                     lblBadgeBot.Visible = false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Se ignoran los errores de red para no interrumpir al usuario
+                Debug.WriteLine($"[Notificaciones] No se pudo revisar: {ex.Message}");
+            }
+            finally
+            {
+                _revisandoNotificaciones = false;
             }
         }
-
         private void btnMycuenta_Click(object sender, EventArgs e)
         {
             AbrirFormularioEnPanel(new FrmMiCuenta(_usuario));

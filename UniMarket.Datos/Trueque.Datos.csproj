@@ -92,7 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="DAO\NotificacionesDatos.cs" />
+    <Compile Include="DAO\INotificacionesDAO.cs" />
+    <Compile Include="DAO\NotificacionesDAO.cs" />
     <Compile Include="DAO\Conexion.cs" />
     <Compile Include="DAO\IPublicacionDAO.cs" />
     <Compile Include="DAO\ISolicitudCompraDAO.cs" />
@@ -101,9 +102,11 @@
     <Compile Include="DAO\SolicitudCompraDAO.cs" />
     <Compile Include="DAO\UsuarioDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\INotificacionesRepository.cs" />
     <Compile Include="Repository\ISolicitudCompraRepository.cs" />
     <Compile Include="Repository\IPublicacionRepository.cs" />
     <Compile Include="Repository\IUsuarioRepository.cs" />
+    <Compile Include="Repository\NotificacionesRepository.cs" />
     <Compile Include="Repository\PublicacionRepository.cs" />
     <Compile Include="Repository\SolicitudCompraRepository.cs" />
     <Compile Include="Repository\UsuarioRepository.cs" />

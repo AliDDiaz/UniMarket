@@ -148,7 +148,7 @@ namespace UniMarket.Presentacion
                     Cursor = Cursors.Hand
                 };
 
-                card.Click += (s, e) => SeleccionarTarjeta(card, pub);
+                card.Click += (s, e) => VerDetalleProducto(card, pub);
 
                 // 2. Foto del producto arriba
                 PictureBox pic = new PictureBox
@@ -163,7 +163,7 @@ namespace UniMarket.Presentacion
                     using (var ms = new MemoryStream(pub.Imagen))
                         pic.Image = Image.FromStream(ms);
                 }
-                pic.Click += (s, e) => SeleccionarTarjeta(card, pub);
+                pic.Click += (s, e) => VerDetalleProducto(card, pub);
 
                 // 3. Título del producto
                 Label lblTitulo = new Label
@@ -175,7 +175,7 @@ namespace UniMarket.Presentacion
                     Size = new Size(196, 22),
                     AutoEllipsis = true
                 };
-                lblTitulo.Click += (s, e) => SeleccionarTarjeta(card, pub);
+                lblTitulo.Click += (s, e) => VerDetalleProducto(card, pub);
 
                 // 4. Precio grande en morado
                 Label lblPrecio = new Label
@@ -186,7 +186,7 @@ namespace UniMarket.Presentacion
                     Location = new Point(12, 174),
                     AutoSize = true
                 };
-                lblPrecio.Click += (s, e) => SeleccionarTarjeta(card, pub);
+                lblPrecio.Click += (s, e) => VerDetalleProducto(card, pub);
 
                 // 5. Botón morado "Agregar al carrito"
                 Button btnAgregar = new Button
@@ -255,8 +255,17 @@ namespace UniMarket.Presentacion
 
             tarjetaElegida.BackColor = Color.FromArgb(237, 231, 255);
         }
+        private void VerDetalleProducto(Panel tarjeta, Publicacion pub)
+        {
+            SeleccionarTarjeta(tarjeta, pub);
 
-        
+            using (var detalle = new FrmDetalleProducto(pub))
+            {
+                detalle.ShowDialog(this);
+            }
+        }
+
+
 
         private void picEngel_Click_1(object sender, EventArgs e)
         {

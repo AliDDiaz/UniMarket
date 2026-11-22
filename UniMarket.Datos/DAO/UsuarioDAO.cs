@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NpgsqlTypes;
 using UniMarket.Entidades;
 
 namespace UniMarket.Datos.DAO
 {
     public class UsuarioDAO : IUsuarioDAO
     {
-
+        private const string Columnas = "id, nombre, correo, telefono, contrasena, rol, activo, fecha_registro, foto";
         private readonly Conexion _conexion;
 
         public UsuarioDAO()
@@ -59,7 +60,7 @@ namespace UniMarket.Datos.DAO
                 using (var con = _conexion.ObtenerConexion())
                 {
 
-                    string sql = "UDPATE usuarios SET activo = FALSE WHERE id = @Id";
+                    string sql = "UPDATE usuarios SET activo = FALSE WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
@@ -112,7 +113,7 @@ namespace UniMarket.Datos.DAO
                 using(var con = _conexion.ObtenerConexion())
                 {
 
-                    string sql = @"SELECT id, nombre, correo, telefono, contrasena, rol, activo FROM usuarios WHERE correo = @Correo";
+                    string sql = $@"SELECT {Columnas} FROM usuarios WHERE correo = @Correo";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Correo", correo);
@@ -144,7 +145,7 @@ namespace UniMarket.Datos.DAO
                using (var con = _conexion.ObtenerConexion())
                 {
 
-                    string sql = @"SELECT id, nombre, correo, telefono, contrasena, rol, activo FROM usuarios WHERE id = @Id";
+                    string sql = $@"SELECT {Columnas} FROM usuarios WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
 
@@ -179,8 +180,7 @@ namespace UniMarket.Datos.DAO
                 using(var con = _conexion.ObtenerConexion())
                 {
 
-                    string sql = @"SELECT id, nombre, correo, telefono, contrasena, rol, activo FROM usuarios";
-
+                    string sql = $@"SELECT {Columnas} FROM usuarios";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         con.Open();
@@ -201,6 +201,150 @@ namespace UniMarket.Datos.DAO
             return lista;
         }
 
+        public void ActualizarPerfil(Usuario usuario)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    string sql = @"UPDATE usuarios
+                           SET correo = @Correo, telefono = @Telefono, foto = @Foto
+                           WHERE id = @Id";
+                    using (var cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", usuario.Id);
+                        cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                        cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
+
+                        var paramFoto = new NpgsqlParameter("@Foto", NpgsqlDbType.Bytea);
+                        paramFoto.Value = (object)usuario.Foto ?? DBNull.Value;
+                        cmd.Parameters.Add(paramFoto);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al actualizar el perfil: {ex.Message}", ex);
+            }
+        }
+
+        public void ActualizarContrasena(int id, string contrasenaHash)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    string sql = "UPDATE usuarios SET contrasena = @Contrasena WHERE id = @Id";
+                    using (var cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@Contrasena", contrasenaHash);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al cambiar la contraseña: {ex.Message}", ex);
+            }
+        }
+
+        public int ContarPublicaciones(int usuarioId)
+        {
+            string sql = "SELECT COUNT(*) FROM publicaciones WHERE vendedor_id = @Id AND activo = TRUE";
+            return ContarPorUsuario(sql, usuarioId, "las publicaciones");
+        }
+
+        public int ContarCompras(int usuarioId)
+        {
+            string sql = "SELECT COUNT(*) FROM solicitudes_compra WHERE comprador_id = @Id AND estado = 'Aceptada'";
+            return ContarPorUsuario(sql, usuarioId, "las compras");
+        }
+
+        private int ContarPorUsuario(string sql, int usuarioId, string queCuenta)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                using (var cmd = new NpgsqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@Id", usuarioId);
+                    con.Open();
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al contar {queCuenta}: {ex.Message}", ex);
+            }
+        }
+
+        public void DesactivarCuenta(int usuarioId)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            // 1. Rechazar solicitudes pendientes (como comprador o como vendedor)
+                            string sqlSolicitudes = @"UPDATE solicitudes_compra
+                                              SET estado = 'Rechazada'
+                                              WHERE estado = 'Pendiente'
+                                                AND (comprador_id = @Id
+                                                     OR publicacion_id IN
+                                                        (SELECT id FROM publicaciones
+                                                         WHERE vendedor_id = @Id))";
+                            using (var cmd = new NpgsqlCommand(sqlSolicitudes, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 2. Desactivar sus publicaciones
+                            string sqlPublicaciones = @"UPDATE publicaciones
+                                                SET activo = false
+                                                WHERE vendedor_id = @Id";
+                            using (var cmd = new NpgsqlCommand(sqlPublicaciones, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 3. Desactivar la cuenta
+                            string sqlUsuario = @"UPDATE usuarios
+                                          SET activo = false
+                                          WHERE id = @Id AND activo = true";
+                            using (var cmd = new NpgsqlCommand(sqlUsuario, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                if (cmd.ExecuteNonQuery() != 1)
+                                    throw new Exception("La cuenta no existe o ya estaba desactivada.");
+                            }
+
+                            tx.Commit();
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al desactivar la cuenta: {ex.Message}", ex);
+            }
+        }
+
         private Usuario Mapear(NpgsqlDataReader r) => new Usuario
         {
 
@@ -210,7 +354,9 @@ namespace UniMarket.Datos.DAO
             Telefono = r["telefono"].ToString(),
             Contrasena = r["contrasena"].ToString(),
             Rol = (RolUsuario)Enum.Parse(typeof(RolUsuario), r["rol"].ToString()),
-            Activo = Convert.ToBoolean(r["activo"])
+            Activo = Convert.ToBoolean(r["activo"]),
+            FechaRegistro = Convert.ToDateTime(r["fecha_registro"]).ToLocalTime(),
+            Foto = r.IsDBNull(r.GetOrdinal("foto")) ? null : (byte[])r["foto"]
 
         };
 

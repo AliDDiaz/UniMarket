@@ -16,5 +16,7 @@ namespace UniMarket.Entidades
         public string Contrasena { get; set; }
         public RolUsuario Rol { get; set; }
         public bool Activo { get; set; }
+        public DateTime FechaRegistro { get; set; }
+        public byte[] Foto { get; set; }
     }
 }

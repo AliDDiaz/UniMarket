@@ -31,15 +31,17 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal2));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblBadgeBot = new System.Windows.Forms.Label();
-            this.btnBot = new System.Windows.Forms.Button();
             this.btnSalir = new System.Windows.Forms.Button();
             this.btnMycuenta = new System.Windows.Forms.Button();
             this.btnHistorial = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.lblBadgeBot = new System.Windows.Forms.Label();
+            this.btnBot = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lblBadgeCarrito = new System.Windows.Forms.Label();
+            this.btnCarrito = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,7 +50,6 @@
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.timerBot = new System.Windows.Forms.Timer(this.components);
             this.notifyIconBot = new System.Windows.Forms.NotifyIcon(this.components);
-            this.btnCarrito = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -66,8 +67,103 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(204, 669);
+            this.panel1.Size = new System.Drawing.Size(204, 687);
             this.panel1.TabIndex = 0;
+            // 
+            // btnSalir
+            // 
+            this.btnSalir.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSalir.FlatAppearance.BorderSize = 0;
+            this.btnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSalir.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSalir.ForeColor = System.Drawing.Color.White;
+            this.btnSalir.Location = new System.Drawing.Point(3, 360);
+            this.btnSalir.Name = "btnSalir";
+            this.btnSalir.Size = new System.Drawing.Size(201, 54);
+            this.btnSalir.TabIndex = 5;
+            this.btnSalir.Text = "CERRAR SESIÓN";
+            this.btnSalir.UseVisualStyleBackColor = true;
+            this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
+            // 
+            // btnMycuenta
+            // 
+            this.btnMycuenta.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnMycuenta.FlatAppearance.BorderSize = 0;
+            this.btnMycuenta.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMycuenta.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMycuenta.ForeColor = System.Drawing.Color.White;
+            this.btnMycuenta.Image = ((System.Drawing.Image)(resources.GetObject("btnMycuenta.Image")));
+            this.btnMycuenta.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMycuenta.Location = new System.Drawing.Point(3, 300);
+            this.btnMycuenta.Name = "btnMycuenta";
+            this.btnMycuenta.Size = new System.Drawing.Size(208, 54);
+            this.btnMycuenta.TabIndex = 4;
+            this.btnMycuenta.Text = "    MI CUENTA";
+            this.btnMycuenta.UseVisualStyleBackColor = true;
+            this.btnMycuenta.Click += new System.EventHandler(this.btnMycuenta_Click);
+            // 
+            // btnHistorial
+            // 
+            this.btnHistorial.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHistorial.FlatAppearance.BorderSize = 0;
+            this.btnHistorial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHistorial.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHistorial.ForeColor = System.Drawing.Color.White;
+            this.btnHistorial.Image = ((System.Drawing.Image)(resources.GetObject("btnHistorial.Image")));
+            this.btnHistorial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHistorial.Location = new System.Drawing.Point(-3, 217);
+            this.btnHistorial.Name = "btnHistorial";
+            this.btnHistorial.Size = new System.Drawing.Size(213, 65);
+            this.btnHistorial.TabIndex = 2;
+            this.btnHistorial.Text = "    MIS SOLICITUDES";
+            this.btnHistorial.UseVisualStyleBackColor = true;
+            this.btnHistorial.Click += new System.EventHandler(this.btnHistorial_Click);
+            // 
+            // button2
+            // 
+            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(3, 145);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(208, 54);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "    PUBLICAR";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Indigo;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(0, 85);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(211, 54);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "INICIO";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.Window;
+            this.label1.Location = new System.Drawing.Point(28, 38);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(126, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "LOGO TRUEQUE";
             // 
             // lblBadgeBot
             // 
@@ -97,112 +193,10 @@
             this.btnBot.UseVisualStyleBackColor = true;
             this.btnBot.Click += new System.EventHandler(this.btnBot_Click_1);
             // 
-            // btnSalir
-            // 
-            this.btnSalir.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnSalir.FlatAppearance.BorderSize = 0;
-            this.btnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSalir.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalir.ForeColor = System.Drawing.Color.White;
-            this.btnSalir.Location = new System.Drawing.Point(3, 360);
-            this.btnSalir.Name = "btnSalir";
-            this.btnSalir.Size = new System.Drawing.Size(201, 54);
-            this.btnSalir.TabIndex = 5;
-            this.btnSalir.Text = "CERRAR SESIÓN";
-            this.btnSalir.UseVisualStyleBackColor = true;
-            this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
-            this.btnSalir.MouseEnter += new System.EventHandler(this.btnSalir_MouseEnter_1);
-            this.btnSalir.MouseLeave += new System.EventHandler(this.btnSalir_MouseLeave_1);
-            // 
-            // btnMycuenta
-            // 
-            this.btnMycuenta.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMycuenta.FlatAppearance.BorderSize = 0;
-            this.btnMycuenta.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMycuenta.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnMycuenta.ForeColor = System.Drawing.Color.White;
-            this.btnMycuenta.Image = ((System.Drawing.Image)(resources.GetObject("btnMycuenta.Image")));
-            this.btnMycuenta.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMycuenta.Location = new System.Drawing.Point(3, 300);
-            this.btnMycuenta.Name = "btnMycuenta";
-            this.btnMycuenta.Size = new System.Drawing.Size(208, 54);
-            this.btnMycuenta.TabIndex = 4;
-            this.btnMycuenta.Text = "    MI CUENTA";
-            this.btnMycuenta.UseVisualStyleBackColor = true;
-            this.btnMycuenta.MouseEnter += new System.EventHandler(this.btnMycuenta_MouseEnter);
-            this.btnMycuenta.MouseLeave += new System.EventHandler(this.btnMycuenta_MouseLeave);
-            // 
-            // btnHistorial
-            // 
-            this.btnHistorial.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnHistorial.FlatAppearance.BorderSize = 0;
-            this.btnHistorial.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHistorial.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnHistorial.ForeColor = System.Drawing.Color.White;
-            this.btnHistorial.Image = ((System.Drawing.Image)(resources.GetObject("btnHistorial.Image")));
-            this.btnHistorial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHistorial.Location = new System.Drawing.Point(-3, 217);
-            this.btnHistorial.Name = "btnHistorial";
-            this.btnHistorial.Size = new System.Drawing.Size(213, 65);
-            this.btnHistorial.TabIndex = 2;
-            this.btnHistorial.Text = "    HISTORIAL DE COMPRAS";
-            this.btnHistorial.UseVisualStyleBackColor = true;
-            this.btnHistorial.MouseEnter += new System.EventHandler(this.btnHistorial_MouseEnter);
-            this.btnHistorial.MouseLeave += new System.EventHandler(this.btnHistorial_MouseLeave);
-            // 
-            // button2
-            // 
-            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(3, 145);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(208, 54);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "    PUBLICAR";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            this.button2.MouseEnter += new System.EventHandler(this.button2_MouseEnter_1);
-            this.button2.MouseLeave += new System.EventHandler(this.button2_MouseLeave_1);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Indigo;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 85);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(211, 54);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "INICIO";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            this.button1.MouseEnter += new System.EventHandler(this.button1_MouseEnter_1);
-            this.button1.MouseLeave += new System.EventHandler(this.button1_MouseLeave_1);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.Window;
-            this.label1.Location = new System.Drawing.Point(28, 38);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(126, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "LOGO TRUEQUE";
-            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Indigo;
+            this.panel2.Controls.Add(this.lblBadgeCarrito);
             this.panel2.Controls.Add(this.btnCarrito);
             this.panel2.Controls.Add(this.lblBadgeBot);
             this.panel2.Controls.Add(this.label3);
@@ -213,9 +207,36 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(204, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(826, 112);
+            this.panel2.Size = new System.Drawing.Size(890, 112);
             this.panel2.TabIndex = 1;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            // 
+            // lblBadgeCarrito
+            // 
+            this.lblBadgeCarrito.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.lblBadgeCarrito.Font = new System.Drawing.Font("Segoe UI Light", 8.5F);
+            this.lblBadgeCarrito.ForeColor = System.Drawing.Color.White;
+            this.lblBadgeCarrito.Location = new System.Drawing.Point(758, 31);
+            this.lblBadgeCarrito.Name = "lblBadgeCarrito";
+            this.lblBadgeCarrito.Size = new System.Drawing.Size(22, 22);
+            this.lblBadgeCarrito.TabIndex = 8;
+            this.lblBadgeCarrito.Text = "0";
+            this.lblBadgeCarrito.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBadgeCarrito.Visible = false;
+            // 
+            // btnCarrito
+            // 
+            this.btnCarrito.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCarrito.FlatAppearance.BorderSize = 0;
+            this.btnCarrito.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCarrito.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCarrito.ForeColor = System.Drawing.Color.White;
+            this.btnCarrito.Location = new System.Drawing.Point(729, 33);
+            this.btnCarrito.Name = "btnCarrito";
+            this.btnCarrito.Size = new System.Drawing.Size(51, 51);
+            this.btnCarrito.TabIndex = 7;
+            this.btnCarrito.Text = "🛒";
+            this.btnCarrito.UseVisualStyleBackColor = true;
+            this.btnCarrito.Click += new System.EventHandler(this.btnCarrito_Click);
             // 
             // label3
             // 
@@ -252,7 +273,6 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "---------";
             this.label4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label2
             // 
@@ -275,7 +295,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(204, 112);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(24, 8, 4, 8);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(826, 557);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(890, 575);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // panelContenedor
@@ -283,9 +303,8 @@
             this.panelContenedor.BackColor = System.Drawing.Color.GhostWhite;
             this.panelContenedor.Location = new System.Drawing.Point(27, 11);
             this.panelContenedor.Name = "panelContenedor";
-            this.panelContenedor.Size = new System.Drawing.Size(801, 571);
+            this.panelContenedor.Size = new System.Drawing.Size(863, 564);
             this.panelContenedor.TabIndex = 0;
-            this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
             // timerBot
             // 
@@ -299,25 +318,11 @@
             this.notifyIconBot.Text = "notifyIcon1";
             this.notifyIconBot.Visible = true;
             // 
-            // btnCarrito
-            // 
-            this.btnCarrito.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCarrito.FlatAppearance.BorderSize = 0;
-            this.btnCarrito.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCarrito.Font = new System.Drawing.Font("Segoe UI", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCarrito.ForeColor = System.Drawing.Color.White;
-            this.btnCarrito.Location = new System.Drawing.Point(729, 33);
-            this.btnCarrito.Name = "btnCarrito";
-            this.btnCarrito.Size = new System.Drawing.Size(56, 51);
-            this.btnCarrito.TabIndex = 7;
-            this.btnCarrito.Text = "🛒";
-            this.btnCarrito.UseVisualStyleBackColor = true;
-            // 
             // FrmPrincipal2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1030, 669);
+            this.ClientSize = new System.Drawing.Size(1094, 687);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -354,5 +359,6 @@
         private System.Windows.Forms.Button btnBot;
         private System.Windows.Forms.Label lblBadgeBot;
         private System.Windows.Forms.Button btnCarrito;
+        private System.Windows.Forms.Label lblBadgeCarrito;
     }
 }

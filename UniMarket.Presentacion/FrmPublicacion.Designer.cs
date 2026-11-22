@@ -46,6 +46,7 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.btnSubirFoto = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFoto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -56,10 +57,10 @@
             // lblTitulo
             // 
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.lblTitulo.BackColor = System.Drawing.Color.Transparent;
             this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.lblTitulo.Location = new System.Drawing.Point(245, 253);
+            this.lblTitulo.Location = new System.Drawing.Point(268, 164);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(50, 20);
             this.lblTitulo.TabIndex = 0;
@@ -71,7 +72,7 @@
             this.lblDescripcion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.lblDescripcion.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescripcion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.lblDescripcion.Location = new System.Drawing.Point(530, 137);
+            this.lblDescripcion.Location = new System.Drawing.Point(575, 139);
             this.lblDescripcion.Name = "lblDescripcion";
             this.lblDescripcion.Size = new System.Drawing.Size(165, 20);
             this.lblDescripcion.TabIndex = 1;
@@ -80,10 +81,10 @@
             // lblPrecio
             // 
             this.lblPrecio.AutoSize = true;
-            this.lblPrecio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.lblPrecio.BackColor = System.Drawing.Color.Transparent;
             this.lblPrecio.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrecio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.lblPrecio.Location = new System.Drawing.Point(245, 295);
+            this.lblPrecio.Location = new System.Drawing.Point(266, 216);
             this.lblPrecio.Name = "lblPrecio";
             this.lblPrecio.Size = new System.Drawing.Size(52, 20);
             this.lblPrecio.TabIndex = 2;
@@ -92,10 +93,10 @@
             // lblStock
             // 
             this.lblStock.AutoSize = true;
-            this.lblStock.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.lblStock.BackColor = System.Drawing.Color.Transparent;
             this.lblStock.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStock.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.lblStock.Location = new System.Drawing.Point(245, 336);
+            this.lblStock.Location = new System.Drawing.Point(266, 273);
             this.lblStock.Name = "lblStock";
             this.lblStock.Size = new System.Drawing.Size(157, 20);
             this.lblStock.TabIndex = 3;
@@ -103,10 +104,10 @@
             // 
             // txtTitulo
             // 
-            this.txtTitulo.Location = new System.Drawing.Point(322, 253);
+            this.txtTitulo.Location = new System.Drawing.Point(322, 164);
             this.txtTitulo.MaxLength = 120;
             this.txtTitulo.Name = "txtTitulo";
-            this.txtTitulo.Size = new System.Drawing.Size(100, 22);
+            this.txtTitulo.Size = new System.Drawing.Size(157, 22);
             this.txtTitulo.TabIndex = 4;
             // 
             // txtDescripcion
@@ -118,21 +119,21 @@
             this.txtDescripcion.Multiline = true;
             this.txtDescripcion.Name = "txtDescripcion";
             this.txtDescripcion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDescripcion.Size = new System.Drawing.Size(215, 229);
+            this.txtDescripcion.Size = new System.Drawing.Size(303, 229);
             this.txtDescripcion.TabIndex = 5;
             // 
             // txtPrecio
             // 
-            this.txtPrecio.Location = new System.Drawing.Point(313, 295);
+            this.txtPrecio.Location = new System.Drawing.Point(322, 216);
             this.txtPrecio.Name = "txtPrecio";
-            this.txtPrecio.Size = new System.Drawing.Size(100, 22);
+            this.txtPrecio.Size = new System.Drawing.Size(157, 22);
             this.txtPrecio.TabIndex = 6;
             // 
             // txtStock
             // 
-            this.txtStock.Location = new System.Drawing.Point(408, 336);
+            this.txtStock.Location = new System.Drawing.Point(429, 271);
             this.txtStock.Name = "txtStock";
-            this.txtStock.Size = new System.Drawing.Size(100, 22);
+            this.txtStock.Size = new System.Drawing.Size(50, 22);
             this.txtStock.TabIndex = 7;
             // 
             // btnGuardar
@@ -144,9 +145,9 @@
             this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGuardar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnGuardar.Location = new System.Drawing.Point(287, 412);
+            this.btnGuardar.Location = new System.Drawing.Point(257, 417);
             this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(144, 61);
+            this.btnGuardar.Size = new System.Drawing.Size(92, 46);
             this.btnGuardar.TabIndex = 8;
             this.btnGuardar.Text = "Guardar";
             this.btnGuardar.UseVisualStyleBackColor = false;
@@ -155,9 +156,9 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(-25, -33);
+            this.pictureBox1.Location = new System.Drawing.Point(-25, -66);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(855, 600);
+            this.pictureBox1.Size = new System.Drawing.Size(938, 628);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
@@ -167,11 +168,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 22.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.label1.Location = new System.Drawing.Point(217, 34);
+            this.label1.Location = new System.Drawing.Point(234, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(336, 50);
+            this.label1.Size = new System.Drawing.Size(360, 54);
             this.label1.TabIndex = 11;
             this.label1.Text = "Publicar Producto";
             // 
@@ -181,7 +182,7 @@
             this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.label2.Location = new System.Drawing.Point(178, 98);
+            this.label2.Location = new System.Drawing.Point(212, 94);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(397, 20);
             this.label2.TabIndex = 12;
@@ -191,7 +192,7 @@
             // 
             this.pbFoto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.pbFoto.Image = ((System.Drawing.Image)(resources.GetObject("pbFoto.Image")));
-            this.pbFoto.Location = new System.Drawing.Point(12, 164);
+            this.pbFoto.Location = new System.Drawing.Point(25, 153);
             this.pbFoto.Name = "pbFoto";
             this.pbFoto.Size = new System.Drawing.Size(161, 227);
             this.pbFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -202,7 +203,7 @@
             // 
             this.pictureBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(192, 293);
+            this.pictureBox3.Location = new System.Drawing.Point(226, 214);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(34, 22);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -213,7 +214,7 @@
             // 
             this.pictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(192, 334);
+            this.pictureBox4.Location = new System.Drawing.Point(226, 271);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(34, 22);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -224,7 +225,7 @@
             // 
             this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(192, 253);
+            this.pictureBox5.Location = new System.Drawing.Point(226, 162);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(34, 22);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -241,20 +242,29 @@
             this.btnSubirFoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSubirFoto.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubirFoto.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnSubirFoto.Location = new System.Drawing.Point(304, 175);
+            this.btnSubirFoto.Location = new System.Drawing.Point(25, 386);
             this.btnSubirFoto.Name = "btnSubirFoto";
-            this.btnSubirFoto.Size = new System.Drawing.Size(118, 40);
+            this.btnSubirFoto.Size = new System.Drawing.Size(158, 34);
             this.btnSubirFoto.TabIndex = 19;
             this.btnSubirFoto.Text = "Subir Foto";
             this.btnSubirFoto.UseVisualStyleBackColor = false;
             this.btnSubirFoto.Click += new System.EventHandler(this.btnSubirFoto_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(209, 135);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(622, 265);
+            this.panel1.TabIndex = 20;
             // 
             // FrmPublicacion
             // 
             this.AcceptButton = this.btnGuardar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 540);
+            this.ClientSize = new System.Drawing.Size(881, 518);
             this.Controls.Add(this.btnSubirFoto);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
@@ -271,6 +281,7 @@
             this.Controls.Add(this.lblPrecio);
             this.Controls.Add(this.lblDescripcion);
             this.Controls.Add(this.lblTitulo);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -307,5 +318,6 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.Button btnSubirFoto;
+        private System.Windows.Forms.Panel panel1;
     }
 }

@@ -11,12 +11,13 @@ namespace UniMarket.Presentacion
     public partial class FrmPrincipal : Form
     {
         private readonly PublicacionService _service;
-        private readonly Usuario _usuario;
         private Publicacion _publicacionSeleccionada;
-
+        private readonly Usuario _usuario;
+        private BotAyuda botAyuda = new BotAyuda();
         public FrmPrincipal(Usuario usuario)
         {
             InitializeComponent();
+            this.Controls.Add(botAyuda);
             _service = new PublicacionService();
             _usuario = usuario;
 
@@ -114,16 +115,6 @@ namespace UniMarket.Presentacion
             }
         }
 
-        private void btnSolicitudes_Click(object sender, EventArgs e)
-        {
-            using (var frm = new FrmSolicitudes(_usuario))
-            {
-                frm.ShowDialog();
-            }
-
-            CargarPublicaciones();
-        }
-
         private void AbrirSolicitudCompra(Publicacion pub)
         {
             if (pub.PerteneceA(_usuario.Id))
@@ -197,10 +188,10 @@ namespace UniMarket.Presentacion
                 };
                 lblPrecio.Click += (s, e) => SeleccionarTarjeta(card, pub);
 
-                // 5. Botón morado "Adquirir"
-                Button btnAdquirir = new Button
+                // 5. Botón morado "Agregar al carrito"
+                Button btnAgregar = new Button
                 {
-                    Text = "🛒 Adquirir",
+                    Text = "🛒 Agregar al carrito",
                     Size = new Size(196, 36),
                     Location = new Point(12, 222),
                     BackColor = Color.FromArgb(103, 58, 183),
@@ -209,23 +200,48 @@ namespace UniMarket.Presentacion
                     Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
                     Cursor = Cursors.Hand
                 };
-                btnAdquirir.FlatAppearance.BorderSize = 0;
+                btnAgregar.FlatAppearance.BorderSize = 0;
 
                 if (pub.PerteneceA(_usuario.Id))
                 {
-                    btnAdquirir.Text = "Tu publicación";
-                    btnAdquirir.BackColor = Color.FromArgb(180, 170, 210);
-                    btnAdquirir.Enabled = false;
+                    btnAgregar.Text = "Tu publicación";
+                    btnAgregar.BackColor = Color.FromArgb(180, 170, 210);
+                    btnAgregar.Enabled = false;
                 }
                 else
                 {
-                    btnAdquirir.Click += (s, e) => AbrirSolicitudCompra(pub);
+                    btnAgregar.Click += (s, e) =>
+                    {
+                        try
+                        {
+                            CarritoService.Agregar(pub, 1);
+
+                            // Feedback visual rápido en el mismo botón sin interrumpir con MessageBox
+                            btnAgregar.Text = "✓ Agregado";
+                            btnAgregar.BackColor = Color.FromArgb(46, 204, 113);
+
+                            var t = new Timer { Interval = 1200 };
+                            t.Tick += (ts, te) =>
+                            {
+                                btnAgregar.Text = "🛒 Agregar al carrito";
+                                btnAgregar.BackColor = Color.FromArgb(103, 58, 183);
+                                t.Stop();
+                                t.Dispose();
+                            };
+                            t.Start();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Stock disponible",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    };
                 }
 
                 card.Controls.Add(pic);
                 card.Controls.Add(lblTitulo);
                 card.Controls.Add(lblPrecio);
-                card.Controls.Add(btnAdquirir);
+                card.Controls.Add(btnAgregar);
 
                 flpCatalogo.Controls.Add(card);
             }
@@ -238,6 +254,13 @@ namespace UniMarket.Presentacion
                 ctrl.BackColor = Color.White;
 
             tarjetaElegida.BackColor = Color.FromArgb(237, 231, 255);
+        }
+
+        
+
+        private void picEngel_Click_1(object sender, EventArgs e)
+        {
+            botAyuda.Alternar();
         }
     }
 }

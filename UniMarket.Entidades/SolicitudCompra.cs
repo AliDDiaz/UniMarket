@@ -13,6 +13,7 @@ namespace UniMarket.Entidades
         public int PublicacionId { get; set; }
         public int CompradorId { get; set; }
         public int Cantidad { get; set; }
+        public decimal PrecioUnitario { get; set; }
         public EstadoSolicitud Estado { get; set; }
         public DateTime Fecha { get; set; }
         public bool EstaPendiente => Estado == EstadoSolicitud.Pendiente;

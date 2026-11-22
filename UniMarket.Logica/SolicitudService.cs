@@ -10,23 +10,27 @@ namespace UniMarket.Logica
     {
         private readonly ISolicitudCompraRepository _solicitudes;
         private readonly IPublicacionRepository _publicaciones;
+        private readonly IUsuarioRepository _usuarios;
         private readonly NotificacionesService _notificaciones;
 
         public SolicitudService(ISolicitudCompraRepository solicitudes,
-                                IPublicacionRepository publicaciones)
+                                IPublicacionRepository publicaciones,
+                                IUsuarioRepository usuarios)
         {
             _solicitudes = solicitudes;
             _publicaciones = publicaciones;
+            _usuarios = usuarios;
             _notificaciones = new NotificacionesService();
         }
 
         // Constructor de conveniencia
         public SolicitudService()
             : this(new SolicitudCompraRepository(new SolicitudCompraDAO()),
-                   new PublicacionRepository(new PublicacionDAO()))
+                   new PublicacionRepository(new PublicacionDAO()),
+                   new UsuarioRepository(new UsuarioDAO()))
         { }
 
-        public int Solicitar(int publicacionId, int compradorId, int cantidad, string nombreComprador = "Un usuario")
+        public int Solicitar(int publicacionId, int compradorId, int cantidad)
         {
             if (compradorId <= 0)
                 throw new Exception("Debes iniciar sesión para solicitar una compra.");
@@ -51,11 +55,17 @@ namespace UniMarket.Logica
             if (_solicitudes.HasPending(publicacionId, compradorId))
                 throw new Exception("Ya tienes una solicitud pendiente para esta publicación.");
 
+            var comprador = _usuarios.GetById(compradorId);
+            if(comprador == null)
+            {
+                throw new Exception("No se encontró tu usuario. Inicia sesión de nuevo.");
+            }
             var solicitud = new SolicitudCompra
             {
                 PublicacionId = publicacionId,
                 CompradorId = compradorId,
-                Cantidad = cantidad
+                Cantidad = cantidad,
+                PrecioUnitario = publicacion.Precio
             };
 
             int nuevaSolicitudId = _solicitudes.Add(solicitud);
@@ -64,7 +74,7 @@ namespace UniMarket.Logica
 
             _notificaciones.NotificarNuevaOferta(
                 vendedorId: publicacion.VendedorId,
-                nombreComprador: nombreComprador,
+                nombreComprador: comprador.Nombre,
                 tituloProducto: publicacion.Titulo,
                 cantidad: cantidad,
                 totalOferta: totalOferta,
@@ -72,6 +82,27 @@ namespace UniMarket.Logica
             );
 
             return nuevaSolicitudId;
+        }
+
+        // Envía cada producto del carrito por separado: un fallo no detiene a los demás
+        public ResultadoEnvioCarrito EnviarCarrito(int compradorId, IEnumerable<ItemCarrito> items)
+        {
+            var resultado = new ResultadoEnvioCarrito();
+
+            foreach (var item in items)
+            {
+                try
+                {
+                    Solicitar(item.Producto.Id, compradorId, item.Cantidad);
+                    resultado.Enviados.Add(item.Producto.Id);
+                }
+                catch (Exception ex)
+                {
+                    resultado.Fallidos.Add($"{item.Producto.Titulo}: {ex.Message}");
+                }
+            }
+
+            return resultado;
         }
 
         public void Aceptar(int solicitudId, int usuarioId)
@@ -148,4 +179,11 @@ namespace UniMarket.Logica
             return solicitud;
         }
     }
+
+    public class ResultadoEnvioCarrito
+    {
+        public List<int> Enviados { get; } = new List<int>();     // ids de las publicaciones enviadas
+        public List<string> Fallidos { get; } = new List<string>(); // "Producto: motivo"
+    }
+
 }

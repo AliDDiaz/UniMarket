@@ -16,6 +16,9 @@ namespace UniMarket.Datos.DAO
         int Insertar(Usuario usuario);
         void Actualizar(Usuario usuario);
         void Eliminar(int id);
-
+        void ActualizarPerfil(Usuario usuario);
+        void ActualizarContrasena(int id, string contrasenaHash);
+        int ContarPublicaciones(int usuarioId);
+        int ContarCompras(int usuarioId);
     }
 }

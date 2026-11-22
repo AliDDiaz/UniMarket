@@ -10,6 +10,7 @@ namespace UniMarket.Logica
 {
     public class UsuarioService
     {
+        private const int MaxFotoBytes = 2 * 1024 * 1024; // 2 MB
         private readonly IUsuarioRepository _repository;
 
         public UsuarioService(IUsuarioRepository repository)
@@ -61,6 +62,63 @@ namespace UniMarket.Logica
             usuario.Contrasena = null;
             return usuario;
         }
+
+        public Usuario ObtenerPerfil(int usuarioId)
+        {
+            var usuario = _repository.GetById(usuarioId);
+
+            if (usuario == null || !usuario.Activo)
+                throw new Exception("No se encontró tu cuenta.");
+
+            usuario.Contrasena = null;
+            return usuario;
+        }
+
+        public void ActualizarPerfil(int usuarioId, string correo, string telefono, byte[] foto)
+        {
+            correo = (correo ?? "").Trim().ToLowerInvariant();
+            telefono = (telefono ?? "").Trim();
+
+            var usuario = _repository.GetById(usuarioId);
+            if (usuario == null || !usuario.Activo)
+                throw new Exception("No se encontró tu cuenta.");
+
+            ValidarDatos(usuario.Nombre, correo, telefono);
+
+            var otro = _repository.GetByCorreo(correo);
+            if (otro != null && otro.Id != usuarioId)
+                throw new Exception("Ya existe un usuario con ese correo.");
+
+            if (foto != null && foto.Length > MaxFotoBytes)
+                throw new Exception("La foto no puede pesar más de 2 MB.");
+
+            usuario.Correo = correo;
+            usuario.Telefono = telefono;
+            usuario.Foto = foto;
+
+            _repository.UpdateProfile(usuario);
+        }
+
+        public void CambiarContrasena(int usuarioId, string actual, string nueva)
+        {
+            var usuario = _repository.GetById(usuarioId);
+            if (usuario == null || !usuario.Activo)
+                throw new Exception("No se encontró tu cuenta.");
+
+            if (!HashContrasena.Verificar(actual ?? "", usuario.Contrasena))
+                throw new Exception("La contraseña actual no es correcta.");
+
+            ValidarContrasena(nueva);
+
+            if (HashContrasena.Verificar(nueva, usuario.Contrasena))
+                throw new Exception("La nueva contraseña debe ser distinta a la actual.");
+
+            _repository.UpdatePassword(usuarioId, HashContrasena.Generar(nueva));
+        }
+
+        public int ContarPublicaciones(int usuarioId) => _repository.CountPublications(usuarioId);
+
+        public int ContarCompras(int usuarioId) => _repository.CountPurchases(usuarioId);
 
         private void ValidarDatos(string nombre, string correo, string telefono)
         {

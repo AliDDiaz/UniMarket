@@ -16,6 +16,10 @@ namespace UniMarket.Datos.Repository
         int Add(Usuario usuario);
         void Update(Usuario usuario);
         void Delete(int id);
+        void UpdateProfile(Usuario usuario);
+        void UpdatePassword(int id, string contrasenaHash);
+        int CountPublications(int usuarioId);
+        int CountPurchases(int usuarioId);
 
     }
 }

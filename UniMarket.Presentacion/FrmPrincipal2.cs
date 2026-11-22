@@ -179,5 +179,10 @@ namespace UniMarket.Presentacion
                 // Se ignoran los errores de red para no interrumpir al usuario
             }
         }
+
+        private void btnMycuenta_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new FrmMiCuenta(_usuario));
+        }
     }
 }

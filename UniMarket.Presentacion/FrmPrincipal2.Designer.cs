@@ -40,6 +40,7 @@
             this.lblBadgeBot = new System.Windows.Forms.Label();
             this.btnBot = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.lblBadgeCarrito = new System.Windows.Forms.Label();
             this.btnCarrito = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -49,7 +50,6 @@
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.timerBot = new System.Windows.Forms.Timer(this.components);
             this.notifyIconBot = new System.Windows.Forms.NotifyIcon(this.components);
-            this.lblBadgeCarrito = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -100,6 +100,7 @@
             this.btnMycuenta.TabIndex = 4;
             this.btnMycuenta.Text = "    MI CUENTA";
             this.btnMycuenta.UseVisualStyleBackColor = true;
+            this.btnMycuenta.Click += new System.EventHandler(this.btnMycuenta_Click);
             // 
             // btnHistorial
             // 
@@ -208,6 +209,19 @@
             this.panel2.Size = new System.Drawing.Size(890, 112);
             this.panel2.TabIndex = 1;
             // 
+            // lblBadgeCarrito
+            // 
+            this.lblBadgeCarrito.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.lblBadgeCarrito.Font = new System.Drawing.Font("Segoe UI Light", 8.5F);
+            this.lblBadgeCarrito.ForeColor = System.Drawing.Color.White;
+            this.lblBadgeCarrito.Location = new System.Drawing.Point(758, 31);
+            this.lblBadgeCarrito.Name = "lblBadgeCarrito";
+            this.lblBadgeCarrito.Size = new System.Drawing.Size(22, 22);
+            this.lblBadgeCarrito.TabIndex = 8;
+            this.lblBadgeCarrito.Text = "0";
+            this.lblBadgeCarrito.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBadgeCarrito.Visible = false;
+            // 
             // btnCarrito
             // 
             this.btnCarrito.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -302,19 +316,6 @@
             this.notifyIconBot.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIconBot.Icon")));
             this.notifyIconBot.Text = "notifyIcon1";
             this.notifyIconBot.Visible = true;
-            // 
-            // lblBadgeCarrito
-            // 
-            this.lblBadgeCarrito.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
-            this.lblBadgeCarrito.Font = new System.Drawing.Font("Segoe UI Light", 8.5F);
-            this.lblBadgeCarrito.ForeColor = System.Drawing.Color.White;
-            this.lblBadgeCarrito.Location = new System.Drawing.Point(758, 31);
-            this.lblBadgeCarrito.Name = "lblBadgeCarrito";
-            this.lblBadgeCarrito.Size = new System.Drawing.Size(22, 22);
-            this.lblBadgeCarrito.TabIndex = 8;
-            this.lblBadgeCarrito.Text = "0";
-            this.lblBadgeCarrito.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblBadgeCarrito.Visible = false;
             // 
             // FrmPrincipal2
             // 

@@ -355,12 +355,12 @@ namespace UniMarket.Presentacion
 
             Agregar("¿Qué pasa al confirmar la compra?",
                 "Se envía una solicitud a cada vendedor y ellos reciben una notificación. Tu solicitud queda «Pendiente» " +
-                "hasta que el vendedor la acepte o la rechace. Puedes ver el estado en «HISTORIAL DE COMPRAS».",
+                "hasta que el vendedor la acepte o la rechace. Puedes ver el estado en «" + BotonSolicitudes + "», pestaña «Enviadas».",
                 true, "confirmar", "confirmo", "solicitud", "pendiente", "despues");
 
             Agregar("¿Cómo acepto o rechazo una solicitud?",
-                "Cuando alguien te pide un producto te llega una notificación. Entra a «HISTORIAL DE COMPRAS», elige la solicitud " +
-                "pendiente y pulsa «Aceptar» o «Rechazar». Al aceptar se descuentan las unidades del stock.",
+                "Cuando alguien te pide un producto te llega una notificación. Entra a «" + BotonSolicitudes + "», pestaña «Recibidas», " +
+                "elige la solicitud pendiente y pulsa «Aceptar» o «Rechazar». Al aceptar se descuentan las unidades del stock.",
                 true, "aceptar", "acepto", "rechazar", "rechazo");
 
             Agregar("¿Qué hace la campana?",
@@ -382,18 +382,32 @@ namespace UniMarket.Presentacion
                 false, "stock", "mas unidades", "agotado", "disponible");
 
             Agregar("¿Cómo veo mis compras?",
-                "«HISTORIAL DE COMPRAS» muestra las solicitudes que enviaste y las que recibiste, con su estado: Pendiente, Aceptada o Rechazada.",
-                false, "historial", "mis compras", "estado", "ver compras");
+                "«" + BotonSolicitudes + "» tiene dos pestañas: «Enviadas» (las que pediste tú) y «Recibidas» (las que te piden a ti), " +
+                "con su estado: Pendiente, Aceptada o Rechazada.",
+                false, "historial", "mis compras", "estado", "ver compras", "mis solicitudes");
 
             Agregar("¿Cómo contacto al vendedor?",
-                "En «HISTORIAL DE COMPRAS» aparece la información de contacto de la otra persona para ponerse de acuerdo en la entrega.",
+                "Cuando el vendedor acepta tu solicitud, en «" + BotonSolicitudes + "», pestaña «Enviadas», aparecen su nombre y su teléfono " +
+                "para ponerse de acuerdo en la entrega. Antes de que la acepte, no se muestran.",
                 false, "contacto", "contactar", "telefono", "comunicar");
 
             Agregar("¿Cómo cierro sesión?",
                 "Pulsa «CERRAR SESIÓN» al final del menú de la izquierda y confirma.",
                 false, "cerrar sesion", "salir", "cerrar la sesion");
+
+            Agregar("¿Cómo edito mis datos o mi contraseña?",
+                "Entra a «MI CUENTA» y pulsa «Editar». Puedes cambiar tu correo, teléfono, foto y contraseña (el nombre no se puede cambiar). " +
+                "Pulsa «Guardar» para aplicar los cambios o «Cancelar» para descartarlos.",
+                false, "mi cuenta", "editar cuenta", "cambiar correo", "cambiar telefono", "contrasena", "foto de perfil", "mis datos");
+
+            Agregar("¿Cómo desactivo mi cuenta?",
+                "En «MI CUENTA», al final, pulsa «Desactivar cuenta». Te pedirá confirmación y tu contraseña. " +
+                "Se desactivan tu cuenta y tus publicaciones, se rechazan tus solicitudes pendientes y se cierra tu sesión.",
+                false, "desactivar", "eliminar cuenta", "borrar cuenta", "dar de baja");
         }
 
+        // Nombre del botón del menú donde se ven las solicitudes (un solo lugar para cambiarlo)
+        private const string BotonSolicitudes = "MIS SOLICITUDES";
         private const string MensajeNoEntendi =
                "¡Ups! 🦝 No pude responder tu pregunta en este momento. " +
     "Puedes intentar nuevamente o elegir una de las preguntas sugeridas. "

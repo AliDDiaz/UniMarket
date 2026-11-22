@@ -46,6 +46,7 @@ namespace UniMarket.Logica
             if (nuevaCantidad <= 0)
             {
                 _items.Remove(item);
+                OnCarritoActualizado?.Invoke();
                 return;
             }
 
@@ -53,16 +54,19 @@ namespace UniMarket.Logica
                 throw new Exception($"Stock máximo disponible: {item.Producto.Stock}.");
 
             item.Cantidad = nuevaCantidad;
+            OnCarritoActualizado?.Invoke();
         }
 
         public static void Eliminar(int publicacionId)
         {
             _items.RemoveAll(i => i.Producto.Id == publicacionId);
+            OnCarritoActualizado?.Invoke();
         }
 
         public static void Vaciar()
         {
             _items.Clear();
+            OnCarritoActualizado?.Invoke();
         }
     }
 }

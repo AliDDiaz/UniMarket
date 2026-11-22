@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using UniMarket.Entidades;
 using UniMarket.Logica;
+using System.Linq;
 
 namespace UniMarket.Presentacion
 {
@@ -166,24 +167,31 @@ namespace UniMarket.Presentacion
 
         private void btnConfirmarCompra_Click_1(object sender, EventArgs e)
         {
-            try
-            {
-                foreach (var item in CarritoService.ObtenerItems())
-                {
-                    _solicitudService.Solicitar(item.Producto.Id, _compradorId, item.Cantidad);
-                }
+            // Copia de los productos, porque el carrito cambia mientras se procesa
+            var resultado = _solicitudService.EnviarCarrito(
+                _compradorId, CarritoService.ObtenerItems().ToList());
 
-                CarritoService.Vaciar();
+            // Los productos enviados salen del carrito; los que fallaron se quedan
+            foreach (var publicacionId in resultado.Enviados)
+                CarritoService.Eliminar(publicacionId);
+
+            RenderizarCarrito();
+
+            if (resultado.Fallidos.Count == 0)
+            {
                 MessageBox.Show("¡Solicitudes enviadas! Los vendedores han sido notificados por Trueque Bot.",
                     "Compra solicitada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                DialogResult = DialogResult.OK;
-                Close();
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al procesar el carrito: " + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
+            string encabezado = resultado.Enviados.Count > 0
+                ? $"Se enviaron {resultado.Enviados.Count} solicitud(es), pero estas no se pudieron enviar y siguen en tu carrito:"
+                : "No se pudo enviar ninguna solicitud:";
+
+            MessageBox.Show(
+                encabezado + Environment.NewLine + Environment.NewLine +
+                string.Join(Environment.NewLine, resultado.Fallidos),
+                "Compra solicitada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void btnVaciar_Click_1(object sender, EventArgs e)

@@ -20,7 +20,9 @@ namespace UniMarket.Presentacion
         public FrmPrincipal2(Usuario usuario)
         {
             InitializeComponent();
+            FormClosed += FrmPrincipal2_FormClosed;
             _usuario = usuario;
+
 
             ConfigurarHover(button1, button2, btnHistorial, btnMycuenta, btnSalir);
             AbrirFormularioEnPanel(new FrmPrincipal(_usuario));
@@ -64,17 +66,30 @@ namespace UniMarket.Presentacion
 
         private void FrmPrincipal2_Load_1(object sender, EventArgs e)
         {
-            // Contador de notificaciones con forma circular
-            var path = new System.Drawing.Drawing2D.GraphicsPath();
-            path.AddEllipse(0, 0, lblBadgeBot.Width, lblBadgeBot.Height);
-            lblBadgeBot.Region = new Region(path);
-            lblBadgeBot.BringToFront();
+            // Contadores (campana y carrito) con forma circular
+            HacerCircular(lblBadgeBot);
+            HacerCircular(lblBadgeCarrito);
 
             RevisarNotificacionesBot();
             timerBot.Start();
 
             CarritoService.OnCarritoActualizado += ActualizarBotonCarrito;
             ActualizarBotonCarrito();
+        }
+
+        private void HacerCircular(Label etiqueta)
+        {
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddEllipse(0, 0, etiqueta.Width, etiqueta.Height);
+            etiqueta.Region = new Region(path);
+            etiqueta.BringToFront();
+        }
+
+        private void FrmPrincipal2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // El carrito es estático: se limpia para que no pase al siguiente usuario
+            CarritoService.OnCarritoActualizado -= ActualizarBotonCarrito;
+            CarritoService.Vaciar();
         }
 
         // ---------- Menú lateral ----------
@@ -114,6 +129,8 @@ namespace UniMarket.Presentacion
         private void ActualizarBotonCarrito()
         {
             int total = CarritoService.TotalUnidades;
+            lblBadgeCarrito.Text = total.ToString();
+            lblBadgeCarrito.Visible = total > 0;
         }
 
         // ---------- Notificaciones ----------

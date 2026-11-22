@@ -83,6 +83,27 @@ namespace UniMarket.Logica
             return nuevaSolicitudId;
         }
 
+        // Envía cada producto del carrito por separado: un fallo no detiene a los demás
+        public ResultadoEnvioCarrito EnviarCarrito(int compradorId, IEnumerable<ItemCarrito> items)
+        {
+            var resultado = new ResultadoEnvioCarrito();
+
+            foreach (var item in items)
+            {
+                try
+                {
+                    Solicitar(item.Producto.Id, compradorId, item.Cantidad);
+                    resultado.Enviados.Add(item.Producto.Id);
+                }
+                catch (Exception ex)
+                {
+                    resultado.Fallidos.Add($"{item.Producto.Titulo}: {ex.Message}");
+                }
+            }
+
+            return resultado;
+        }
+
         public void Aceptar(int solicitudId, int usuarioId)
         {
             var solicitud = ObtenerPendienteDelVendedor(solicitudId, usuarioId, out Publicacion publicacion);
@@ -157,4 +178,11 @@ namespace UniMarket.Logica
             return solicitud;
         }
     }
+
+    public class ResultadoEnvioCarrito
+    {
+        public List<int> Enviados { get; } = new List<int>();     // ids de las publicaciones enviadas
+        public List<string> Fallidos { get; } = new List<string>(); // "Producto: motivo"
+    }
+
 }

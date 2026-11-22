@@ -49,6 +49,7 @@
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.timerBot = new System.Windows.Forms.Timer(this.components);
             this.notifyIconBot = new System.Windows.Forms.NotifyIcon(this.components);
+            this.lblBadgeCarrito = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -193,6 +194,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Indigo;
+            this.panel2.Controls.Add(this.lblBadgeCarrito);
             this.panel2.Controls.Add(this.btnCarrito);
             this.panel2.Controls.Add(this.lblBadgeBot);
             this.panel2.Controls.Add(this.label3);
@@ -301,6 +303,19 @@
             this.notifyIconBot.Text = "notifyIcon1";
             this.notifyIconBot.Visible = true;
             // 
+            // lblBadgeCarrito
+            // 
+            this.lblBadgeCarrito.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.lblBadgeCarrito.Font = new System.Drawing.Font("Segoe UI Light", 8.5F);
+            this.lblBadgeCarrito.ForeColor = System.Drawing.Color.White;
+            this.lblBadgeCarrito.Location = new System.Drawing.Point(758, 31);
+            this.lblBadgeCarrito.Name = "lblBadgeCarrito";
+            this.lblBadgeCarrito.Size = new System.Drawing.Size(22, 22);
+            this.lblBadgeCarrito.TabIndex = 8;
+            this.lblBadgeCarrito.Text = "0";
+            this.lblBadgeCarrito.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBadgeCarrito.Visible = false;
+            // 
             // FrmPrincipal2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -342,5 +357,6 @@
         private System.Windows.Forms.Button btnBot;
         private System.Windows.Forms.Label lblBadgeBot;
         private System.Windows.Forms.Button btnCarrito;
+        private System.Windows.Forms.Label lblBadgeCarrito;
     }
 }

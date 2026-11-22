@@ -20,6 +20,6 @@ namespace UniMarket.Datos.Repository
         void UpdatePassword(int id, string contrasenaHash);
         int CountPublications(int usuarioId);
         int CountPurchases(int usuarioId);
-
+        void DeactivateAccount(int usuarioId);
     }
 }

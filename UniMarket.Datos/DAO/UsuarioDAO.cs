@@ -283,6 +283,68 @@ namespace UniMarket.Datos.DAO
             }
         }
 
+        public void DesactivarCuenta(int usuarioId)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            // 1. Rechazar solicitudes pendientes (como comprador o como vendedor)
+                            string sqlSolicitudes = @"UPDATE solicitudes_compra
+                                              SET estado = 'Rechazada'
+                                              WHERE estado = 'Pendiente'
+                                                AND (comprador_id = @Id
+                                                     OR publicacion_id IN
+                                                        (SELECT id FROM publicaciones
+                                                         WHERE vendedor_id = @Id))";
+                            using (var cmd = new NpgsqlCommand(sqlSolicitudes, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 2. Desactivar sus publicaciones
+                            string sqlPublicaciones = @"UPDATE publicaciones
+                                                SET activo = false
+                                                WHERE vendedor_id = @Id";
+                            using (var cmd = new NpgsqlCommand(sqlPublicaciones, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // 3. Desactivar la cuenta
+                            string sqlUsuario = @"UPDATE usuarios
+                                          SET activo = false
+                                          WHERE id = @Id AND activo = true";
+                            using (var cmd = new NpgsqlCommand(sqlUsuario, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                if (cmd.ExecuteNonQuery() != 1)
+                                    throw new Exception("La cuenta no existe o ya estaba desactivada.");
+                            }
+
+                            tx.Commit();
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al desactivar la cuenta: {ex.Message}", ex);
+            }
+        }
+
         private Usuario Mapear(NpgsqlDataReader r) => new Usuario
         {
 

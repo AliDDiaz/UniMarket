@@ -149,5 +149,21 @@ namespace UniMarket.Logica
                 return false;
             }
         }
+
+        public void DesactivarCuenta(int usuarioId, string contrasena)
+        {
+            if (string.IsNullOrWhiteSpace(contrasena))
+                throw new Exception("Escribe tu contraseña para confirmar.");
+
+            var usuario = _repository.GetById(usuarioId);
+
+            if (usuario == null || !usuario.Activo)
+                throw new Exception("No se encontró tu cuenta.");
+
+            if (!HashContrasena.Verificar(contrasena, usuario.Contrasena))
+                throw new Exception("La contraseña es incorrecta.");
+
+            _repository.DeactivateAccount(usuarioId);
+        }
     }
 }

@@ -20,5 +20,6 @@ namespace UniMarket.Datos.DAO
         void ActualizarContrasena(int id, string contrasenaHash);
         int ContarPublicaciones(int usuarioId);
         int ContarCompras(int usuarioId);
+        void DesactivarCuenta(int usuarioId);
     }
 }

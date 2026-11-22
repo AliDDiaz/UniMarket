@@ -28,5 +28,7 @@ namespace UniMarket.Datos.Repository
         public void UpdatePassword(int id, string contrasenaHash) => _dao.ActualizarContrasena(id, contrasenaHash);
         public int CountPublications(int usuarioId) => _dao.ContarPublicaciones(usuarioId);
         public int CountPurchases(int usuarioId) => _dao.ContarCompras(usuarioId);
+        public void DeactivateAccount(int usuarioId) => _dao.DesactivarCuenta(usuarioId);
+        
     }
 }

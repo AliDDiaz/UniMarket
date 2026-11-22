@@ -236,5 +236,110 @@ namespace UniMarket.Presentacion
             MessageBox.Show(mensaje, "Mi cuenta",
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+
+        private void btnEliminarCuenta_Click(object sender, EventArgs e)
+        {
+            var confirmar = MessageBox.Show(
+                "Tu cuenta y tus publicaciones se desactivarán, y tus solicitudes pendientes " +
+                "serán rechazadas.\n\nNo podrás volver a iniciar sesión con esta cuenta.\n\n" +
+                "¿Deseas continuar?",
+                "Desactivar cuenta",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (confirmar != DialogResult.Yes) return;
+
+            string contrasena = PedirContrasena();
+            if (contrasena == null) return;   // canceló
+
+            try
+            {
+                _service.DesactivarCuenta(_usuario.Id, contrasena);
+            }
+            catch (Exception ex)
+            {
+                Aviso(ex.Message);
+                return;
+            }
+
+            MessageBox.Show("Tu cuenta fue desactivada. Se cerrará tu sesión.",
+                "Desactivar cuenta", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Cierra FrmPrincipal2 y le avisa a Program.cs que vuelva al Login
+            var principal = Parent != null ? Parent.FindForm() : null;
+            if (principal != null)
+            {
+                principal.DialogResult = DialogResult.Retry;
+                principal.Close();
+            }
+        }
+
+        // Cuadro pequeño para escribir la contraseña. Devuelve null si cancela.
+        private string PedirContrasena()
+        {
+            using (var dialogo = new Form())
+            {
+                dialogo.Text = "Confirmar contraseña";
+                dialogo.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialogo.StartPosition = FormStartPosition.CenterParent;
+                dialogo.MaximizeBox = false;
+                dialogo.MinimizeBox = false;
+                dialogo.ShowInTaskbar = false;
+                dialogo.ClientSize = new Size(340, 140);
+                dialogo.BackColor = Color.FromArgb(245, 243, 255);
+                dialogo.Font = new Font("Segoe UI", 9F);
+
+                var lbl = new Label
+                {
+                    Text = "Escribe tu contraseña para confirmar:",
+                    Location = new Point(20, 16),
+                    AutoSize = true,
+                    ForeColor = Color.FromArgb(59, 31, 154)
+                };
+
+                var txt = new TextBox
+                {
+                    Location = new Point(20, 44),
+                    Size = new Size(300, 27),
+                    Font = new Font("Segoe UI", 10F),
+                    UseSystemPasswordChar = true
+                };
+
+                var btnAceptar = new Button
+                {
+                    Text = "Desactivar",
+                    DialogResult = DialogResult.OK,
+                    Location = new Point(110, 92),
+                    Size = new Size(100, 34),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(220, 38, 38),
+                    ForeColor = Color.White,
+                    Cursor = Cursors.Hand
+                };
+                btnAceptar.FlatAppearance.BorderSize = 0;
+
+                var btnCancelarDlg = new Button
+                {
+                    Text = "Cancelar",
+                    DialogResult = DialogResult.Cancel,
+                    Location = new Point(220, 92),
+                    Size = new Size(100, 34),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(237, 231, 251),
+                    ForeColor = Color.FromArgb(109, 63, 214),
+                    Cursor = Cursors.Hand
+                };
+                btnCancelarDlg.FlatAppearance.BorderSize = 0;
+
+                dialogo.Controls.AddRange(new Control[] { lbl, txt, btnAceptar, btnCancelarDlg });
+                dialogo.AcceptButton = btnAceptar;
+                dialogo.CancelButton = btnCancelarDlg;
+
+                var resultado = dialogo.ShowDialog(Parent != null ? Parent.FindForm() : this);
+
+                return resultado == DialogResult.OK ? txt.Text : null;
+            }
+        }
     }
 }

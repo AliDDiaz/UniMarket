@@ -157,9 +157,5 @@ namespace UniMarket.Presentacion
             CargarListas();
         }
 
-        private void btnCerrar_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
     }
 }

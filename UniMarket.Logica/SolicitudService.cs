@@ -10,23 +10,27 @@ namespace UniMarket.Logica
     {
         private readonly ISolicitudCompraRepository _solicitudes;
         private readonly IPublicacionRepository _publicaciones;
+        private readonly IUsuarioRepository _usuarios;
         private readonly NotificacionesService _notificaciones;
 
         public SolicitudService(ISolicitudCompraRepository solicitudes,
-                                IPublicacionRepository publicaciones)
+                                IPublicacionRepository publicaciones,
+                                IUsuarioRepository usuarios)
         {
             _solicitudes = solicitudes;
             _publicaciones = publicaciones;
+            _usuarios = usuarios;
             _notificaciones = new NotificacionesService();
         }
 
         // Constructor de conveniencia
         public SolicitudService()
             : this(new SolicitudCompraRepository(new SolicitudCompraDAO()),
-                   new PublicacionRepository(new PublicacionDAO()))
+                   new PublicacionRepository(new PublicacionDAO()),
+                   new UsuarioRepository(new UsuarioDAO()))
         { }
 
-        public int Solicitar(int publicacionId, int compradorId, int cantidad, string nombreComprador = "Un usuario")
+        public int Solicitar(int publicacionId, int compradorId, int cantidad)
         {
             if (compradorId <= 0)
                 throw new Exception("Debes iniciar sesión para solicitar una compra.");
@@ -51,6 +55,11 @@ namespace UniMarket.Logica
             if (_solicitudes.HasPending(publicacionId, compradorId))
                 throw new Exception("Ya tienes una solicitud pendiente para esta publicación.");
 
+            var comprador = _usuarios.GetById(compradorId);
+            if(comprador == null)
+            {
+                throw new Exception("No se encontró tu usuario. Inicia sesión de nuevo.");
+            }
             var solicitud = new SolicitudCompra
             {
                 PublicacionId = publicacionId,
@@ -64,7 +73,7 @@ namespace UniMarket.Logica
 
             _notificaciones.NotificarNuevaOferta(
                 vendedorId: publicacion.VendedorId,
-                nombreComprador: nombreComprador,
+                nombreComprador: comprador.Nombre,
                 tituloProducto: publicacion.Titulo,
                 cantidad: cantidad,
                 totalOferta: totalOferta,

@@ -51,11 +51,12 @@
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Indigo;
-            this.lblTitulo.Location = new System.Drawing.Point(304, 44);
+            this.lblTitulo.Location = new System.Drawing.Point(274, 44);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(216, 28);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Nombre del producto";
+            this.lblTitulo.Click += new System.EventHandler(this.lblTitulo_Click);
             // 
             // lblPrecio
             // 
@@ -107,7 +108,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Lavender;
-            this.ClientSize = new System.Drawing.Size(623, 384);
+            this.ClientSize = new System.Drawing.Size(680, 384);
             this.Controls.Add(this.txtDescripcion);
             this.Controls.Add(this.lblCantidad);
             this.Controls.Add(this.lblDescripcion);

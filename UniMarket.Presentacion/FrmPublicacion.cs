@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using UniMarket.Entidades;
 using UniMarket.Logica;
-using System.Drawing;
 
 namespace UniMarket.Presentacion
 {
     public partial class FrmPublicacion : Form
     {
-        
+
         private readonly PublicacionService _service;
         private readonly int _usuarioId;
         private readonly Publicacion _publicacion;
@@ -97,16 +98,38 @@ namespace UniMarket.Presentacion
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Title = "Selecciona la foto del producto";
-                ofd.Filter = "Imágenes (*.jpg;*.jpeg;*.png;*.webp)|*.jpg;*.jpeg;*.png;*.webp";
+                ofd.Filter = "Imágenes (*.jpg;*.jpeg;*.png;*.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    // Muestra la vista previa en el PictureBox izquierdo (cambia pbFoto por el Name de tu PictureBox)
-                    pbFoto.Image = Image.FromFile(ofd.FileName);
-                    pbFoto.SizeMode = PictureBoxSizeMode.Zoom;
+                    try
+                    {
+                        byte[] imagenBytes = System.IO.File.ReadAllBytes(ofd.FileName);
 
-                    // Convierte el archivo a bytes para guardarlo en Supabase
-                    _imagenSeleccionada = System.IO.File.ReadAllBytes(ofd.FileName);
+                        using (MemoryStream ms = new MemoryStream(imagenBytes))
+                        using (Image imagen = Image.FromStream(ms))
+                        {
+                            Image nuevaImagen = new Bitmap(imagen);
+
+                            Image imagenAnterior = pbFoto.Image;
+
+                            pbFoto.Image = nuevaImagen;
+                            pbFoto.SizeMode = PictureBoxSizeMode.Zoom;
+
+                            if (imagenAnterior != null)
+                                imagenAnterior.Dispose();
+                        }
+
+                        _imagenSeleccionada = imagenBytes;
+                    }
+                    catch (OutOfMemoryException)
+                    {
+                        MessageBox.Show("No se pudo cargar la imagen. Verifica que sea válida y no demasiado grande.");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al cargar la imagen: " + ex.Message);
+                    }
                 }
             }
         }

@@ -61,7 +61,7 @@ namespace UniMarket.Datos
                                 Tipo = reader.GetString(4),
                                 SolicitudId = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
                                 Leido = reader.GetBoolean(6),
-                                Fecha = reader.GetDateTime(7)
+                                Fecha = reader.GetDateTime(7).ToLocalTime()
                             });
                         }
                     }
@@ -99,7 +99,7 @@ namespace UniMarket.Datos
                                 Tipo = reader.GetString(4),
                                 SolicitudId = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
                                 Leido = reader.GetBoolean(6),
-                                Fecha = reader.GetDateTime(7)
+                                Fecha = reader.GetDateTime(7).ToLocalTime()
                             });
                         }
                     }

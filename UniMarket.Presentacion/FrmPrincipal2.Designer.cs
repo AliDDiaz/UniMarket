@@ -115,8 +115,9 @@
             this.btnHistorial.Name = "btnHistorial";
             this.btnHistorial.Size = new System.Drawing.Size(213, 65);
             this.btnHistorial.TabIndex = 2;
-            this.btnHistorial.Text = "    HISTORIAL DE COMPRAS";
+            this.btnHistorial.Text = "    MIS SOLICITUDES";
             this.btnHistorial.UseVisualStyleBackColor = true;
+            this.btnHistorial.Click += new System.EventHandler(this.btnHistorial_Click);
             // 
             // button2
             // 

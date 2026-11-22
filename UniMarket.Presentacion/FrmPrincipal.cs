@@ -11,8 +11,8 @@ namespace UniMarket.Presentacion
     public partial class FrmPrincipal : Form
     {
         private readonly PublicacionService _service;
-        private readonly Usuario _usuario;
         private Publicacion _publicacionSeleccionada;
+        private readonly Usuario _usuario;
         private BotAyuda botAyuda = new BotAyuda();
         public FrmPrincipal(Usuario usuario)
         {
@@ -113,16 +113,6 @@ namespace UniMarket.Presentacion
                 MessageBox.Show(ex.Message, "No se pudo eliminar",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void btnSolicitudes_Click(object sender, EventArgs e)
-        {
-            using (var frm = new FrmSolicitudes(_usuario))
-            {
-                frm.ShowDialog();
-            }
-
-            CargarPublicaciones();
         }
 
         private void AbrirSolicitudCompra(Publicacion pub)

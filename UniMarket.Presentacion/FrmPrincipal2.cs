@@ -13,7 +13,6 @@ namespace UniMarket.Presentacion
         // Colores del menú lateral (un solo lugar para cambiarlos)
         private static readonly Color ColorNormal = Color.Indigo;
         private static readonly Color ColorHover = Color.FromArgb(124, 77, 255);
-
         private readonly Usuario _usuario;
         private readonly NotificacionesService _botService = new NotificacionesService();
         private Form formularioActivo = null;
@@ -199,6 +198,12 @@ namespace UniMarket.Presentacion
         private void btnMycuenta_Click(object sender, EventArgs e)
         {
             AbrirFormularioEnPanel(new FrmMiCuenta(_usuario));
+        }
+
+        private void btnHistorial_Click(object sender, EventArgs e)
+        {
+
+            AbrirFormularioEnPanel(new FrmSolicitudes(_usuario));
         }
     }
 }

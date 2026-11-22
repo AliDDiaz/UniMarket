@@ -36,7 +36,6 @@
             this.btnEliminar = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.chkMisPublicaciones = new System.Windows.Forms.CheckBox();
-            this.btnSolicitudes = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flpCatalogo = new System.Windows.Forms.FlowLayoutPanel();
             this.picEngel = new System.Windows.Forms.PictureBox();
@@ -87,7 +86,7 @@
             // 
             this.btnEliminar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEliminar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnEliminar.Location = new System.Drawing.Point(258, 447);
+            this.btnEliminar.Location = new System.Drawing.Point(480, 447);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Size = new System.Drawing.Size(93, 46);
             this.btnEliminar.TabIndex = 4;
@@ -100,7 +99,7 @@
             this.btnEditar.BackColor = System.Drawing.Color.GhostWhite;
             this.btnEditar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnEditar.Location = new System.Drawing.Point(81, 447);
+            this.btnEditar.Location = new System.Drawing.Point(278, 447);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(93, 46);
             this.btnEditar.TabIndex = 5;
@@ -120,18 +119,6 @@
             this.chkMisPublicaciones.Text = "Solo mis publicaciones";
             this.chkMisPublicaciones.UseVisualStyleBackColor = true;
             this.chkMisPublicaciones.CheckedChanged += new System.EventHandler(this.chkMisPublicaciones_CheckedChanged);
-            // 
-            // btnSolicitudes
-            // 
-            this.btnSolicitudes.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSolicitudes.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnSolicitudes.Location = new System.Drawing.Point(548, 447);
-            this.btnSolicitudes.Name = "btnSolicitudes";
-            this.btnSolicitudes.Size = new System.Drawing.Size(93, 46);
-            this.btnSolicitudes.TabIndex = 10;
-            this.btnSolicitudes.Text = "Mis solicitudes";
-            this.btnSolicitudes.UseVisualStyleBackColor = true;
-            this.btnSolicitudes.Click += new System.EventHandler(this.btnSolicitudes_Click);
             // 
             // pictureBox1
             // 
@@ -174,7 +161,6 @@
             this.ClientSize = new System.Drawing.Size(889, 532);
             this.Controls.Add(this.picEngel);
             this.Controls.Add(this.flpCatalogo);
-            this.Controls.Add(this.btnSolicitudes);
             this.Controls.Add(this.chkMisPublicaciones);
             this.Controls.Add(this.btnEditar);
             this.Controls.Add(this.btnEliminar);
@@ -202,7 +188,6 @@
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.CheckBox chkMisPublicaciones;
-        private System.Windows.Forms.Button btnSolicitudes;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FlowLayoutPanel flpCatalogo;
         private System.Windows.Forms.PictureBox picEngel;

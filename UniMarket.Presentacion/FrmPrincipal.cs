@@ -20,12 +20,6 @@ namespace UniMarket.Presentacion
             this.Controls.Add(botAyuda);
             _service = new PublicacionService();
             _usuario = usuario;
-
-
-            lblUsuario.Text = $"Hola, {_usuario.Nombre}";
-            lblUsuario.SizeChanged += (s, e) => AjustarDisposicion();   // el saludo cambia de ancho con el nombre
-            Resize += (s, e) => AjustarDisposicion();
-            AjustarDisposicion();
             CargarPublicaciones();
         }
 
@@ -278,39 +272,6 @@ namespace UniMarket.Presentacion
             botAyuda.Alternar();
         }
 
-        // Acomoda los controles según el tamaño disponible
-        private void AjustarDisposicion()
-        {
-            int w = ClientSize.Width;
-            int h = ClientSize.Height;
-            if (w < 400 || h < 300) return;   // por si se está minimizando
 
-            const int margen = 40;
-
-            // Fondo
-            pictureBox1.BackColor = Color.Lavender;
-            pictureBox1.SetBounds(0, 0, w, h);
-
-            // Catálogo: ocupa todo el ancho y el alto disponible
-            flpCatalogo.SetBounds(margen, 137, w - margen * 2, h - 137 - 110);
-
-            // Fila de búsqueda alineada con el borde izquierdo del catálogo
-            lblBuscar.Left = flpCatalogo.Left;
-            txtBuscar.Left = lblBuscar.Right + 8;
-            txtBuscar.Width = Math.Max(200, w / 3);
-            btnBuscar.Left = txtBuscar.Right + 16;
-
-            // Saludo y "Solo mis publicaciones" pegados al borde derecho del catálogo
-            lblUsuario.Left = flpCatalogo.Right - lblUsuario.Width;
-            chkMisPublicaciones.Left = flpCatalogo.Right - chkMisPublicaciones.Width;
-
-            // Editar y Eliminar centrados abajo
-            int xEditar = (w - (btnEditar.Width + 20 + btnEliminar.Width)) / 2;
-            btnEditar.Location = new Point(xEditar, h - 97);
-            btnEliminar.Location = new Point(btnEditar.Right + 20, h - 97);
-
-            // Engel en la esquina inferior derecha
-            picEngel.Location = new Point(w - picEngel.Width - 30, h - picEngel.Height - 20);
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -12,186 +13,294 @@ namespace UniMarket.Presentacion
     {
         private readonly SolicitudService _service;
         private readonly Usuario _usuario;
-        private bool esTrueque;
+        private List<SolicitudDetalle> _recibidas = new List<SolicitudDetalle>();
+        private List<SolicitudDetalle> _enviadas = new List<SolicitudDetalle>();
 
-        public FrmSolicitudes(Usuario usuario)
+        public FrmSolicitudes()
         {
             InitializeComponent();
+        }
+
+        public FrmSolicitudes(Usuario usuario) : this()
+        {
             _service = new SolicitudService();
             _usuario = usuario;
 
-            PrepararGrilla(dgvRecibidas);
-            AgregarColumna(dgvRecibidas, "Producto", "Titulo", 25);
-            AgregarColumna(dgvRecibidas, "Comprador", "NombreContraparte", 20);
-            AgregarColumna(dgvRecibidas, "Cantidad", "Cantidad", 10);
-            AgregarColumna(dgvRecibidas, "Pago / Oferta", "ResumenPago", 35);
-            AgregarColumna(dgvRecibidas, "Estado", "Estado", 12);
-            AgregarColumna(dgvRecibidas, "Fecha", "Fecha", 18, "dd/MM/yyyy HH:mm");
+            flpRecibidas.BringToFront();
+            flpEnviadas.BringToFront();
 
-            PrepararGrilla(dgvEnviadas);
-            AgregarColumna(dgvEnviadas, "Producto", "Titulo", 22);
-            AgregarColumna(dgvEnviadas, "Cantidad", "Cantidad", 8);
-            AgregarColumna(dgvEnviadas, "Pago / Oferta", "ResumenPago", 30);
-            AgregarColumna(dgvEnviadas, "Estado", "Estado", 10);
-            AgregarColumna(dgvEnviadas, "Vendedor", "NombreContraparte", 16, null, "(al aceptar)");
-            AgregarColumnaLink(dgvEnviadas, "Teléfono", "TelefonoContacto", 12, "(al aceptar)");
-            AgregarColumna(dgvEnviadas, "Fecha", "Fecha", 16, "dd/MM/yyyy HH:mm");
-
-            dgvEnviadas.CellContentClick += dgvEnviadas_CellContentClick;
+            flpRecibidas.SizeChanged += (s, e) => RenderizarRecibidas();
+            flpEnviadas.SizeChanged += (s, e) => RenderizarEnviadas();
 
             CargarListas();
-        }
-
-        private void PrepararGrilla(DataGridView dgv)
-        {
-            dgv.AutoGenerateColumns = false;
-            dgv.ReadOnly = true;
-            dgv.AllowUserToAddRows = false;
-            dgv.AllowUserToDeleteRows = false;
-            dgv.MultiSelect = false;
-            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        }
-
-        private void AgregarColumna(DataGridView dgv, string titulo, string propiedad,
-                                    float peso, string formato = null, string textoNulo = null)
-        {
-            var estilo = new DataGridViewCellStyle();
-            if (formato != null) estilo.Format = formato;
-            if (textoNulo != null) estilo.NullValue = textoNulo;
-
-            dgv.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                HeaderText = titulo,
-                DataPropertyName = propiedad,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = peso,
-                DefaultCellStyle = estilo
-            });
-        }
-
-        private void AgregarColumnaLink(DataGridView dgv, string titulo, string propiedad,
-                                        float peso, string textoNulo = null)
-        {
-            var estilo = new DataGridViewCellStyle();
-            if (textoNulo != null) estilo.NullValue = textoNulo;
-
-            dgv.Columns.Add(new DataGridViewLinkColumn
-            {
-                Name = "colTelefono",
-                HeaderText = titulo,
-                DataPropertyName = propiedad,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                FillWeight = peso,
-                DefaultCellStyle = estilo,
-                LinkColor = Color.FromArgb(37, 211, 102),       // Verde estilo WhatsApp
-                ActiveLinkColor = Color.FromArgb(18, 140, 126),
-                VisitedLinkColor = Color.FromArgb(37, 211, 102),
-                TrackVisitedState = false
-            });
-        }
-
-        private void dgvEnviadas_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-
-            if (dgvEnviadas.Columns[e.ColumnIndex].Name == "colTelefono")
-            {
-                var solicitud = dgvEnviadas.Rows[e.RowIndex].DataBoundItem as SolicitudDetalle;
-                if (solicitud == null) return;
-
-                if (string.IsNullOrWhiteSpace(solicitud.TelefonoContacto))
-                {
-                    MessageBox.Show("El número del vendedor estará disponible cuando acepte tu solicitud.",
-                        "Pendiente de aprobación", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                AbrirWhatsApp(solicitud.TelefonoContacto, solicitud.Titulo, solicitud.Cantidad, solicitud.EsTrueque);
-            }
-        }
-
-        private void AbrirWhatsApp(string telefono, string producto, int cantidad, bool esTrueque)
-        {
-            // Extrae solo los dígitos (quita espacios, guiones o '+')
-            string soloNumeros = new string(telefono.Where(char.IsDigit).ToArray());
-
-            // Si es un celular colombiano de 10 dígitos (ej: 3001234567), agrega el indicativo 57
-            if (soloNumeros.Length == 10 && soloNumeros.StartsWith("3"))
-            {
-                soloNumeros = "57" + soloNumeros;
-            }
-
-            string que = esTrueque ? "el trueque" : "la solicitud";
-            string mensaje = Uri.EscapeDataString(
-                $"¡Hola! Te contacto desde Trueque. Me aceptaste {que} por {cantidad} unidad(es) de \"{producto}\".");
-
-            string url = $"https://wa.me/{soloNumeros}?text={mensaje}";
-
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = url,
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"No se pudo abrir WhatsApp: {ex.Message}",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void CargarListas()
         {
             try
             {
-                dgvRecibidas.DataSource = null;
-                dgvRecibidas.DataSource = _service.ObtenerRecibidas(_usuario.Id);
+                _recibidas = _service.ObtenerRecibidas(_usuario.Id);
+                _enviadas = _service.ObtenerEnviadas(_usuario.Id);
 
-                dgvEnviadas.DataSource = null;
-                dgvEnviadas.DataSource = _service.ObtenerEnviadas(_usuario.Id);
+                RenderizarRecibidas();
+                RenderizarEnviadas();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar: {ex.Message}", "Error",
+                MessageBox.Show($"Error al cargar solicitudes: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private SolicitudDetalle ObtenerPendienteSeleccionada()
+        private void RenderizarRecibidas()
         {
-            var s = dgvRecibidas.CurrentRow?.DataBoundItem as SolicitudDetalle;
+            flpRecibidas.Controls.Clear();
 
-            if (s == null)
+            if (_recibidas == null || _recibidas.Count == 0)
             {
-                MessageBox.Show("Selecciona una solicitud de la lista.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return null;
+                flpRecibidas.Controls.Add(CrearMensajeVacio("Aún no has recibido solicitudes de compra.", flpRecibidas));
+                return;
             }
 
-            if (!s.EstaPendiente)
+            foreach (var s in _recibidas)
             {
-                MessageBox.Show("Esta solicitud ya fue atendida.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return null;
-            }
+                int ancho = Math.Max(280, flpRecibidas.ClientSize.Width - 26);
+                Panel card = new Panel
+                {
+                    Width = ancho,
+                    Height = s.EstaPendiente ? 132 : 98,
+                    BackColor = Color.White,
+                    Margin = new Padding(0, 0, 0, 10)
+                };
 
-            return s;
+                // Título del producto
+                Label lblTitulo = new Label
+                {
+                    Text = s.Titulo,
+                    Font = new Font("Segoe UI", 10.5F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(40, 40, 55),
+                    Location = new Point(14, 12),
+                    Size = new Size(ancho - 125, 22),
+                    AutoEllipsis = true
+                };
+
+                // Insignia de estado arriba a la derecha
+                Label lblEstado = CrearBadgeEstado(s.Estado.ToString(), ancho - 105, 12);
+
+                // Detalle comprador y total
+                Label lblDetalle = new Label
+                {
+                    Text = $"Comprador: {s.NombreContraparte}  •  {s.Cantidad} ud(s)  •  Total: ${s.Total:N0}",
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(103, 58, 183),
+                    Location = new Point(14, 40),
+                    Size = new Size(ancho - 28, 20),
+                    AutoEllipsis = true
+                };
+
+                // Fecha
+                Label lblFecha = new Label
+                {
+                    Text = $"📅 {s.Fecha:dd/MM/yyyy HH:mm}",
+                    Font = new Font("Segoe UI", 8.5F),
+                    ForeColor = Color.FromArgb(120, 120, 140),
+                    Location = new Point(14, 64),
+                    AutoSize = true
+                };
+
+                card.Controls.Add(lblTitulo);
+                card.Controls.Add(lblEstado);
+                card.Controls.Add(lblDetalle);
+                card.Controls.Add(lblFecha);
+
+                if (s.EstaPendiente)
+                {
+                    Button btnAceptarCard = new Button
+                    {
+                        Text = "✓ Aceptar",
+                        Size = new Size(105, 30),
+                        Location = new Point(14, 90),
+                        BackColor = Color.FromArgb(34, 197, 94),
+                        ForeColor = Color.White,
+                        FlatStyle = FlatStyle.Flat,
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        Cursor = Cursors.Hand
+                    };
+                    btnAceptarCard.FlatAppearance.BorderSize = 0;
+                    btnAceptarCard.Click += (sender, e) => AceptarSolicitud(s);
+
+                    Button btnRechazarCard = new Button
+                    {
+                        Text = "✕ Rechazar",
+                        Size = new Size(105, 30),
+                        Location = new Point(127, 90),
+                        BackColor = Color.FromArgb(239, 68, 68),
+                        ForeColor = Color.White,
+                        FlatStyle = FlatStyle.Flat,
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        Cursor = Cursors.Hand
+                    };
+                    btnRechazarCard.FlatAppearance.BorderSize = 0;
+                    btnRechazarCard.Click += (sender, e) => RechazarSolicitud(s);
+
+                    card.Controls.Add(btnAceptarCard);
+                    card.Controls.Add(btnRechazarCard);
+                }
+
+                flpRecibidas.Controls.Add(card);
+            }
         }
 
-        private void btnAceptar_Click(object sender, EventArgs e)
+        private void RenderizarEnviadas()
         {
-            var s = ObtenerPendienteSeleccionada();
-            if (s == null) return;
+            flpEnviadas.Controls.Clear();
 
-            string oferta = s.EsTrueque ? $"\n\nTrueque. Te ofrece: {s.OfertaTrueque}" : "";
+            if (_enviadas == null || _enviadas.Count == 0)
+            {
+                flpEnviadas.Controls.Add(CrearMensajeVacio("No has enviado solicitudes todavía.", flpEnviadas));
+                return;
+            }
 
+            foreach (var s in _enviadas)
+            {
+                int ancho = Math.Max(280, flpEnviadas.ClientSize.Width - 26);
+                bool tieneWhatsapp = !string.IsNullOrWhiteSpace(s.TelefonoContacto);
+
+                Panel card = new Panel
+                {
+                    Width = ancho,
+                    Height = 132,
+                    BackColor = Color.White,
+                    Margin = new Padding(0, 0, 0, 10)
+                };
+
+                Label lblTitulo = new Label
+                {
+                    Text = s.Titulo,
+                    Font = new Font("Segoe UI", 10.5F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(40, 40, 55),
+                    Location = new Point(14, 12),
+                    Size = new Size(ancho - 125, 22),
+                    AutoEllipsis = true
+                };
+
+                Label lblEstado = CrearBadgeEstado(s.Estado.ToString(), ancho - 105, 12);
+
+                string vendedorTexto = string.IsNullOrWhiteSpace(s.NombreContraparte)
+                    ? "Vendedor: (visible al aceptar)"
+                    : $"Vendedor: {s.NombreContraparte}";
+
+                Label lblDetalle = new Label
+                {
+                    Text = $"{vendedorTexto}  •  {s.Cantidad} ud(s)  •  ${s.Total:N0}",
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(103, 58, 183),
+                    Location = new Point(14, 40),
+                    Size = new Size(ancho - 28, 20),
+                    AutoEllipsis = true
+                };
+
+                Label lblFecha = new Label
+                {
+                    Text = $"📅 {s.Fecha:dd/MM/yyyy HH:mm}",
+                    Font = new Font("Segoe UI", 8.5F),
+                    ForeColor = Color.FromArgb(120, 120, 140),
+                    Location = new Point(14, 64),
+                    AutoSize = true
+                };
+
+                card.Controls.Add(lblTitulo);
+                card.Controls.Add(lblEstado);
+                card.Controls.Add(lblDetalle);
+                card.Controls.Add(lblFecha);
+
+                if (tieneWhatsapp)
+                {
+                    Button btnWhatsApp = new Button
+                    {
+                        Text = $"💬 WhatsApp: {s.TelefonoContacto}",
+                        Size = new Size(230, 30),
+                        Location = new Point(14, 90),
+                        BackColor = Color.FromArgb(37, 211, 102),
+                        ForeColor = Color.White,
+                        FlatStyle = FlatStyle.Flat,
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        Cursor = Cursors.Hand
+                    };
+                    btnWhatsApp.FlatAppearance.BorderSize = 0;
+                    btnWhatsApp.Click += (sender, e) =>
+                        AbrirWhatsApp(s.TelefonoContacto, s.Titulo, s.Cantidad);
+
+                    card.Controls.Add(btnWhatsApp);
+                }
+                else
+                {
+                    Label lblInfo = new Label
+                    {
+                        Text = s.EstaPendiente
+                            ? "⏳ El contacto de WhatsApp aparecerá cuando acepten."
+                            : "Contacto no disponible.",
+                        Font = new Font("Segoe UI", 8.5F, FontStyle.Italic),
+                        ForeColor = Color.FromArgb(130, 120, 155),
+                        Location = new Point(14, 94),
+                        AutoSize = true
+                    };
+                    card.Controls.Add(lblInfo);
+                }
+
+                flpEnviadas.Controls.Add(card);
+            }
+        }
+
+        private Label CrearBadgeEstado(string estado, int x, int y)
+        {
+            string est = (estado ?? "").ToUpper();
+            Color fondo = Color.FromArgb(254, 243, 199);
+            Color texto = Color.FromArgb(180, 83, 9);
+
+            if (est.Contains("ACEPT"))
+            {
+                fondo = Color.FromArgb(220, 252, 231);
+                texto = Color.FromArgb(21, 128, 61);
+            }
+            else if (est.Contains("RECHAZ"))
+            {
+                fondo = Color.FromArgb(254, 226, 226);
+                texto = Color.FromArgb(185, 28, 28);
+            }
+
+            return new Label
+            {
+                Text = est,
+                Location = new Point(x, y),
+                Size = new Size(92, 22),
+                BackColor = fondo,
+                ForeColor = texto,
+                Font = new Font("Segoe UI", 7.8F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+        }
+
+        private Label CrearMensajeVacio(string mensaje, FlowLayoutPanel contenedor)
+        {
+            return new Label
+            {
+                Text = mensaje,
+                AutoSize = false,
+                Width = Math.Max(250, contenedor.ClientSize.Width - 26),
+                Height = 50,
+                Font = new Font("Segoe UI", 9.5F),
+                ForeColor = Color.FromArgb(110, 100, 135),
+                Padding = new Padding(4, 10, 4, 4)
+            };
+        }
+
+        private void AceptarSolicitud(SolicitudDetalle s)
+        {
             var conf = MessageBox.Show(
-                $"¿Aceptar la solicitud de {s.NombreContraparte} por {s.Cantidad} unidad(es) de \"{s.Titulo}\"?{oferta}\n\n" +
+                $"¿Aceptar la solicitud de {s.NombreContraparte} por {s.Cantidad} unidad(es) de \"{s.Titulo}\"?\n\n" +
                 "Se descontarán las unidades de tu publicación y el comprador verá tus datos de contacto.",
                 "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
             if (conf != DialogResult.Yes) return;
 
             try
@@ -209,11 +318,8 @@ namespace UniMarket.Presentacion
             CargarListas();
         }
 
-        private void btnRechazar_Click(object sender, EventArgs e)
+        private void RechazarSolicitud(SolicitudDetalle s)
         {
-            var s = ObtenerPendienteSeleccionada();
-            if (s == null) return;
-
             var conf = MessageBox.Show(
                 $"¿Rechazar la solicitud de {s.NombreContraparte} por \"{s.Titulo}\"?",
                 "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -232,6 +338,35 @@ namespace UniMarket.Presentacion
             }
 
             CargarListas();
+        }
+
+        private void AbrirWhatsApp(string telefono, string producto, int cantidad)
+        {
+            string soloNumeros = new string(telefono.Where(char.IsDigit).ToArray());
+
+            if (soloNumeros.Length == 10 && soloNumeros.StartsWith("3"))
+            {
+                soloNumeros = "57" + soloNumeros;
+            }
+
+            string mensaje = Uri.EscapeDataString(
+                $"¡Hola! Te contacto desde Trueque. Me aceptaste la solicitud por {cantidad} unidad(es) de \"{producto}\".");
+
+            string url = $"https://wa.me/{soloNumeros}?text={mensaje}";
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"No se pudo abrir WhatsApp: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)

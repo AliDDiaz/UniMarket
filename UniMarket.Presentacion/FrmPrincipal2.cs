@@ -10,9 +10,10 @@ namespace UniMarket.Presentacion
 {
     public partial class FrmPrincipal2 : Form
     {
-        // Colores del menú lateral (un solo lugar para cambiarlos)
+        //---color 
         private static readonly Color ColorNormal = Color.Indigo;
         private static readonly Color ColorHover = Color.FromArgb(124, 77, 255);
+        //-----color
         private readonly Usuario _usuario;
         private readonly NotificacionesService _botService = new NotificacionesService();
         private Form formularioActivo = null;

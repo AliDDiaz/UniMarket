@@ -150,12 +150,6 @@
     <Compile Include="FrmRegistro.Designer.cs">
       <DependentUpon>FrmRegistro.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSolicitud.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmSolicitud.Designer.cs">
-      <DependentUpon>FrmSolicitud.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmSolicitudes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -190,9 +184,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmRegistro.resx">
       <DependentUpon>FrmRegistro.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmSolicitud.resx">
-      <DependentUpon>FrmSolicitud.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSolicitudes.resx">
       <DependentUpon>FrmSolicitudes.cs</DependentUpon>

@@ -115,23 +115,6 @@ namespace UniMarket.Presentacion
             }
         }
 
-        private void AbrirSolicitudCompra(Publicacion pub)
-        {
-            if (pub.PerteneceA(_usuario.Id))
-            {
-                MessageBox.Show("No puedes comprar tu propia publicación.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (var frm = new FrmSolicitud(pub, _usuario.Id))
-            {
-                frm.ShowDialog();
-            }
-
-            CargarPublicaciones();
-        }
-
         private void MostrarCatalogo(List<Publicacion> lista)
         {
             flpCatalogo.Controls.Clear();

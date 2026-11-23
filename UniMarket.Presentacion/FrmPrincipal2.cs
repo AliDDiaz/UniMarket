@@ -23,6 +23,7 @@ namespace UniMarket.Presentacion
         public FrmPrincipal2(Usuario usuario)
         {
             InitializeComponent();
+            ReorganizarDisposicion();
             FormClosed += FrmPrincipal2_FormClosed;
             _usuario = usuario;
 
@@ -206,5 +207,46 @@ namespace UniMarket.Presentacion
 
             AbrirFormularioEnPanel(new FrmSolicitudes(_usuario));
         }
+
+        // Quita el encabezado, pasa la campana y el carrito al menú de la izquierda
+        // y hace que el contenido central ocupe todo el espacio libre
+        private void ReorganizarDisposicion()
+        {
+            // 1. Campana y carrito (con sus contadores) pasan al panel izquierdo,
+            //    donde antes estaba el botón INICIO
+            panel1.Controls.Add(btnBot);
+            panel1.Controls.Add(lblBadgeBot);
+            panel1.Controls.Add(btnCarrito);
+            panel1.Controls.Add(lblBadgeCarrito);
+
+            btnBot.Location = new Point(47, 217);
+            btnCarrito.Location = new Point(127, 217);
+
+            // Los contadores rojos van en la esquina superior derecha de cada botón
+            lblBadgeBot.Location = new Point(btnBot.Left + 45, btnBot.Top - 1);
+            lblBadgeCarrito.Location = new Point(btnCarrito.Left + 40, btnCarrito.Top - 4);
+            lblBadgeBot.BringToFront();
+            lblBadgeCarrito.BringToFront();
+
+            // 2. El menú baja para dejar sitio a esa fila de iconos
+            const int desplazamiento = 73;
+            foreach (var boton in new[] { button1, button2, btnHistorial, btnMycuenta, btnSalir })
+                boton.Top += desplazamiento;
+
+            // 3. Se elimina el encabezado (ya no tiene nada dentro que se use)
+            Controls.Remove(panel2);
+            panel2.Dispose();
+
+            // 4. El contenido central pasa a ocupar todo el espacio que queda
+            flowLayoutPanel1.Controls.Remove(panelContenedor);
+            Controls.Remove(flowLayoutPanel1);
+            flowLayoutPanel1.Dispose();
+
+            Controls.Add(panelContenedor);
+            panelContenedor.Dock = DockStyle.Fill;
+            panelContenedor.Margin = Padding.Empty;
+            panelContenedor.BringToFront();   // los paneles de borde se acomodan primero; el que rellena, al final
+        }
     }
 }
+

@@ -125,7 +125,7 @@
             this.btnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSalir.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalir.ForeColor = System.Drawing.Color.White;
-            this.btnSalir.Location = new System.Drawing.Point(7, 531);
+            this.btnSalir.Location = new System.Drawing.Point(12, 691);
             this.btnSalir.Name = "btnSalir";
             this.btnSalir.Size = new System.Drawing.Size(201, 54);
             this.btnSalir.TabIndex = 5;
@@ -142,7 +142,7 @@
             this.btnMycuenta.ForeColor = System.Drawing.Color.White;
             this.btnMycuenta.Image = ((System.Drawing.Image)(resources.GetObject("btnMycuenta.Image")));
             this.btnMycuenta.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMycuenta.Location = new System.Drawing.Point(7, 471);
+            this.btnMycuenta.Location = new System.Drawing.Point(7, 588);
             this.btnMycuenta.Name = "btnMycuenta";
             this.btnMycuenta.Size = new System.Drawing.Size(212, 54);
             this.btnMycuenta.TabIndex = 4;
@@ -159,7 +159,7 @@
             this.btnHistorial.ForeColor = System.Drawing.Color.White;
             this.btnHistorial.Image = ((System.Drawing.Image)(resources.GetObject("btnHistorial.Image")));
             this.btnHistorial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHistorial.Location = new System.Drawing.Point(0, 400);
+            this.btnHistorial.Location = new System.Drawing.Point(0, 482);
             this.btnHistorial.Name = "btnHistorial";
             this.btnHistorial.Size = new System.Drawing.Size(225, 65);
             this.btnHistorial.TabIndex = 2;
@@ -191,7 +191,7 @@
             this.button2.ForeColor = System.Drawing.Color.White;
             this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(3, 340);
+            this.button2.Location = new System.Drawing.Point(3, 401);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(208, 54);
             this.button2.TabIndex = 2;
@@ -209,7 +209,7 @@
             this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(-3, 280);
+            this.button1.Location = new System.Drawing.Point(0, 314);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(228, 54);
             this.button1.TabIndex = 1;

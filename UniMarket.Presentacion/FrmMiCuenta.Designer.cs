@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMiCuenta));
             this.pnlEncabezado = new System.Windows.Forms.Panel();
             this.pnlDatos = new System.Windows.Forms.Panel();
             this.btnCancelar = new System.Windows.Forms.Button();
@@ -50,6 +51,8 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.pnlPerfil = new System.Windows.Forms.Panel();
+            this.lblTruequesValor = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -61,14 +64,11 @@
             this.lblNombrePerfil = new System.Windows.Forms.Label();
             this.btnCambiarFoto = new System.Windows.Forms.Button();
             this.picFoto = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlEliminar = new System.Windows.Forms.Panel();
             this.btnEliminarCuenta = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.lblTruequesValor = new System.Windows.Forms.Label();
             this.pnlEncabezado.SuspendLayout();
             this.pnlDatos.SuspendLayout();
             this.pnlContrasena.SuspendLayout();
@@ -81,14 +81,16 @@
             // pnlEncabezado
             // 
             this.pnlEncabezado.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.pnlEncabezado.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnlEncabezado.BackgroundImage")));
+            this.pnlEncabezado.Controls.Add(this.pnlEliminar);
             this.pnlEncabezado.Controls.Add(this.pnlDatos);
             this.pnlEncabezado.Controls.Add(this.pnlPerfil);
-            this.pnlEncabezado.Controls.Add(this.label2);
             this.pnlEncabezado.Controls.Add(this.label1);
-            this.pnlEncabezado.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlEncabezado.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlEncabezado.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.pnlEncabezado.Location = new System.Drawing.Point(0, 0);
             this.pnlEncabezado.Name = "pnlEncabezado";
-            this.pnlEncabezado.Size = new System.Drawing.Size(853, 489);
+            this.pnlEncabezado.Size = new System.Drawing.Size(1594, 841);
             this.pnlEncabezado.TabIndex = 0;
             // 
             // pnlDatos
@@ -105,9 +107,9 @@
             this.pnlDatos.Controls.Add(this.label8);
             this.pnlDatos.Controls.Add(this.label7);
             this.pnlDatos.Controls.Add(this.panel3);
-            this.pnlDatos.Location = new System.Drawing.Point(290, 86);
+            this.pnlDatos.Location = new System.Drawing.Point(436, 135);
             this.pnlDatos.Name = "pnlDatos";
-            this.pnlDatos.Size = new System.Drawing.Size(549, 360);
+            this.pnlDatos.Size = new System.Drawing.Size(610, 413);
             this.pnlDatos.TabIndex = 3;
             // 
             // btnCancelar
@@ -169,7 +171,7 @@
             this.pnlContrasena.Controls.Add(this.label12);
             this.pnlContrasena.Controls.Add(this.label11);
             this.pnlContrasena.Controls.Add(this.label10);
-            this.pnlContrasena.Location = new System.Drawing.Point(0, 190);
+            this.pnlContrasena.Location = new System.Drawing.Point(25, 191);
             this.pnlContrasena.Name = "pnlContrasena";
             this.pnlContrasena.Size = new System.Drawing.Size(549, 84);
             this.pnlContrasena.TabIndex = 7;
@@ -190,27 +192,27 @@
             // txtContrasenaConfirmar
             // 
             this.txtContrasenaConfirmar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtContrasenaConfirmar.Location = new System.Drawing.Point(370, 24);
+            this.txtContrasenaConfirmar.Location = new System.Drawing.Point(374, 28);
             this.txtContrasenaConfirmar.Name = "txtContrasenaConfirmar";
-            this.txtContrasenaConfirmar.Size = new System.Drawing.Size(160, 27);
+            this.txtContrasenaConfirmar.Size = new System.Drawing.Size(160, 23);
             this.txtContrasenaConfirmar.TabIndex = 5;
             this.txtContrasenaConfirmar.UseSystemPasswordChar = true;
             // 
             // txtContrasenaNueva
             // 
             this.txtContrasenaNueva.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtContrasenaNueva.Location = new System.Drawing.Point(195, 24);
+            this.txtContrasenaNueva.Location = new System.Drawing.Point(199, 29);
             this.txtContrasenaNueva.Name = "txtContrasenaNueva";
-            this.txtContrasenaNueva.Size = new System.Drawing.Size(160, 27);
+            this.txtContrasenaNueva.Size = new System.Drawing.Size(160, 23);
             this.txtContrasenaNueva.TabIndex = 4;
             this.txtContrasenaNueva.UseSystemPasswordChar = true;
             // 
             // txtContrasenaActual
             // 
             this.txtContrasenaActual.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtContrasenaActual.Location = new System.Drawing.Point(20, 24);
+            this.txtContrasenaActual.Location = new System.Drawing.Point(29, 28);
             this.txtContrasenaActual.Name = "txtContrasenaActual";
-            this.txtContrasenaActual.Size = new System.Drawing.Size(160, 27);
+            this.txtContrasenaActual.Size = new System.Drawing.Size(160, 23);
             this.txtContrasenaActual.TabIndex = 3;
             this.txtContrasenaActual.UseSystemPasswordChar = true;
             // 
@@ -220,7 +222,7 @@
             this.label12.BackColor = System.Drawing.Color.Transparent;
             this.label12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.label12.Location = new System.Drawing.Point(370, 2);
+            this.label12.Location = new System.Drawing.Point(385, 5);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(126, 20);
             this.label12.TabIndex = 2;
@@ -232,7 +234,7 @@
             this.label11.BackColor = System.Drawing.Color.Transparent;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.label11.Location = new System.Drawing.Point(195, 2);
+            this.label11.Location = new System.Drawing.Point(211, 5);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(135, 20);
             this.label11.TabIndex = 1;
@@ -244,11 +246,12 @@
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.label10.Location = new System.Drawing.Point(20, 2);
+            this.label10.Location = new System.Drawing.Point(38, 5);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(134, 20);
             this.label10.TabIndex = 0;
             this.label10.Text = "Contraseña actual";
+            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // txtCorreo
             // 
@@ -325,7 +328,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(549, 44);
+            this.panel3.Size = new System.Drawing.Size(610, 44);
             this.panel3.TabIndex = 0;
             // 
             // label3
@@ -355,10 +358,33 @@
             this.pnlPerfil.Controls.Add(this.lblNombrePerfil);
             this.pnlPerfil.Controls.Add(this.btnCambiarFoto);
             this.pnlPerfil.Controls.Add(this.picFoto);
-            this.pnlPerfil.Location = new System.Drawing.Point(24, 86);
+            this.pnlPerfil.Location = new System.Drawing.Point(125, 135);
             this.pnlPerfil.Name = "pnlPerfil";
-            this.pnlPerfil.Size = new System.Drawing.Size(250, 390);
+            this.pnlPerfil.Size = new System.Drawing.Size(282, 433);
             this.pnlPerfil.TabIndex = 2;
+            // 
+            // lblTruequesValor
+            // 
+            this.lblTruequesValor.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTruequesValor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
+            this.lblTruequesValor.Location = new System.Drawing.Point(120, 358);
+            this.lblTruequesValor.Name = "lblTruequesValor";
+            this.lblTruequesValor.Size = new System.Drawing.Size(110, 20);
+            this.lblTruequesValor.TabIndex = 12;
+            this.lblTruequesValor.Text = "-";
+            this.lblTruequesValor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
+            this.label16.Location = new System.Drawing.Point(20, 358);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(73, 20);
+            this.label16.TabIndex = 11;
+            this.label16.Text = "Trueques";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label6
             // 
@@ -486,25 +512,13 @@
             this.picFoto.TabIndex = 0;
             this.picFoto.TabStop = false;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.label2.Location = new System.Drawing.Point(28, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(574, 20);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Gestiona tu información personal, actualiza tus datos o desactiva tu cuenta.";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.label1.Location = new System.Drawing.Point(24, 6);
+            this.label1.Location = new System.Drawing.Point(554, 50);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(167, 38);
             this.label1.TabIndex = 0;
@@ -516,9 +530,9 @@
             this.pnlEliminar.Controls.Add(this.btnEliminarCuenta);
             this.pnlEliminar.Controls.Add(this.label15);
             this.pnlEliminar.Controls.Add(this.label14);
-            this.pnlEliminar.Location = new System.Drawing.Point(24, 495);
+            this.pnlEliminar.Location = new System.Drawing.Point(116, 615);
             this.pnlEliminar.Name = "pnlEliminar";
-            this.pnlEliminar.Size = new System.Drawing.Size(815, 90);
+            this.pnlEliminar.Size = new System.Drawing.Size(869, 115);
             this.pnlEliminar.TabIndex = 11;
             // 
             // btnEliminarCuenta
@@ -529,7 +543,7 @@
             this.btnEliminarCuenta.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEliminarCuenta.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
             this.btnEliminarCuenta.ForeColor = System.Drawing.Color.White;
-            this.btnEliminarCuenta.Location = new System.Drawing.Point(610, 25);
+            this.btnEliminarCuenta.Location = new System.Drawing.Point(634, 36);
             this.btnEliminarCuenta.Name = "btnEliminarCuenta";
             this.btnEliminarCuenta.Size = new System.Drawing.Size(185, 40);
             this.btnEliminarCuenta.TabIndex = 2;
@@ -541,7 +555,7 @@
             // 
             this.label15.BackColor = System.Drawing.Color.Transparent;
             this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.label15.Location = new System.Drawing.Point(20, 38);
+            this.label15.Location = new System.Drawing.Point(36, 36);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(560, 40);
             this.label15.TabIndex = 1;
@@ -560,36 +574,12 @@
             this.label14.TabIndex = 0;
             this.label14.Text = "Desactivar cuenta";
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.label16.Location = new System.Drawing.Point(20, 358);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(73, 20);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "Trueques";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblTruequesValor
-            // 
-            this.lblTruequesValor.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTruequesValor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.lblTruequesValor.Location = new System.Drawing.Point(120, 358);
-            this.lblTruequesValor.Name = "lblTruequesValor";
-            this.lblTruequesValor.Size = new System.Drawing.Size(110, 20);
-            this.lblTruequesValor.TabIndex = 12;
-            this.lblTruequesValor.Text = "-";
-            this.lblTruequesValor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // FrmMiCuenta
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(853, 592);
-            this.Controls.Add(this.pnlEliminar);
+            this.ClientSize = new System.Drawing.Size(1594, 841);
             this.Controls.Add(this.pnlEncabezado);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
@@ -616,7 +606,6 @@
         #endregion
 
         private System.Windows.Forms.Panel pnlEncabezado;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlPerfil;
         private System.Windows.Forms.Button btnCambiarFoto;

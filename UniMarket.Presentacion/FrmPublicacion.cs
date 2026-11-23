@@ -9,12 +9,20 @@ namespace UniMarket.Presentacion
 {
     public partial class FrmPublicacion : Form
     {
-
         private readonly PublicacionService _service;
+        private readonly Usuario _usuario;
         private readonly int _usuarioId;
         private readonly Publicacion _publicacion;
         private byte[] _imagenSeleccionada = null;
 
+        // Constructor recomendado (recibe Usuario para poder regresar al catálogo incrustado)
+        public FrmPublicacion(Usuario usuario, Publicacion publicacion = null)
+            : this(usuario.Id, publicacion)
+        {
+            _usuario = usuario;
+        }
+
+        // Constructor compatible con int usuarioId
         public FrmPublicacion(int usuarioId, Publicacion publicacion = null)
         {
             InitializeComponent();
@@ -48,9 +56,9 @@ namespace UniMarket.Presentacion
                 _imagenSeleccionada = _publicacion.Imagen;
                 if (_imagenSeleccionada != null && _imagenSeleccionada.Length > 0)
                 {
-                    using (var ms = new System.IO.MemoryStream(_imagenSeleccionada))
+                    using (var ms = new MemoryStream(_imagenSeleccionada))
                     {
-                        pbFoto.Image = System.Drawing.Image.FromStream(ms);
+                        pbFoto.Image = Image.FromStream(ms);
                         pbFoto.SizeMode = PictureBoxSizeMode.Zoom;
                     }
                 }
@@ -79,7 +87,6 @@ namespace UniMarket.Presentacion
             }
         }
 
-        // Solo se pueden escribir los campos que la modalidad elegida usa
         private void cmbModalidad_SelectedIndexChanged(object sender, EventArgs e)
         {
             var modalidad = ModalidadSeleccionada();
@@ -130,18 +137,13 @@ namespace UniMarket.Presentacion
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
-                DialogResult = DialogResult.OK;
+                VolverAlCatalogo();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "No se pudo guardar",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnSubirFoto_Click(object sender, EventArgs e)
@@ -155,13 +157,12 @@ namespace UniMarket.Presentacion
                 {
                     try
                     {
-                        byte[] imagenBytes = System.IO.File.ReadAllBytes(ofd.FileName);
+                        byte[] imagenBytes = File.ReadAllBytes(ofd.FileName);
 
                         using (MemoryStream ms = new MemoryStream(imagenBytes))
                         using (Image imagen = Image.FromStream(ms))
                         {
                             Image nuevaImagen = new Bitmap(imagen);
-
                             Image imagenAnterior = pbFoto.Image;
 
                             pbFoto.Image = nuevaImagen;
@@ -183,6 +184,37 @@ namespace UniMarket.Presentacion
                     }
                 }
             }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void VolverAlCatalogo()
+        {
+            if (this.Parent is Panel contenedor && _usuario != null)
+            {
+                var frmCatalogo = new FrmPrincipal(_usuario)
+                {
+                    TopLevel = false,
+                    FormBorderStyle = FormBorderStyle.None,
+                    Dock = DockStyle.Fill
+                };
+                contenedor.Controls.Clear();
+                contenedor.Controls.Add(frmCatalogo);
+                frmCatalogo.Show();
+                this.Close();
+            }
+            else
+            {
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
+        }
+
+        private void FrmPublicacion_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

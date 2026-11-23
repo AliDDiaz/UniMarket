@@ -35,10 +35,8 @@
             this.btnEliminar = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.chkMisPublicaciones = new System.Windows.Forms.CheckBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.flpCatalogo = new System.Windows.Forms.FlowLayoutPanel();
             this.picEngel = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEngel)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,7 +75,7 @@
             this.btnEliminar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnEliminar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEliminar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnEliminar.Location = new System.Drawing.Point(755, 760);
+            this.btnEliminar.Location = new System.Drawing.Point(859, 760);
             this.btnEliminar.Name = "btnEliminar";
             this.btnEliminar.Size = new System.Drawing.Size(93, 46);
             this.btnEliminar.TabIndex = 4;
@@ -91,7 +89,7 @@
             this.btnEditar.BackColor = System.Drawing.Color.GhostWhite;
             this.btnEditar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnEditar.Location = new System.Drawing.Point(566, 760);
+            this.btnEditar.Location = new System.Drawing.Point(652, 760);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(93, 46);
             this.btnEditar.TabIndex = 5;
@@ -112,18 +110,6 @@
             this.chkMisPublicaciones.UseVisualStyleBackColor = true;
             this.chkMisPublicaciones.CheckedChanged += new System.EventHandler(this.chkMisPublicaciones_CheckedChanged);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1404, 806);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 13;
-            this.pictureBox1.TabStop = false;
-            // 
             // flpCatalogo
             // 
             this.flpCatalogo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -143,7 +129,7 @@
             this.picEngel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(196)))), ((int)(((byte)(245)))));
             this.picEngel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picEngel.Image = ((System.Drawing.Image)(resources.GetObject("picEngel.Image")));
-            this.picEngel.Location = new System.Drawing.Point(1100, 692);
+            this.picEngel.Location = new System.Drawing.Point(1256, 728);
             this.picEngel.Name = "picEngel";
             this.picEngel.Size = new System.Drawing.Size(81, 78);
             this.picEngel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -157,6 +143,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Lavender;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1404, 806);
             this.Controls.Add(this.picEngel);
             this.Controls.Add(this.flpCatalogo);
@@ -166,12 +153,10 @@
             this.Controls.Add(this.btnBuscar);
             this.Controls.Add(this.txtBuscar);
             this.Controls.Add(this.lblBuscar);
-            this.Controls.Add(this.pictureBox1);
             this.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "6";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picEngel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -185,7 +170,6 @@
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.CheckBox chkMisPublicaciones;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FlowLayoutPanel flpCatalogo;
         private System.Windows.Forms.PictureBox picEngel;
     }

@@ -342,5 +342,10 @@ namespace UniMarket.Presentacion
                 return resultado == DialogResult.OK ? txt.Text : null;
             }
         }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

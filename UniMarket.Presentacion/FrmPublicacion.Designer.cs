@@ -47,11 +47,16 @@
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.btnSubirFoto = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblModalidad = new System.Windows.Forms.Label();
+            this.cmbModalidad = new System.Windows.Forms.ComboBox();
+            this.lblTrueque = new System.Windows.Forms.Label();
+            this.txtTrueque = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFoto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTitulo
@@ -119,7 +124,7 @@
             this.txtDescripcion.Multiline = true;
             this.txtDescripcion.Name = "txtDescripcion";
             this.txtDescripcion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDescripcion.Size = new System.Drawing.Size(303, 229);
+            this.txtDescripcion.Size = new System.Drawing.Size(303, 118);
             this.txtDescripcion.TabIndex = 5;
             // 
             // txtPrecio
@@ -158,7 +163,7 @@
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(-25, -66);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(938, 628);
+            this.pictureBox1.Size = new System.Drawing.Size(860, 638);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
@@ -254,17 +259,66 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.txtTrueque);
+            this.panel1.Controls.Add(this.lblTrueque);
             this.panel1.Location = new System.Drawing.Point(209, 135);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 265);
+            this.panel1.Size = new System.Drawing.Size(618, 344);
             this.panel1.TabIndex = 20;
+            // 
+            // lblModalidad
+            // 
+            this.lblModalidad.AutoSize = true;
+            this.lblModalidad.BackColor = System.Drawing.Color.Transparent;
+            this.lblModalidad.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblModalidad.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
+            this.lblModalidad.Location = new System.Drawing.Point(266, 318);
+            this.lblModalidad.Name = "lblModalidad";
+            this.lblModalidad.Size = new System.Drawing.Size(83, 20);
+            this.lblModalidad.TabIndex = 21;
+            this.lblModalidad.Text = "Modalidad";
+            // 
+            // cmbModalidad
+            // 
+            this.cmbModalidad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbModalidad.FormattingEnabled = true;
+            this.cmbModalidad.Location = new System.Drawing.Point(266, 342);
+            this.cmbModalidad.Name = "cmbModalidad";
+            this.cmbModalidad.Size = new System.Drawing.Size(213, 24);
+            this.cmbModalidad.TabIndex = 0;
+            this.cmbModalidad.SelectedIndexChanged += new System.EventHandler(this.cmbModalidad_SelectedIndexChanged);
+            // 
+            // lblTrueque
+            // 
+            this.lblTrueque.AutoSize = true;
+            this.lblTrueque.BackColor = System.Drawing.Color.Transparent;
+            this.lblTrueque.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTrueque.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
+            this.lblTrueque.Location = new System.Drawing.Point(310, 157);
+            this.lblTrueque.Name = "lblTrueque";
+            this.lblTrueque.Size = new System.Drawing.Size(220, 20);
+            this.lblTrueque.TabIndex = 0;
+            this.lblTrueque.Text = "Qué busco a cambio (trueque)";
+            // 
+            // txtTrueque
+            // 
+            this.txtTrueque.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.txtTrueque.Location = new System.Drawing.Point(304, 182);
+            this.txtTrueque.MaxLength = 300;
+            this.txtTrueque.Multiline = true;
+            this.txtTrueque.Name = "txtTrueque";
+            this.txtTrueque.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtTrueque.Size = new System.Drawing.Size(303, 77);
+            this.txtTrueque.TabIndex = 1;
             // 
             // FrmPublicacion
             // 
             this.AcceptButton = this.btnGuardar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(881, 518);
+            this.ClientSize = new System.Drawing.Size(831, 504);
+            this.Controls.Add(this.cmbModalidad);
+            this.Controls.Add(this.lblModalidad);
             this.Controls.Add(this.btnSubirFoto);
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox4);
@@ -294,6 +348,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,5 +375,9 @@
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.Button btnSubirFoto;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lblTrueque;
+        private System.Windows.Forms.Label lblModalidad;
+        private System.Windows.Forms.ComboBox cmbModalidad;
+        private System.Windows.Forms.TextBox txtTrueque;
     }
 }

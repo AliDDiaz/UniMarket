@@ -20,7 +20,7 @@ namespace UniMarket.Presentacion
             InitializeComponent();
 
             lblTitulo.Text = pub.Titulo;
-            lblPrecio.Text = $"${pub.Precio:N0}";
+            lblPrecio.Text = pub.AceptaVenta ? $"${pub.Precio:N0}" : "Solo trueque";
             txtDescripcion.Text = string.IsNullOrWhiteSpace(pub.Descripcion)
                 ? "El vendedor no agregó una descripción."
                 : pub.Descripcion;

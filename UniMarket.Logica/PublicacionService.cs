@@ -9,6 +9,7 @@ namespace UniMarket.Logica
     public class PublicacionService
     {
         private const decimal PrecioMaximo = 9999999999.99m;
+        private const int MaxTruequeBusca = 300;
 
         private readonly IPublicacionRepository _repository;
 
@@ -93,6 +94,16 @@ namespace UniMarket.Logica
 
             string descripcion = (publicacion.Descripcion ?? "").Trim();
             publicacion.Descripcion = descripcion == "" ? null : descripcion;
+
+            string truequeBusca = (publicacion.TruequeBusca ?? "").Trim();
+            publicacion.TruequeBusca = truequeBusca == "" ? null : truequeBusca;
+
+            // Lo que la modalidad no usa, se descarta
+            if (!publicacion.AceptaVenta)
+                publicacion.Precio = 0;
+
+            if (!publicacion.AceptaTrueque)
+                publicacion.TruequeBusca = null;
         }
 
         private void ValidarDatos(Publicacion publicacion)
@@ -106,11 +117,23 @@ namespace UniMarket.Logica
             if (publicacion.Descripcion != null && publicacion.Descripcion.Length > 500)
                 throw new Exception("La descripción no puede superar los 500 caracteres.");
 
-            if (publicacion.Precio <= 0)
-                throw new Exception("El precio debe ser mayor a cero.");
+            if (publicacion.AceptaVenta)
+            {
+                if (publicacion.Precio <= 0)
+                    throw new Exception("El precio debe ser mayor a cero.");
 
-            if (publicacion.Precio > PrecioMaximo)
-                throw new Exception("El precio es demasiado alto.");
+                if (publicacion.Precio > PrecioMaximo)
+                    throw new Exception("El precio es demasiado alto.");
+            }
+
+            if (publicacion.AceptaTrueque)
+            {
+                if (publicacion.TruequeBusca == null)
+                    throw new Exception("Indica qué buscas a cambio para aceptar trueques.");
+
+                if (publicacion.TruequeBusca.Length > MaxTruequeBusca)
+                    throw new Exception($"Lo que buscas a cambio no puede superar los {MaxTruequeBusca} caracteres.");
+            }
 
             if (publicacion.Stock < 0)
                 throw new Exception("El stock no puede ser negativo.");

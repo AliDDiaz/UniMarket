@@ -43,6 +43,9 @@ namespace UniMarket.Logica
             if (publicacion == null || !publicacion.Activo)
                 throw new Exception("La publicación no existe.");
 
+            if (!publicacion.AceptaVenta)
+                throw new Exception("Esta publicación solo acepta trueque.");
+
             if (publicacion.PerteneceA(compradorId))
                 throw new Exception("No puedes comprar tu propia publicación.");
 

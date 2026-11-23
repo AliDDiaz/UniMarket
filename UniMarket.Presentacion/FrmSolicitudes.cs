@@ -12,6 +12,7 @@ namespace UniMarket.Presentacion
     {
         private readonly SolicitudService _service;
         private readonly Usuario _usuario;
+        private bool esTrueque;
 
         public FrmSolicitudes(Usuario usuario)
         {
@@ -20,21 +21,21 @@ namespace UniMarket.Presentacion
             _usuario = usuario;
 
             PrepararGrilla(dgvRecibidas);
-            AgregarColumna(dgvRecibidas, "Producto", "Titulo", 35);
-            AgregarColumna(dgvRecibidas, "Comprador", "NombreContraparte", 25);
-            AgregarColumna(dgvRecibidas, "Cantidad", "Cantidad", 12);
-            AgregarColumna(dgvRecibidas, "Total", "Total", 18, "#,##0.##");
-            AgregarColumna(dgvRecibidas, "Estado", "Estado", 15);
-            AgregarColumna(dgvRecibidas, "Fecha", "Fecha", 20, "dd/MM/yyyy HH:mm");
+            AgregarColumna(dgvRecibidas, "Producto", "Titulo", 25);
+            AgregarColumna(dgvRecibidas, "Comprador", "NombreContraparte", 20);
+            AgregarColumna(dgvRecibidas, "Cantidad", "Cantidad", 10);
+            AgregarColumna(dgvRecibidas, "Pago / Oferta", "ResumenPago", 35);
+            AgregarColumna(dgvRecibidas, "Estado", "Estado", 12);
+            AgregarColumna(dgvRecibidas, "Fecha", "Fecha", 18, "dd/MM/yyyy HH:mm");
 
             PrepararGrilla(dgvEnviadas);
-            AgregarColumna(dgvEnviadas, "Producto", "Titulo", 30);
-            AgregarColumna(dgvEnviadas, "Cantidad", "Cantidad", 10);
-            AgregarColumna(dgvEnviadas, "Total", "Total", 15, "#,##0.##");
-            AgregarColumna(dgvEnviadas, "Estado", "Estado", 12);
-            AgregarColumna(dgvEnviadas, "Vendedor", "NombreContraparte", 20, null, "(al aceptar)");
-            AgregarColumnaLink(dgvEnviadas, "Teléfono", "TelefonoContacto", 15, "(al aceptar)");
-            AgregarColumna(dgvEnviadas, "Fecha", "Fecha", 18, "dd/MM/yyyy HH:mm");
+            AgregarColumna(dgvEnviadas, "Producto", "Titulo", 22);
+            AgregarColumna(dgvEnviadas, "Cantidad", "Cantidad", 8);
+            AgregarColumna(dgvEnviadas, "Pago / Oferta", "ResumenPago", 30);
+            AgregarColumna(dgvEnviadas, "Estado", "Estado", 10);
+            AgregarColumna(dgvEnviadas, "Vendedor", "NombreContraparte", 16, null, "(al aceptar)");
+            AgregarColumnaLink(dgvEnviadas, "Teléfono", "TelefonoContacto", 12, "(al aceptar)");
+            AgregarColumna(dgvEnviadas, "Fecha", "Fecha", 16, "dd/MM/yyyy HH:mm");
 
             dgvEnviadas.CellContentClick += dgvEnviadas_CellContentClick;
 
@@ -105,11 +106,11 @@ namespace UniMarket.Presentacion
                     return;
                 }
 
-                AbrirWhatsApp(solicitud.TelefonoContacto, solicitud.Titulo, solicitud.Cantidad);
+                AbrirWhatsApp(solicitud.TelefonoContacto, solicitud.Titulo, solicitud.Cantidad, solicitud.EsTrueque);
             }
         }
 
-        private void AbrirWhatsApp(string telefono, string producto, int cantidad)
+        private void AbrirWhatsApp(string telefono, string producto, int cantidad, bool esTrueque)
         {
             // Extrae solo los dígitos (quita espacios, guiones o '+')
             string soloNumeros = new string(telefono.Where(char.IsDigit).ToArray());
@@ -120,8 +121,9 @@ namespace UniMarket.Presentacion
                 soloNumeros = "57" + soloNumeros;
             }
 
+            string que = esTrueque ? "el trueque" : "la solicitud";
             string mensaje = Uri.EscapeDataString(
-                $"¡Hola! Te contacto desde Trueque. Me aceptaste la solicitud por {cantidad} unidad(es) de \"{producto}\".");
+                $"¡Hola! Te contacto desde Trueque. Me aceptaste {que} por {cantidad} unidad(es) de \"{producto}\".");
 
             string url = $"https://wa.me/{soloNumeros}?text={mensaje}";
 
@@ -183,10 +185,13 @@ namespace UniMarket.Presentacion
             var s = ObtenerPendienteSeleccionada();
             if (s == null) return;
 
+            string oferta = s.EsTrueque ? $"\n\nTrueque. Te ofrece: {s.OfertaTrueque}" : "";
+
             var conf = MessageBox.Show(
-                $"¿Aceptar la solicitud de {s.NombreContraparte} por {s.Cantidad} unidad(es) de \"{s.Titulo}\"?\n\n" +
+                $"¿Aceptar la solicitud de {s.NombreContraparte} por {s.Cantidad} unidad(es) de \"{s.Titulo}\"?{oferta}\n\n" +
                 "Se descontarán las unidades de tu publicación y el comprador verá tus datos de contacto.",
                 "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
             if (conf != DialogResult.Yes) return;
 
             try

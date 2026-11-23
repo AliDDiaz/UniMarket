@@ -264,7 +264,7 @@ namespace UniMarket.Presentacion
         {
             SeleccionarTarjeta(tarjeta, pub);
 
-            using (var detalle = new FrmDetalleProducto(pub))
+            using (var detalle = new FrmDetalleProducto(pub, _usuario))
             {
                 detalle.ShowDialog(this);
             }

@@ -8,6 +8,9 @@ namespace UniMarket.Logica
 {
     public class SolicitudService
     {
+        private const int MinOfertaTrueque = 10;
+        private const int MaxOfertaTrueque = 300;
+
         private readonly ISolicitudCompraRepository _solicitudes;
         private readonly IPublicacionRepository _publicaciones;
         private readonly IUsuarioRepository _usuarios;
@@ -30,44 +33,23 @@ namespace UniMarket.Logica
                    new UsuarioRepository(new UsuarioDAO()))
         { }
 
+        // ----- Solicitar una compra con dinero -----
+
         public int Solicitar(int publicacionId, int compradorId, int cantidad)
         {
-            if (compradorId <= 0)
-                throw new Exception("Debes iniciar sesión para solicitar una compra.");
-
-            if (cantidad <= 0)
-                throw new Exception("La cantidad debe ser mayor a cero.");
-
-            var publicacion = _publicaciones.GetById(publicacionId);
-
-            if (publicacion == null || !publicacion.Activo)
-                throw new Exception("La publicación no existe.");
+            var publicacion = ValidarSolicitud(publicacionId, compradorId, cantidad);
 
             if (!publicacion.AceptaVenta)
                 throw new Exception("Esta publicación solo acepta trueque.");
 
-            if (publicacion.PerteneceA(compradorId))
-                throw new Exception("No puedes comprar tu propia publicación.");
+            var comprador = ObtenerComprador(compradorId);
 
-            if (publicacion.Stock <= 0)
-                throw new Exception("Esta publicación está agotada.");
-
-            if (!publicacion.TieneStockPara(cantidad))
-                throw new Exception($"Solo hay {publicacion.Stock} unidad(es) disponible(s).");
-
-            if (_solicitudes.HasPending(publicacionId, compradorId))
-                throw new Exception("Ya tienes una solicitud pendiente para esta publicación.");
-
-            var comprador = _usuarios.GetById(compradorId);
-            if(comprador == null)
-            {
-                throw new Exception("No se encontró tu usuario. Inicia sesión de nuevo.");
-            }
             var solicitud = new SolicitudCompra
             {
                 PublicacionId = publicacionId,
                 CompradorId = compradorId,
                 Cantidad = cantidad,
+                Tipo = TipoSolicitud.Compra,
                 PrecioUnitario = publicacion.Precio
             };
 
@@ -81,6 +63,48 @@ namespace UniMarket.Logica
                 tituloProducto: publicacion.Titulo,
                 cantidad: cantidad,
                 totalOferta: totalOferta,
+                solicitudId: nuevaSolicitudId
+            );
+
+            return nuevaSolicitudId;
+        }
+
+        // ----- Proponer un trueque -----
+
+        public int ProponerTrueque(int publicacionId, int compradorId, int cantidad, string oferta)
+        {
+            oferta = (oferta ?? "").Trim();
+
+            if (oferta.Length < MinOfertaTrueque)
+                throw new Exception($"Describe lo que ofreces a cambio (mínimo {MinOfertaTrueque} caracteres).");
+
+            if (oferta.Length > MaxOfertaTrueque)
+                throw new Exception($"Lo que ofreces no puede superar los {MaxOfertaTrueque} caracteres.");
+
+            var publicacion = ValidarSolicitud(publicacionId, compradorId, cantidad);
+
+            if (!publicacion.AceptaTrueque)
+                throw new Exception("Esta publicación no acepta trueques.");
+
+            var comprador = ObtenerComprador(compradorId);
+
+            var solicitud = new SolicitudCompra
+            {
+                PublicacionId = publicacionId,
+                CompradorId = compradorId,
+                Cantidad = cantidad,
+                Tipo = TipoSolicitud.Trueque,
+                OfertaTrueque = oferta
+            };
+
+            int nuevaSolicitudId = _solicitudes.Add(solicitud);
+
+            _notificaciones.NotificarNuevaPropuestaTrueque(
+                vendedorId: publicacion.VendedorId,
+                nombreComprador: comprador.Nombre,
+                tituloProducto: publicacion.Titulo,
+                cantidad: cantidad,
+                oferta: oferta,
                 solicitudId: nuevaSolicitudId
             );
 
@@ -123,7 +147,8 @@ namespace UniMarket.Logica
                 compradorId: solicitud.CompradorId,
                 tituloProducto: publicacion.Titulo,
                 aceptada: true,
-                solicitudId: solicitudId
+                solicitudId: solicitudId,
+                esTrueque: solicitud.EsTrueque
             );
         }
 
@@ -138,7 +163,8 @@ namespace UniMarket.Logica
                 compradorId: solicitud.CompradorId,
                 tituloProducto: publicacion.Titulo,
                 aceptada: false,
-                solicitudId: solicitudId
+                solicitudId: solicitudId,
+                esTrueque: solicitud.EsTrueque
             );
         }
 
@@ -156,6 +182,47 @@ namespace UniMarket.Logica
                 throw new Exception("Debes iniciar sesión para ver tus solicitudes.");
 
             return _solicitudes.GetSent(compradorId);
+        }
+
+        // ----- Validaciones compartidas por compra y trueque -----
+
+        private Publicacion ValidarSolicitud(int publicacionId, int compradorId, int cantidad)
+        {
+            if (compradorId <= 0)
+                throw new Exception("Debes iniciar sesión para hacer una solicitud.");
+
+            if (cantidad <= 0)
+                throw new Exception("La cantidad debe ser mayor a cero.");
+
+            var publicacion = _publicaciones.GetById(publicacionId);
+
+            if (publicacion == null || !publicacion.Activo)
+                throw new Exception("La publicación no existe.");
+
+            if (publicacion.PerteneceA(compradorId))
+                throw new Exception("No puedes hacer una solicitud sobre tu propia publicación.");
+
+            if (publicacion.Stock <= 0)
+                throw new Exception("Esta publicación está agotada.");
+
+            if (!publicacion.TieneStockPara(cantidad))
+                throw new Exception($"Solo hay {publicacion.Stock} unidad(es) disponible(s).");
+
+            // Una sola solicitud pendiente por publicación: o dinero, o trueque
+            if (_solicitudes.HasPending(publicacionId, compradorId))
+                throw new Exception("Ya tienes una solicitud pendiente para esta publicación.");
+
+            return publicacion;
+        }
+
+        private Usuario ObtenerComprador(int compradorId)
+        {
+            var comprador = _usuarios.GetById(compradorId);
+
+            if (comprador == null)
+                throw new Exception("No se encontró tu usuario. Inicia sesión de nuevo.");
+
+            return comprador;
         }
 
         private SolicitudCompra ObtenerPendienteDelVendedor(

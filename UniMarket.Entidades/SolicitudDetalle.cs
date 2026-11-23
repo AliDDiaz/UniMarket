@@ -12,6 +12,9 @@ namespace UniMarket.Entidades
         public TipoSolicitud Tipo { get; set; }
         public string OfertaTrueque { get; set; }
         public bool EsTrueque => Tipo == TipoSolicitud.Trueque;
+        public string ResumenPago => EsTrueque
+                      ? "Trueque: " + OfertaTrueque
+                      : "$" + Total.ToString("#,##0.##");
         public EstadoSolicitud Estado { get; set; }
         public DateTime Fecha { get; set; }
         public string NombreContraparte { get; set; }

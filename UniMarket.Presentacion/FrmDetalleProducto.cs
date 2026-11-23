@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using UniMarket.Entidades;
+using UniMarket.Logica;
 
 namespace UniMarket.Presentacion
 {
     public partial class FrmDetalleProducto : Form
     {
+        private readonly Publicacion _pub;
+        private readonly Usuario _usuario;
+        private readonly SolicitudService _solicitudes = new SolicitudService();
 
-        public FrmDetalleProducto(Publicacion pub)
+        public FrmDetalleProducto(Publicacion pub, Usuario usuario)
         {
             InitializeComponent();
+            _pub = pub;
+            _usuario = usuario;
 
             lblTitulo.Text = pub.Titulo;
             lblPrecio.Text = pub.AceptaVenta ? $"${pub.Precio:N0}" : "Solo trueque";
@@ -33,6 +33,164 @@ namespace UniMarket.Presentacion
                 {
                     picProducto.Image = new Bitmap(imagen);
                 }
+            }
+
+            ConfigurarTrueque();
+        }
+
+        // El apartado de trueque solo aparece si el vendedor lo activó
+        private void ConfigurarTrueque()
+        {
+            bool acepta = _pub.AceptaTrueque;
+
+            lblTrueque.Visible = acepta;
+            txtTrueque.Visible = acepta;
+            btnProponerTrueque.Visible = acepta;
+
+            if (!acepta) return;
+
+            txtTrueque.Text = _pub.TruequeBusca;
+
+            if (_pub.PerteneceA(_usuario.Id))
+                DeshabilitarBoton("Tu publicación");
+            else if (_pub.Stock <= 0)
+                DeshabilitarBoton("Agotado");
+        }
+
+        private void DeshabilitarBoton(string texto)
+        {
+            btnProponerTrueque.Text = texto;
+            btnProponerTrueque.BackColor = Color.FromArgb(180, 170, 210);
+            btnProponerTrueque.Enabled = false;
+        }
+
+        private void btnProponerTrueque_Click(object sender, EventArgs e)
+        {
+            int cantidad = 1;
+            string oferta = "";
+
+            // Si hay un error de validación, el cuadro vuelve a abrirse con lo escrito
+            while (true)
+            {
+                if (!PedirPropuesta(ref cantidad, ref oferta))
+                    return;
+
+                try
+                {
+                    _solicitudes.ProponerTrueque(_pub.Id, _usuario.Id, cantidad, oferta);
+
+                    MessageBox.Show("Tu propuesta fue enviada. El vendedor recibirá una notificación.",
+                        "Trueque", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    DialogResult = DialogResult.OK;
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "No se pudo enviar la propuesta",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        // Cuadro para escribir la propuesta. Devuelve false si el usuario cancela.
+        private bool PedirPropuesta(ref int cantidad, ref string oferta)
+        {
+            int maximo = Math.Max(1, _pub.Stock);
+
+            using (var dialogo = new Form())
+            {
+                dialogo.Text = "Proponer trueque";
+                dialogo.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialogo.StartPosition = FormStartPosition.CenterParent;
+                dialogo.MaximizeBox = false;
+                dialogo.MinimizeBox = false;
+                dialogo.ShowInTaskbar = false;
+                dialogo.ClientSize = new Size(400, 300);
+                dialogo.BackColor = Color.Lavender;
+                dialogo.Font = new Font("Segoe UI", 9F);
+
+                var lblBusca = new Label
+                {
+                    Text = "El vendedor busca: " + _pub.TruequeBusca,
+                    Location = new Point(20, 14),
+                    Size = new Size(360, 48),
+                    ForeColor = Color.Indigo,
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold)
+                };
+
+                var lblCantidad = new Label
+                {
+                    Text = "Unidades que quieres:",
+                    Location = new Point(20, 72),
+                    AutoSize = true,
+                    ForeColor = Color.Indigo
+                };
+
+                var nudCantidad = new NumericUpDown
+                {
+                    Location = new Point(200, 68),
+                    Size = new Size(70, 25),
+                    Minimum = 1,
+                    Maximum = maximo,
+                    Value = Math.Min(Math.Max(cantidad, 1), maximo)
+                };
+
+                var lblOferta = new Label
+                {
+                    Text = "¿Qué ofreces a cambio? (mínimo 10 caracteres)",
+                    Location = new Point(20, 104),
+                    AutoSize = true,
+                    ForeColor = Color.Indigo
+                };
+
+                var txtOferta = new TextBox
+                {
+                    Location = new Point(20, 128),
+                    Size = new Size(360, 100),
+                    Multiline = true,
+                    MaxLength = 300,
+                    ScrollBars = ScrollBars.Vertical,
+                    Text = oferta
+                };
+
+                var btnEnviar = new Button
+                {
+                    Text = "Enviar propuesta",
+                    DialogResult = DialogResult.OK,
+                    Location = new Point(150, 246),
+                    Size = new Size(130, 34),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(103, 58, 183),
+                    ForeColor = Color.White,
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                    Cursor = Cursors.Hand
+                };
+                btnEnviar.FlatAppearance.BorderSize = 0;
+
+                var btnCancelar = new Button
+                {
+                    Text = "Cancelar",
+                    DialogResult = DialogResult.Cancel,
+                    Location = new Point(290, 246),
+                    Size = new Size(90, 34),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(237, 231, 251),
+                    ForeColor = Color.FromArgb(109, 63, 214),
+                    Cursor = Cursors.Hand
+                };
+                btnCancelar.FlatAppearance.BorderSize = 0;
+
+                dialogo.Controls.AddRange(new Control[]
+                    { lblBusca, lblCantidad, nudCantidad, lblOferta, txtOferta, btnEnviar, btnCancelar });
+                dialogo.CancelButton = btnCancelar;
+
+                if (dialogo.ShowDialog(this) != DialogResult.OK)
+                    return false;
+
+                cantidad = (int)nudCantidad.Value;
+                oferta = txtOferta.Text;
+                return true;
             }
         }
 

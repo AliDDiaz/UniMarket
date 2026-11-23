@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsistenteService.cs" />
     <Compile Include="CarritoService.cs" />
+    <Compile Include="IAsistenteService.cs" />
     <Compile Include="NotificacionesService.cs" />
     <Compile Include="HashContrasena.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

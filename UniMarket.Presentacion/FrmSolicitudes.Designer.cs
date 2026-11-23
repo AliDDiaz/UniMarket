@@ -38,7 +38,6 @@
             this.tabEnviadas = new System.Windows.Forms.TabPage();
             this.dgvEnviadas = new System.Windows.Forms.DataGridView();
             this.btnActualizar = new System.Windows.Forms.Button();
-            this.btnCerrar = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabSolicitudes.SuspendLayout();
             this.tabRecibidas.SuspendLayout();
@@ -129,7 +128,7 @@
             this.tabEnviadas.Location = new System.Drawing.Point(4, 25);
             this.tabEnviadas.Name = "tabEnviadas";
             this.tabEnviadas.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEnviadas.Size = new System.Drawing.Size(922, 346);
+            this.tabEnviadas.Size = new System.Drawing.Size(839, 322);
             this.tabEnviadas.TabIndex = 1;
             this.tabEnviadas.Text = "Enviadas";
             this.tabEnviadas.UseVisualStyleBackColor = true;
@@ -142,7 +141,7 @@
             this.dgvEnviadas.Name = "dgvEnviadas";
             this.dgvEnviadas.RowHeadersWidth = 51;
             this.dgvEnviadas.RowTemplate.Height = 24;
-            this.dgvEnviadas.Size = new System.Drawing.Size(916, 340);
+            this.dgvEnviadas.Size = new System.Drawing.Size(833, 316);
             this.dgvEnviadas.TabIndex = 0;
             // 
             // btnActualizar
@@ -156,19 +155,6 @@
             this.btnActualizar.Text = "Actualizar";
             this.btnActualizar.UseVisualStyleBackColor = true;
             this.btnActualizar.Click += new System.EventHandler(this.btnActualizar_Click);
-            // 
-            // btnCerrar
-            // 
-            this.btnCerrar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCerrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCerrar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnCerrar.Location = new System.Drawing.Point(642, 500);
-            this.btnCerrar.Name = "btnCerrar";
-            this.btnCerrar.Size = new System.Drawing.Size(116, 57);
-            this.btnCerrar.TabIndex = 2;
-            this.btnCerrar.Text = "Cerrar";
-            this.btnCerrar.UseVisualStyleBackColor = true;
-            this.btnCerrar.Click += new System.EventHandler(this.btnCerrar_Click);
             // 
             // pictureBox1
             // 
@@ -185,9 +171,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnCerrar;
             this.ClientSize = new System.Drawing.Size(871, 586);
-            this.Controls.Add(this.btnCerrar);
             this.Controls.Add(this.btnActualizar);
             this.Controls.Add(this.tabSolicitudes);
             this.Controls.Add(this.pictureBox1);
@@ -212,7 +196,6 @@
         private System.Windows.Forms.TabPage tabRecibidas;
         private System.Windows.Forms.TabPage tabEnviadas;
         private System.Windows.Forms.Button btnActualizar;
-        private System.Windows.Forms.Button btnCerrar;
         private System.Windows.Forms.Panel pnlAcciones;
         private System.Windows.Forms.DataGridView dgvRecibidas;
         private System.Windows.Forms.Button btnRechazar;

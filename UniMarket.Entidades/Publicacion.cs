@@ -17,6 +17,11 @@ namespace UniMarket.Entidades
         public int Stock { get; set; }
         public bool Activo { get; set; }
         public byte[] Imagen { get; set; }
+        public ModalidadPublicacion Modalidad { get; set; } = ModalidadPublicacion.Venta;
+        public string TruequeBusca { get; set; }
+
+        public bool AceptaVenta => Modalidad != ModalidadPublicacion.Trueque;
+        public bool AceptaTrueque => Modalidad != ModalidadPublicacion.Venta;
 
         public bool PerteneceA(int usuarioId) => VendedorId == usuarioId;
 

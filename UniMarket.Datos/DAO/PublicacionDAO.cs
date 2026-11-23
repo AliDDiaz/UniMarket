@@ -9,7 +9,7 @@ namespace UniMarket.Datos.DAO
     public class PublicacionDAO : IPublicacionDAO
     {
         private const string Columnas =
-            "id, vendedor_id, titulo, descripcion, precio, stock, activo, imagen";
+            "id, vendedor_id, titulo, descripcion, precio, stock, activo, imagen, modalidad, trueque_busca";
 
         private readonly Conexion _conexion;
 
@@ -125,8 +125,8 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"INSERT INTO publicaciones (vendedor_id, titulo, descripcion, precio, stock, imagen)
-                                   VALUES (@VendedorId, @Titulo, @Descripcion, @Precio, @Stock, @Imagen)
+                    string sql = @"INSERT INTO publicaciones (vendedor_id, titulo, descripcion, precio, stock, imagen, modalidad, trueque_busca)
+                                   VALUES (@VendedorId, @Titulo, @Descripcion, @Precio, @Stock, @Imagen, @Modalidad, @TruequeBusca)
                                    RETURNING id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -151,7 +151,8 @@ namespace UniMarket.Datos.DAO
                 {
                     string sql = @"UPDATE publicaciones
                                    SET titulo = @Titulo, descripcion = @Descripcion,
-                                       precio = @Precio, stock = @Stock, imagen = @Imagen
+                                       precio = @Precio, stock = @Stock, imagen = @Imagen,
+                                       modalidad = @Modalidad, trueque_busca = @TruequeBusca
                                    WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -197,20 +198,26 @@ namespace UniMarket.Datos.DAO
             Descripcion = r.IsDBNull(r.GetOrdinal("descripcion"))
                             ? null
                             : r["descripcion"].ToString(),
-            Precio = Convert.ToDecimal(r["precio"]),
+            Precio = r.IsDBNull(r.GetOrdinal("precio")) ? 0m : Convert.ToDecimal(r["precio"]),
             Stock = Convert.ToInt32(r["stock"]),
             Activo = Convert.ToBoolean(r["activo"]),
             Imagen = r.IsDBNull(r.GetOrdinal("imagen"))
-                            ? null
-                            : (byte[])r["imagen"]
+                ? null
+                : (byte[])r["imagen"],
+            Modalidad = (ModalidadPublicacion)Enum.Parse(typeof(ModalidadPublicacion), r["modalidad"].ToString()),
+            TruequeBusca = r.IsDBNull(r.GetOrdinal("trueque_busca"))
+                ? null
+                : r["trueque_busca"].ToString()
         };
 
         private void AgregarParams(NpgsqlCommand cmd, Publicacion publicacion)
         {
             cmd.Parameters.AddWithValue("@Titulo", publicacion.Titulo);
             cmd.Parameters.AddWithValue("@Descripcion", (object)publicacion.Descripcion ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Precio", publicacion.Precio);
+            cmd.Parameters.AddWithValue("@Precio", publicacion.AceptaVenta ? (object)publicacion.Precio : DBNull.Value);
             cmd.Parameters.AddWithValue("@Stock", publicacion.Stock);
+            cmd.Parameters.AddWithValue("@Modalidad", publicacion.Modalidad.ToString());
+            cmd.Parameters.AddWithValue("@TruequeBusca", (object)publicacion.TruequeBusca ?? DBNull.Value);
 
             var paramImagen = new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea);
             paramImagen.Value = (object)publicacion.Imagen ?? DBNull.Value;

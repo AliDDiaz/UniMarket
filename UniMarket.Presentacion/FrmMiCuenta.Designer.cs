@@ -67,6 +67,8 @@
             this.btnEliminarCuenta = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.lblTruequesValor = new System.Windows.Forms.Label();
             this.pnlEncabezado.SuspendLayout();
             this.pnlDatos.SuspendLayout();
             this.pnlContrasena.SuspendLayout();
@@ -86,7 +88,7 @@
             this.pnlEncabezado.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlEncabezado.Location = new System.Drawing.Point(0, 0);
             this.pnlEncabezado.Name = "pnlEncabezado";
-            this.pnlEncabezado.Size = new System.Drawing.Size(853, 456);
+            this.pnlEncabezado.Size = new System.Drawing.Size(853, 489);
             this.pnlEncabezado.TabIndex = 0;
             // 
             // pnlDatos
@@ -340,6 +342,8 @@
             // pnlPerfil
             // 
             this.pnlPerfil.BackColor = System.Drawing.Color.White;
+            this.pnlPerfil.Controls.Add(this.lblTruequesValor);
+            this.pnlPerfil.Controls.Add(this.label16);
             this.pnlPerfil.Controls.Add(this.label6);
             this.pnlPerfil.Controls.Add(this.label5);
             this.pnlPerfil.Controls.Add(this.label4);
@@ -353,7 +357,7 @@
             this.pnlPerfil.Controls.Add(this.picFoto);
             this.pnlPerfil.Location = new System.Drawing.Point(24, 86);
             this.pnlPerfil.Name = "pnlPerfil";
-            this.pnlPerfil.Size = new System.Drawing.Size(250, 360);
+            this.pnlPerfil.Size = new System.Drawing.Size(250, 390);
             this.pnlPerfil.TabIndex = 2;
             // 
             // label6
@@ -512,7 +516,7 @@
             this.pnlEliminar.Controls.Add(this.btnEliminarCuenta);
             this.pnlEliminar.Controls.Add(this.label15);
             this.pnlEliminar.Controls.Add(this.label14);
-            this.pnlEliminar.Location = new System.Drawing.Point(24, 458);
+            this.pnlEliminar.Location = new System.Drawing.Point(24, 495);
             this.pnlEliminar.Name = "pnlEliminar";
             this.pnlEliminar.Size = new System.Drawing.Size(815, 90);
             this.pnlEliminar.TabIndex = 11;
@@ -556,12 +560,35 @@
             this.label14.TabIndex = 0;
             this.label14.Text = "Desactivar cuenta";
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
+            this.label16.Location = new System.Drawing.Point(20, 358);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(73, 20);
+            this.label16.TabIndex = 11;
+            this.label16.Text = "Trueques";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblTruequesValor
+            // 
+            this.lblTruequesValor.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTruequesValor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
+            this.lblTruequesValor.Location = new System.Drawing.Point(120, 358);
+            this.lblTruequesValor.Name = "lblTruequesValor";
+            this.lblTruequesValor.Size = new System.Drawing.Size(110, 20);
+            this.lblTruequesValor.TabIndex = 12;
+            this.lblTruequesValor.Text = "-";
+            this.lblTruequesValor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FrmMiCuenta
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(853, 550);
+            this.ClientSize = new System.Drawing.Size(853, 592);
             this.Controls.Add(this.pnlEliminar);
             this.Controls.Add(this.pnlEncabezado);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -627,5 +654,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button btnEliminarCuenta;
+        private System.Windows.Forms.Label lblTruequesValor;
+        private System.Windows.Forms.Label label16;
     }
 }

@@ -344,9 +344,10 @@ namespace UniMarket.Presentacion
         {
 
             Agregar("¿Cómo publico un producto?",
-        "Pulsa «PUBLICAR» en el menú de la izquierda. Escribe el título, el precio y las unidades disponibles " +
-        "(puedes agregar una descripción y una foto) y pulsa «Guardar». Tu producto aparece en Inicio para los demás.",
-        true, "publicar", "publico", "vender", "vendo", "subir");
+                "Pulsa «PUBLICAR» en el menú de la izquierda. Escribe el título y las unidades disponibles, y elige la modalidad: " +
+                "«Solo venta», «Solo trueque» o «Venta o trueque». Si aceptas venta, pon el precio; si aceptas trueque, escribe qué buscas a cambio. " +
+                "Puedes agregar una descripción y una foto. Pulsa «Guardar» y tu producto aparece en Inicio para los demás.",
+                true, "publicar", "publico", "vender", "vendo", "subir");
 
             Agregar("¿Cómo compro un producto?",
                 "En Inicio pulsa «Agregar al carrito» en el producto que quieras. Luego abre el carrito (el ícono arriba a la derecha), " +
@@ -359,19 +360,20 @@ namespace UniMarket.Presentacion
                 true, "confirmar", "confirmo", "solicitud", "pendiente", "despues");
 
             Agregar("¿Cómo acepto o rechazo una solicitud?",
-                "Cuando alguien te pide un producto te llega una notificación. Entra a «" + BotonSolicitudes + "», pestaña «Recibidas», " +
-                "elige la solicitud pendiente y pulsa «Aceptar» o «Rechazar». Al aceptar se descuentan las unidades del stock.",
+                "Cuando alguien te pide un producto o te propone un trueque, te llega una notificación. Entra a «" + BotonSolicitudes + "», pestaña «Recibidas», " +
+                "elige la solicitud pendiente y pulsa «Aceptar» o «Rechazar». Si es un trueque, verás lo que te ofrecen antes de confirmar. " +
+                "Al aceptar se descuentan las unidades del stock.",
                 true, "aceptar", "acepto", "rechazar", "rechazo");
 
             Agregar("¿Qué hace la campana?",
-                "La campana de arriba te avisa cuando alguien te hace una solicitud o cuando atienden la tuya. " +
-                "El número rojo indica cuántas notificaciones tienes sin leer.",
+                "La campana de arriba te avisa cuando alguien te hace una solicitud de compra o una propuesta de trueque, " +
+                "o cuando atienden la tuya. El número rojo indica cuántas notificaciones tienes sin leer.",
                 true, "campana", "notificacion", "aviso", "avisa");
 
             Agregar("¿Qué límites hay al publicar?",
-                "El título admite hasta 120 caracteres y la descripción hasta 500. El precio debe ser mayor a cero " +
-                "y tienes que publicar con al menos 1 unidad.",
-                true, "limite", "maximo", "caracteres", "cuantos", "minimo");
+                "El título admite hasta 120 caracteres y la descripción hasta 500. Si aceptas venta, el precio debe ser mayor a cero; " +
+                "si aceptas trueque, lo que buscas a cambio admite hasta 300 caracteres. Tienes que publicar con al menos 1 unidad.",
+                false, "limite", "maximo", "caracteres", "cuantos", "minimo");
 
             Agregar("¿Puedo comprar mis propios productos?",
                 "No. En tu propia publicación el botón aparece desactivado («Tu publicación»).",
@@ -404,6 +406,27 @@ namespace UniMarket.Presentacion
                 "En «MI CUENTA», al final, pulsa «Desactivar cuenta». Te pedirá confirmación y tu contraseña. " +
                 "Se desactivan tu cuenta y tus publicaciones, se rechazan tus solicitudes pendientes y se cierra tu sesión.",
                 false, "desactivar", "eliminar cuenta", "borrar cuenta", "dar de baja");
+
+            Agregar("¿Cómo propongo un trueque?",
+                "Abre la publicación (haz clic en ella) y pulsa «Proponer trueque». Elige cuántas unidades quieres y escribe qué ofreces a cambio " +
+                "(mínimo 10 caracteres). El vendedor recibe una notificación y puede aceptar o rechazar. Los trueques no pasan por el carrito.",
+                true, "proponer", "propongo", "ofrecer", "ofrezco", "propuesta", "trueque");
+
+            Agregar("¿Cómo publico algo para hacer trueque?",
+                "En «PUBLICAR» elige la modalidad «Solo trueque» o «Venta o trueque» y escribe qué buscas a cambio. " +
+                "Si es solo trueque no lleva precio; en el catálogo aparecerá como «Solo trueque».",
+                false, "publico un trueque", "publicar trueque", "publicar para trueque", "modalidad", "a cambio", "intercambiar", "intercambio", "trueque");
+
+            Agregar("¿Qué pasa cuando aceptan mi trueque?",
+                "Te llega una notificación. Se descuentan las unidades de la publicación y, en «" + BotonSolicitudes + "», pestaña «Enviadas», " +
+                "aparecen el nombre y el teléfono del vendedor (puedes tocar el teléfono para abrir WhatsApp). " +
+                "El intercambio lo coordinan entre ustedes dos, fuera de la aplicación. Tu cuenta suma un «Trueque» en «MI CUENTA».",
+                false, "aceptan mi trueque", "acepto mi trueque", "aceptaron mi trueque", "trueque aceptado", "trueque");
+
+            Agregar("¿Puedo pagar y hacer trueque en la misma solicitud?",
+                "No. Cuando una publicación es «Venta o trueque», cada solicitud es por dinero o por trueque, no las dos a la vez. " +
+                "Además, solo puedes tener una solicitud pendiente por publicación.",
+                false, "las dos", "ambas", "a la vez", "dinero y trueque", "pagar y", "mismo tiempo", "trueque");
         }
 
         // Nombre del botón del menú donde se ven las solicitudes (un solo lugar para cambiarlo)

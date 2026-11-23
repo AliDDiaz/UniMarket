@@ -160,16 +160,31 @@ namespace UniMarket.Presentacion
                 };
                 lblTitulo.Click += (s, e) => VerDetalleProducto(card, pub);
 
-                // 4. Precio grande en morado
+                // 4. Precio grande en morado (o "Solo trueque" si no tiene precio)
                 Label lblPrecio = new Label
                 {
-                    Text = $"${pub.Precio:N0}",
+                    Text = pub.AceptaVenta ? $"${pub.Precio:N0}" : "Solo trueque",
                     Font = new Font("Segoe UI", 14F, FontStyle.Bold),
                     ForeColor = Color.FromArgb(103, 58, 183),
                     Location = new Point(12, 174),
                     AutoSize = true
                 };
                 lblPrecio.Click += (s, e) => VerDetalleProducto(card, pub);
+
+                // Aviso cuando acepta dinero o trueque
+                Label lblAceptaTrueque = null;
+                if (pub.AceptaVenta && pub.AceptaTrueque)
+                {
+                    lblAceptaTrueque = new Label
+                    {
+                        Text = "⇄ También acepta trueque",
+                        Font = new Font("Segoe UI", 8.5F),
+                        ForeColor = Color.FromArgb(109, 63, 214),
+                        Location = new Point(12, 200),
+                        AutoSize = true
+                    };
+                    lblAceptaTrueque.Click += (s, e) => VerDetalleProducto(card, pub);
+                }
 
                 // 5. Botón morado "Agregar al carrito"
                 Button btnAgregar = new Button
@@ -190,6 +205,11 @@ namespace UniMarket.Presentacion
                     btnAgregar.Text = "Tu publicación";
                     btnAgregar.BackColor = Color.FromArgb(180, 170, 210);
                     btnAgregar.Enabled = false;
+                }
+                else if (!pub.AceptaVenta)
+                {
+                    btnAgregar.Text = "⇄ Ver y proponer trueque";
+                    btnAgregar.Click += (s, e) => VerDetalleProducto(card, pub);
                 }
                 else
                 {
@@ -225,6 +245,8 @@ namespace UniMarket.Presentacion
                 card.Controls.Add(lblTitulo);
                 card.Controls.Add(lblPrecio);
                 card.Controls.Add(btnAgregar);
+                if (lblAceptaTrueque != null)
+                card.Controls.Add(lblAceptaTrueque);
 
                 flpCatalogo.Controls.Add(card);
             }
@@ -242,7 +264,7 @@ namespace UniMarket.Presentacion
         {
             SeleccionarTarjeta(tarjeta, pub);
 
-            using (var detalle = new FrmDetalleProducto(pub))
+            using (var detalle = new FrmDetalleProducto(pub, _usuario))
             {
                 detalle.ShowDialog(this);
             }

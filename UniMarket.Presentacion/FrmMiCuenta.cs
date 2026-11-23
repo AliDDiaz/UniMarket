@@ -61,6 +61,7 @@ namespace UniMarket.Presentacion
                     .ToString("MMM yyyy", new CultureInfo("es-CO"));
                 lblPublicacionesValor.Text = _service.ContarPublicaciones(_usuario.Id).ToString();
                 lblComprasValor.Text = _service.ContarCompras(_usuario.Id).ToString();
+                lblTruequesValor.Text = _service.ContarTrueques(_usuario.Id).ToString();
 
                 _fotoActual = perfil.Foto;
                 _fotoNueva = null;

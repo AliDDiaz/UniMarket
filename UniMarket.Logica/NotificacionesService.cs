@@ -35,17 +35,51 @@ namespace UniMarket.Logica
             });
         }
 
-        // Avisa al comprador si el vendedor aceptó o rechazó su solicitud
-        public void NotificarRespuestaOferta(int compradorId, string tituloProducto,
-            bool aceptada, int? solicitudId = null)
+        // Avisa al vendedor cuando recibe una propuesta de trueque
+        public void NotificarNuevaPropuestaTrueque(int vendedorId, string nombreComprador,
+            string tituloProducto, int cantidad, string oferta, int? solicitudId = null)
         {
+            // La tarjeta de notificación tiene poco espacio: se acorta la oferta
+            string resumen = oferta.Length > 100 ? oferta.Substring(0, 100) + "…" : oferta;
+
+            Guardar(new MensajeNotificaciones
+            {
+                UsuarioId = vendedorId,
+                Titulo = "Nueva propuesta de trueque",
+                Mensaje = $"¡Hola! {nombreComprador} te propone un trueque por {cantidad} unidad(es) de '{tituloProducto}'. " +
+                          $"Ofrece: \"{resumen}\". Revisa tus solicitudes para aceptar o rechazar.",
+                Tipo = "TRUEQUE_RECIBIDO",
+                SolicitudId = solicitudId
+            });
+        }
+
+        // Avisa al comprador si el vendedor aceptó o rechazó su solicitud (compra o trueque)
+        public void NotificarRespuestaOferta(int compradorId, string tituloProducto,
+            bool aceptada, int? solicitudId = null, bool esTrueque = false)
+        {
+            string titulo;
+            string detalle;
+
+            if (esTrueque)
+            {
+                titulo = aceptada ? "¡Propuesta de trueque aceptada!" : "Propuesta de trueque rechazada";
+                detalle = aceptada
+                    ? $"¡Buenas noticias! El vendedor aceptó tu propuesta de trueque por '{tituloProducto}'. Ya puedes coordinar el intercambio."
+                    : $"El vendedor rechazó tu propuesta de trueque por '{tituloProducto}'. Puedes proponer otro objeto o explorar otras publicaciones.";
+            }
+            else
+            {
+                titulo = aceptada ? "¡Solicitud aceptada!" : "Solicitud rechazada";
+                detalle = aceptada
+                    ? $"¡Buenas noticias! El vendedor aceptó tu solicitud por '{tituloProducto}'. Ya puedes coordinar la entrega."
+                    : $"El vendedor rechazó tu solicitud por '{tituloProducto}'. Puedes seguir explorando otras publicaciones.";
+            }
+
             Guardar(new MensajeNotificaciones
             {
                 UsuarioId = compradorId,
-                Titulo = aceptada ? "¡Solicitud aceptada!" : "Solicitud rechazada",
-                Mensaje = aceptada
-                    ? $"¡Buenas noticias! El vendedor aceptó tu solicitud por '{tituloProducto}'. Ya puedes coordinar la entrega."
-                    : $"El vendedor rechazó tu solicitud por '{tituloProducto}'. Puedes seguir explorando otras publicaciones.",
+                Titulo = titulo,
+                Mensaje = detalle,
                 Tipo = aceptada ? "OFERTA_ACEPTADA" : "OFERTA_RECHAZADA",
                 SolicitudId = solicitudId
             });

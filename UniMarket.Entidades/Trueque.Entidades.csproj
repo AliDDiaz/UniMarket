@@ -44,10 +44,12 @@
     <Compile Include="EstadoSolicitud.cs" />
     <Compile Include="ItemCarrito.cs" />
     <Compile Include="MensajeNotificaciones.cs" />
+    <Compile Include="ModalidadPublicacion.cs" />
     <Compile Include="Publicacion.cs" />
     <Compile Include="RolUsuario.cs" />
     <Compile Include="SolicitudCompra.cs" />
     <Compile Include="SolicitudDetalle.cs" />
+    <Compile Include="TipoSolicitud.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

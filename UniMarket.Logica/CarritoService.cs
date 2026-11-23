@@ -19,6 +19,8 @@ namespace UniMarket.Logica
         public static void Agregar(Publicacion pub, int cantidad = 1)
         {
             if (pub == null || cantidad <= 0) return;
+            if (!pub.AceptaVenta)
+                throw new Exception($"\"{pub.Titulo}\" solo se ofrece por trueque; no se puede agregar al carrito.");
 
             var existente = _items.FirstOrDefault(i => i.Producto.Id == pub.Id);
             if (existente != null)

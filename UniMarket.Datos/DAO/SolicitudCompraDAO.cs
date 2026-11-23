@@ -17,15 +17,18 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"INSERT INTO solicitudes_compra (publicacion_id, comprador_id, cantidad, precio_unitario)
-                                   VALUES (@PublicacionId, @CompradorId, @Cantidad, @PrecioUnitario)
+                    string sql = @"INSERT INTO solicitudes_compra (publicacion_id, comprador_id, cantidad, precio_unitario, tipo, oferta_trueque)
+                                   VALUES (@PublicacionId, @CompradorId, @Cantidad, @PrecioUnitario, @Tipo, @OfertaTrueque)
                                    RETURNING id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@PublicacionId", s.PublicacionId);
                         cmd.Parameters.AddWithValue("@CompradorId", s.CompradorId);
                         cmd.Parameters.AddWithValue("@Cantidad", s.Cantidad);
-                        cmd.Parameters.AddWithValue("@PrecioUnitario", s.PrecioUnitario);
+                        cmd.Parameters.AddWithValue("@PrecioUnitario",
+                            s.Tipo == TipoSolicitud.Compra ? (object)s.PrecioUnitario : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Tipo", s.Tipo.ToString());
+                        cmd.Parameters.AddWithValue("@OfertaTrueque", (object)s.OfertaTrueque ?? DBNull.Value);
                         con.Open();
                         return Convert.ToInt32(cmd.ExecuteScalar());
                     }
@@ -43,7 +46,7 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"SELECT id, publicacion_id, comprador_id, cantidad, precio_unitario, estado, fecha
+                    string sql = @"SELECT id, publicacion_id, comprador_id, cantidad, precio_unitario, tipo, oferta_trueque, estado, fecha
                                    FROM solicitudes_compra WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -171,7 +174,7 @@ namespace UniMarket.Datos.DAO
 
         public List<SolicitudDetalle> ObtenerRecibidas(int vendedorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario,
+            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario, s.tipo, s.oferta_trueque,
                           s.estado, s.fecha,
                           c.nombre AS contraparte,
                           NULL::varchar AS telefono
@@ -186,7 +189,7 @@ namespace UniMarket.Datos.DAO
 
         public List<SolicitudDetalle> ObtenerEnviadas(int compradorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario,
+            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario, s.tipo, s.oferta_trueque,
                           s.estado, s.fecha,
                           CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
                           CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
@@ -220,24 +223,32 @@ namespace UniMarket.Datos.DAO
             return lista;
         }
 
+        private string TextoONulo(NpgsqlDataReader r, string columna)
+        {
+            int posicion = r.GetOrdinal(columna);
+            return r.IsDBNull(posicion) ? null : r.GetString(posicion);
+        }
+
+        private decimal PrecioONulo(NpgsqlDataReader r)
+        {
+            int posicion = r.GetOrdinal("precio_unitario");
+            return r.IsDBNull(posicion) ? 0m : r.GetDecimal(posicion);
+        }
+
         private SolicitudDetalle MapearDetalle(NpgsqlDataReader r) => new SolicitudDetalle
         {
             Id = Convert.ToInt32(r["id"]),
             PublicacionId = Convert.ToInt32(r["publicacion_id"]),
             Titulo = r["titulo"].ToString(),
             Cantidad = Convert.ToInt32(r["cantidad"]),
-            PrecioUnitario = Convert.ToDecimal(r["precio_unitario"]),
+            PrecioUnitario = PrecioONulo(r),
+            Tipo = (TipoSolicitud)Enum.Parse(typeof(TipoSolicitud), r["tipo"].ToString()),
+            OfertaTrueque = TextoONulo(r, "oferta_trueque"),
             Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime(),
             NombreContraparte = TextoONulo(r, "contraparte"),
             TelefonoContacto = TextoONulo(r, "telefono")
         };
-
-        private string TextoONulo(NpgsqlDataReader r, string columna)
-        {
-            int posicion = r.GetOrdinal(columna);
-            return r.IsDBNull(posicion) ? null : r.GetString(posicion);
-        }
 
         private SolicitudCompra Mapear(NpgsqlDataReader r) => new SolicitudCompra
         {
@@ -245,7 +256,9 @@ namespace UniMarket.Datos.DAO
             PublicacionId = Convert.ToInt32(r["publicacion_id"]),
             CompradorId = Convert.ToInt32(r["comprador_id"]),
             Cantidad = Convert.ToInt32(r["cantidad"]),
-            PrecioUnitario = Convert.ToDecimal(r["precio_unitario"]),
+            PrecioUnitario = PrecioONulo(r),
+            Tipo = (TipoSolicitud)Enum.Parse(typeof(TipoSolicitud), r["tipo"].ToString()),
+            OfertaTrueque = TextoONulo(r, "oferta_trueque"),
             Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime()
         };

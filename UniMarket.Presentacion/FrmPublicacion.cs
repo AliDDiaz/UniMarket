@@ -22,6 +22,14 @@ namespace UniMarket.Presentacion
             _usuarioId = usuarioId;
             _publicacion = publicacion;
 
+            cmbModalidad.Items.AddRange(new object[]
+            {
+                "Solo venta (dinero)",
+                "Solo trueque (intercambio)",
+                "Venta o trueque"
+            });
+            cmbModalidad.SelectedIndex = 0;
+
             if (_publicacion == null)
             {
                 Text = "Nueva publicación";
@@ -31,8 +39,11 @@ namespace UniMarket.Presentacion
                 Text = "Editar publicación";
                 txtTitulo.Text = _publicacion.Titulo;
                 txtDescripcion.Text = _publicacion.Descripcion;
-                txtPrecio.Text = _publicacion.Precio.ToString("0.##");
+                if (_publicacion.AceptaVenta)
+                    txtPrecio.Text = _publicacion.Precio.ToString("0.##");
                 txtStock.Text = _publicacion.Stock.ToString();
+                txtTrueque.Text = _publicacion.TruequeBusca;
+                cmbModalidad.SelectedIndex = IndiceDeModalidad(_publicacion.Modalidad);
 
                 _imagenSeleccionada = _publicacion.Imagen;
                 if (_imagenSeleccionada != null && _imagenSeleccionada.Length > 0)
@@ -46,12 +57,50 @@ namespace UniMarket.Presentacion
             }
         }
 
+        // ----- Modalidad -----
+
+        private static int IndiceDeModalidad(ModalidadPublicacion modalidad)
+        {
+            switch (modalidad)
+            {
+                case ModalidadPublicacion.Trueque: return 1;
+                case ModalidadPublicacion.Ambas: return 2;
+                default: return 0;
+            }
+        }
+
+        private ModalidadPublicacion ModalidadSeleccionada()
+        {
+            switch (cmbModalidad.SelectedIndex)
+            {
+                case 1: return ModalidadPublicacion.Trueque;
+                case 2: return ModalidadPublicacion.Ambas;
+                default: return ModalidadPublicacion.Venta;
+            }
+        }
+
+        // Solo se pueden escribir los campos que la modalidad elegida usa
+        private void cmbModalidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var modalidad = ModalidadSeleccionada();
+
+            txtPrecio.Enabled = modalidad != ModalidadPublicacion.Trueque;
+            txtTrueque.Enabled = modalidad != ModalidadPublicacion.Venta;
+        }
+
+        // ----- Guardar -----
+
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             try
             {
-                if (!decimal.TryParse(txtPrecio.Text, out decimal precio))
+                var modalidad = ModalidadSeleccionada();
+
+                decimal precio = 0;
+                if (modalidad != ModalidadPublicacion.Trueque &&
+                    !decimal.TryParse(txtPrecio.Text, out precio))
                     throw new Exception("El precio debe ser un número válido.");
+
                 if (!int.TryParse(txtStock.Text, out int stock))
                     throw new Exception("Las unidades deben ser un número entero.");
 
@@ -61,7 +110,9 @@ namespace UniMarket.Presentacion
                     Descripcion = txtDescripcion.Text,
                     Precio = precio,
                     Stock = stock,
-                    Imagen = _imagenSeleccionada
+                    Imagen = _imagenSeleccionada,
+                    Modalidad = modalidad,
+                    TruequeBusca = txtTrueque.Text
                 };
 
                 if (_publicacion == null)

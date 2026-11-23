@@ -58,7 +58,7 @@
             this.tabSolicitudes.Location = new System.Drawing.Point(12, 33);
             this.tabSolicitudes.Name = "tabSolicitudes";
             this.tabSolicitudes.SelectedIndex = 0;
-            this.tabSolicitudes.Size = new System.Drawing.Size(847, 351);
+            this.tabSolicitudes.Size = new System.Drawing.Size(1240, 418);
             this.tabSolicitudes.TabIndex = 0;
             // 
             // tabRecibidas
@@ -71,7 +71,7 @@
             this.tabRecibidas.Location = new System.Drawing.Point(4, 25);
             this.tabRecibidas.Name = "tabRecibidas";
             this.tabRecibidas.Padding = new System.Windows.Forms.Padding(3);
-            this.tabRecibidas.Size = new System.Drawing.Size(839, 322);
+            this.tabRecibidas.Size = new System.Drawing.Size(1232, 389);
             this.tabRecibidas.TabIndex = 0;
             this.tabRecibidas.Text = "Recibidas";
             // 
@@ -83,7 +83,7 @@
             this.dgvRecibidas.Name = "dgvRecibidas";
             this.dgvRecibidas.RowHeadersWidth = 51;
             this.dgvRecibidas.RowTemplate.Height = 24;
-            this.dgvRecibidas.Size = new System.Drawing.Size(833, 216);
+            this.dgvRecibidas.Size = new System.Drawing.Size(1226, 283);
             this.dgvRecibidas.TabIndex = 1;
             // 
             // pnlAcciones
@@ -91,9 +91,9 @@
             this.pnlAcciones.Controls.Add(this.btnRechazar);
             this.pnlAcciones.Controls.Add(this.btnAceptar);
             this.pnlAcciones.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlAcciones.Location = new System.Drawing.Point(3, 219);
+            this.pnlAcciones.Location = new System.Drawing.Point(3, 286);
             this.pnlAcciones.Name = "pnlAcciones";
-            this.pnlAcciones.Size = new System.Drawing.Size(833, 100);
+            this.pnlAcciones.Size = new System.Drawing.Size(1226, 100);
             this.pnlAcciones.TabIndex = 0;
             // 
             // btnRechazar
@@ -148,7 +148,7 @@
             // 
             this.btnActualizar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnActualizar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnActualizar.Location = new System.Drawing.Point(96, 500);
+            this.btnActualizar.Location = new System.Drawing.Point(97, 520);
             this.btnActualizar.Name = "btnActualizar";
             this.btnActualizar.Size = new System.Drawing.Size(116, 57);
             this.btnActualizar.TabIndex = 1;
@@ -160,9 +160,9 @@
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(0, -16);
+            this.pictureBox1.Location = new System.Drawing.Point(0, -70);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(872, 624);
+            this.pictureBox1.Size = new System.Drawing.Size(1355, 803);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
@@ -171,7 +171,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(871, 586);
+            this.ClientSize = new System.Drawing.Size(1264, 653);
             this.Controls.Add(this.btnActualizar);
             this.Controls.Add(this.tabSolicitudes);
             this.Controls.Add(this.pictureBox1);

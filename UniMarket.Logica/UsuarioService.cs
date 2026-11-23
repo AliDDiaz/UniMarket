@@ -119,6 +119,7 @@ namespace UniMarket.Logica
         public int ContarPublicaciones(int usuarioId) => _repository.CountPublications(usuarioId);
 
         public int ContarCompras(int usuarioId) => _repository.CountPurchases(usuarioId);
+        public int ContarTrueques(int usuarioId) => _repository.CountBarters(usuarioId);
 
         private void ValidarDatos(string nombre, string correo, string telefono)
         {

@@ -198,5 +198,10 @@ namespace UniMarket.Presentacion
         {
 
         }
+
+        private void FrmDetalleProducto_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

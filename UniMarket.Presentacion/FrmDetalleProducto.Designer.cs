@@ -165,6 +165,7 @@
             this.Name = "FrmDetalleProducto";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Detalles del producto";
+            this.Load += new System.EventHandler(this.FrmDetalleProducto_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picProducto)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

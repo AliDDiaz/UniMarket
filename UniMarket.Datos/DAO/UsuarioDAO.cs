@@ -261,8 +261,20 @@ namespace UniMarket.Datos.DAO
 
         public int ContarCompras(int usuarioId)
         {
-            string sql = "SELECT COUNT(*) FROM solicitudes_compra WHERE comprador_id = @Id AND estado = 'Aceptada'";
+            string sql = @"SELECT COUNT(*) FROM solicitudes_compra
+                   WHERE comprador_id = @Id AND estado = 'Aceptada' AND tipo = 'Compra'";
             return ContarPorUsuario(sql, usuarioId, "las compras");
+        }
+
+        // Un trueque aceptado cuenta para quien lo propuso y para el dueño de la publicación
+        public int ContarTrueques(int usuarioId)
+        {
+            string sql = @"SELECT COUNT(*)
+                   FROM solicitudes_compra s
+                   JOIN publicaciones p ON p.id = s.publicacion_id
+                   WHERE s.estado = 'Aceptada' AND s.tipo = 'Trueque'
+                     AND (s.comprador_id = @Id OR p.vendedor_id = @Id)";
+            return ContarPorUsuario(sql, usuarioId, "los trueques");
         }
 
         private int ContarPorUsuario(string sql, int usuarioId, string queCuenta)

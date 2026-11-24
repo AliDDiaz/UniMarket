@@ -1,6 +1,3 @@
--- Base de datos de Trueque (PostgreSQL / Supabase)
--- Orden de creación: usuarios -> publicaciones -> solicitudes_compra -> mensajes_notificaciones
-
 CREATE TABLE usuarios (
 
 	id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

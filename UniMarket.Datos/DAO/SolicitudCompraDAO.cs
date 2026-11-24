@@ -22,7 +22,6 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            // 1. Insertar la solicitud en 'solicitudes'
                             string sqlSolicitud = @"INSERT INTO public.solicitudes (publicacion_id, solicitante_id, cantidad, precio_unitario, tipo)
                                                     VALUES (@PublicacionId, @SolicitanteId, @Cantidad, @PrecioUnitario, @Tipo)
                                                     RETURNING id";
@@ -39,7 +38,6 @@ namespace UniMarket.Datos.DAO
                                 solicitudId = Convert.ToInt32(cmd.ExecuteScalar());
                             }
 
-                            // 2. Si es Trueque, registrar el acuerdo en la tabla 'trueques'
                             if (s.EsTrueque)
                             {
                                 string sqlTrueque = @"INSERT INTO public.trueques (solicitud_id, producto_ofrecido_id, descripcion_oferta)
@@ -140,7 +138,6 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            // 1. Cambiar el estado, solo si todavía está pendiente
                             string sqlEstado = @"UPDATE public.solicitudes
                                                  SET estado = 'Aceptada'
                                                  WHERE id = @Id AND estado = 'Pendiente'";
@@ -154,7 +151,6 @@ namespace UniMarket.Datos.DAO
                                 }
                             }
 
-                            // 2. Descontar el stock, solo si alcanza
                             string sqlStock = @"UPDATE public.publicaciones p
                                                 SET stock = p.stock - s.cantidad
                                                 FROM public.solicitudes s
@@ -215,6 +211,7 @@ namespace UniMarket.Datos.DAO
         {
             string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, s.precio_unitario, s.tipo, 
                                   t.descripcion_oferta AS oferta_trueque,
+                                  t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega,
                                   s.estado, s.fecha,
                                   c.nombre AS contraparte,
                                   NULL::varchar AS telefono
@@ -233,6 +230,7 @@ namespace UniMarket.Datos.DAO
         {
             string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, s.precio_unitario, s.tipo, 
                                   t.descripcion_oferta AS oferta_trueque,
+                                  t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega,
                                   s.estado, s.fecha,
                                   CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
                                   CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
@@ -327,6 +325,12 @@ namespace UniMarket.Datos.DAO
             return r.IsDBNull(posicion) ? 0m : r.GetDecimal(posicion);
         }
 
+        private bool BoolONulo(NpgsqlDataReader r, string columna)
+        {
+            int posicion = r.GetOrdinal(columna);
+            return !r.IsDBNull(posicion) && r.GetBoolean(posicion);
+        }
+
         private SolicitudDetalle MapearDetalle(NpgsqlDataReader r) => new SolicitudDetalle
         {
             Id = Convert.ToInt32(r["id"]),
@@ -336,6 +340,9 @@ namespace UniMarket.Datos.DAO
             PrecioUnitario = PrecioONulo(r),
             Tipo = (TipoSolicitud)Enum.Parse(typeof(TipoSolicitud), r["tipo"].ToString()),
             OfertaTrueque = TextoONulo(r, "oferta_trueque"),
+            ConfirmadoSolicitante = BoolONulo(r, "confirmado_solicitante"),
+            ConfirmadoDueno = BoolONulo(r, "confirmado_dueno"),
+            EstadoEntrega = TextoONulo(r, "estado_entrega"),
             Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
             Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime(),
             NombreContraparte = TextoONulo(r, "contraparte"),
@@ -366,8 +373,8 @@ namespace UniMarket.Datos.DAO
                         ? (int?)null
                         : Convert.ToInt32(r["producto_ofrecido_id"]),
                     DescripcionOferta = TextoONulo(r, "oferta_trueque"),
-                    ConfirmadoSolicitante = Convert.ToBoolean(r["confirmado_solicitante"]),
-                    ConfirmadoDueno = Convert.ToBoolean(r["confirmado_dueno"]),
+                    ConfirmadoSolicitante = BoolONulo(r, "confirmado_solicitante"),
+                    ConfirmadoDueno = BoolONulo(r, "confirmado_dueno"),
                     EstadoEntrega = TextoONulo(r, "estado_entrega"),
                     FechaConfirmacion = r.IsDBNull(r.GetOrdinal("fecha_confirmacion"))
                         ? (DateTime?)null

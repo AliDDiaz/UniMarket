@@ -58,22 +58,24 @@ namespace UniMarket.Presentacion
 
             if (_recibidas == null || _recibidas.Count == 0)
             {
-                flpRecibidas.Controls.Add(CrearMensajeVacio("Aún no has recibido solicitudes de compra.", flpRecibidas));
+                flpRecibidas.Controls.Add(CrearMensajeVacio("Aún no has recibido solicitudes.", flpRecibidas));
                 return;
             }
 
             foreach (var s in _recibidas)
             {
                 int ancho = Math.Max(280, flpRecibidas.ClientSize.Width - 26);
+                bool mostrarConfirmarTrueque = s.EsTrueque && s.EstaAceptada;
+                int altoCard = (s.EstaPendiente || mostrarConfirmarTrueque) ? 132 : 98;
+
                 Panel card = new Panel
                 {
                     Width = ancho,
-                    Height = s.EstaPendiente ? 132 : 98,
+                    Height = altoCard,
                     BackColor = Color.White,
                     Margin = new Padding(0, 0, 0, 10)
                 };
 
-                // Título del producto
                 Label lblTitulo = new Label
                 {
                     Text = s.Titulo,
@@ -84,13 +86,15 @@ namespace UniMarket.Presentacion
                     AutoEllipsis = true
                 };
 
-                // Insignia de estado arriba a la derecha
                 Label lblEstado = CrearBadgeEstado(s.Estado.ToString(), ancho - 105, 12);
 
-                // Detalle comprador y total
+                string infoPago = s.EsTrueque
+                    ? $"Oferta: {s.OfertaTrueque}"
+                    : $"Total: ${s.Total:N0}";
+
                 Label lblDetalle = new Label
                 {
-                    Text = $"Comprador: {s.NombreContraparte}  •  {s.Cantidad} ud(s)  •  Total: ${s.Total:N0}",
+                    Text = $"Solicitante: {s.NombreContraparte}  •  {s.Cantidad} ud(s)  •  {infoPago}",
                     Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                     ForeColor = Color.FromArgb(103, 58, 183),
                     Location = new Point(14, 40),
@@ -98,7 +102,6 @@ namespace UniMarket.Presentacion
                     AutoEllipsis = true
                 };
 
-                // Fecha
                 Label lblFecha = new Label
                 {
                     Text = $"📅 {s.Fecha:dd/MM/yyyy HH:mm}",
@@ -146,6 +149,11 @@ namespace UniMarket.Presentacion
                     card.Controls.Add(btnAceptarCard);
                     card.Controls.Add(btnRechazarCard);
                 }
+                else if (mostrarConfirmarTrueque)
+                {
+                    Button btnConfirmar = CrearBotonConfirmarTrueque(s, esRecibida: true, x: 14, y: 90);
+                    card.Controls.Add(btnConfirmar);
+                }
 
                 flpRecibidas.Controls.Add(card);
             }
@@ -165,11 +173,15 @@ namespace UniMarket.Presentacion
             {
                 int ancho = Math.Max(280, flpEnviadas.ClientSize.Width - 26);
                 bool tieneWhatsapp = !string.IsNullOrWhiteSpace(s.TelefonoContacto);
+                bool mostrarConfirmarTrueque = s.EsTrueque && s.EstaAceptada;
+                bool cabeEnUnaFila = ancho >= 445;
+
+                int altoCard = (tieneWhatsapp && mostrarConfirmarTrueque && !cabeEnUnaFila) ? 168 : 132;
 
                 Panel card = new Panel
                 {
                     Width = ancho,
-                    Height = 132,
+                    Height = altoCard,
                     BackColor = Color.White,
                     Margin = new Padding(0, 0, 0, 10)
                 };
@@ -190,9 +202,13 @@ namespace UniMarket.Presentacion
                     ? "Vendedor: (visible al aceptar)"
                     : $"Vendedor: {s.NombreContraparte}";
 
+                string infoPago = s.EsTrueque
+                    ? $"Oferta: {s.OfertaTrueque}"
+                    : $"${s.Total:N0}";
+
                 Label lblDetalle = new Label
                 {
-                    Text = $"{vendedorTexto}  •  {s.Cantidad} ud(s)  •  ${s.Total:N0}",
+                    Text = $"{vendedorTexto}  •  {s.Cantidad} ud(s)  •  {infoPago}",
                     Font = new Font("Segoe UI", 9F, FontStyle.Bold),
                     ForeColor = Color.FromArgb(103, 58, 183),
                     Location = new Point(14, 40),
@@ -219,7 +235,7 @@ namespace UniMarket.Presentacion
                     Button btnWhatsApp = new Button
                     {
                         Text = $"💬 WhatsApp: {s.TelefonoContacto}",
-                        Size = new Size(230, 30),
+                        Size = new Size(215, 30),
                         Location = new Point(14, 90),
                         BackColor = Color.FromArgb(37, 211, 102),
                         ForeColor = Color.White,
@@ -232,6 +248,14 @@ namespace UniMarket.Presentacion
                         AbrirWhatsApp(s.TelefonoContacto, s.Titulo, s.Cantidad);
 
                     card.Controls.Add(btnWhatsApp);
+
+                    if (mostrarConfirmarTrueque)
+                    {
+                        int xConfirmar = cabeEnUnaFila ? 237 : 14;
+                        int yConfirmar = cabeEnUnaFila ? 90 : 126;
+                        Button btnConfirmar = CrearBotonConfirmarTrueque(s, esRecibida: false, x: xConfirmar, y: yConfirmar);
+                        card.Controls.Add(btnConfirmar);
+                    }
                 }
                 else
                 {
@@ -250,6 +274,71 @@ namespace UniMarket.Presentacion
 
                 flpEnviadas.Controls.Add(card);
             }
+        }
+
+        private Button CrearBotonConfirmarTrueque(SolicitudDetalle s, bool esRecibida, int x, int y)
+        {
+            bool yaConfirmeYo = esRecibida ? s.ConfirmadoDueno : s.ConfirmadoSolicitante;
+            bool completado = s.TruequeCompletado;
+
+            string textoBoton = completado
+                ? "✔ Trueque completado"
+                : (yaConfirmeYo ? "⏳ Esperando contraparte" : "🤝 Confirmar trueque");
+
+            Color colorFondo = completado
+                ? Color.FromArgb(21, 128, 61)
+                : (yaConfirmeYo ? Color.FromArgb(148, 163, 184) : Color.FromArgb(103, 58, 183));
+
+            Button btn = new Button
+            {
+                Text = textoBoton,
+                Enabled = !yaConfirmeYo && !completado,
+                Size = new Size(195, 30),
+                Location = new Point(x, y),
+                BackColor = colorFondo,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 8.8F, FontStyle.Bold),
+                Cursor = (!yaConfirmeYo && !completado) ? Cursors.Hand : Cursors.Default
+            };
+            btn.FlatAppearance.BorderSize = 0;
+
+            if (!yaConfirmeYo && !completado)
+            {
+                btn.Click += (sender, e) => ConfirmarTruequeSolicitud(s);
+            }
+
+            return btn;
+        }
+
+        private void ConfirmarTruequeSolicitud(SolicitudDetalle s)
+        {
+            var conf = MessageBox.Show(
+                $"¿Confirmas que ya realizaste el intercambio físico por \"{s.Titulo}\"?\n\n" +
+                "Cuando ambos estudiantes confirmen, el trueque quedará marcado como Completado.",
+                "Confirmar trueque", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (conf != DialogResult.Yes) return;
+
+            try
+            {
+                if (_service.ConfirmarTrueque(s.Id, _usuario.Id))
+                {
+                    MessageBox.Show("Tu confirmación del trueque ha sido registrada.", "Trueque",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo registrar la confirmación.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error al confirmar trueque",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            CargarListas();
         }
 
         private Label CrearBadgeEstado(string estado, int x, int y)
@@ -299,7 +388,7 @@ namespace UniMarket.Presentacion
         {
             var conf = MessageBox.Show(
                 $"¿Aceptar la solicitud de {s.NombreContraparte} por {s.Cantidad} unidad(es) de \"{s.Titulo}\"?\n\n" +
-                "Se descontarán las unidades de tu publicación y el comprador verá tus datos de contacto.",
+                "Se descontarán las unidades de tu publicación y el solicitante verá tus datos de contacto.",
                 "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (conf != DialogResult.Yes) return;
 

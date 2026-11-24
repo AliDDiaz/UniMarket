@@ -12,5 +12,6 @@ namespace UniMarket.Datos.DAO
         bool Rechazar(int id);
         List<SolicitudDetalle> ObtenerRecibidas(int vendedorId);
         List<SolicitudDetalle> ObtenerEnviadas(int compradorId);
+        bool ConfirmarTrueque(int solicitudId, int usuarioId);
     }
 }

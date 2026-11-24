@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using Npgsql;
+﻿using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NpgsqlTypes;
 using UniMarket.Entidades;
 
@@ -17,23 +13,18 @@ namespace UniMarket.Datos.DAO
 
         public UsuarioDAO()
         {
-
             _conexion = new Conexion();
-
         }
 
         public void Actualizar(Usuario usuario)
         {
-
             try
             {
-
                 using (var con = _conexion.ObtenerConexion())
                 {
-
                     string sql = @"UPDATE usuarios SET nombre = @Nombre, correo = @Correo, telefono = @Telefono,
                                  contrasena = @Contrasena, rol = @Rol WHERE id = @Id";
-                    using(var cmd = new NpgsqlCommand(sql, con))
+                    using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", usuario.Id);
                         AgregarParams(cmd, usuario);
@@ -41,25 +32,19 @@ namespace UniMarket.Datos.DAO
                         cmd.ExecuteNonQuery();
                     }
                 }
-
             }
-            catch(NpgsqlException ex)
+            catch (NpgsqlException ex)
             {
-
                 throw new Exception($"Error BD al actualizar usuario: {ex.Message}", ex);
-
             }
-
         }
 
         public void Eliminar(int id)
         {
             try
             {
-
                 using (var con = _conexion.ObtenerConexion())
                 {
-
                     string sql = "UPDATE usuarios SET activo = FALSE WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -67,14 +52,11 @@ namespace UniMarket.Datos.DAO
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
-
                 }
             }
-            catch(NpgsqlException ex)
+            catch (NpgsqlException ex)
             {
-
                 throw new Exception($"Error BD al eliminar usuario: {ex.Message}", ex);
-
             }
         }
 
@@ -82,37 +64,29 @@ namespace UniMarket.Datos.DAO
         {
             try
             {
-                using(var con = _conexion.ObtenerConexion())
+                using (var con = _conexion.ObtenerConexion())
                 {
-
                     string sql = @"INSERT INTO usuarios (nombre, correo, telefono, contrasena, rol) VALUES (@Nombre, @Correo, @Telefono, @Contrasena, @Rol) RETURNING id";
-
-                    using(var cmd = new NpgsqlCommand(sql, con))
+                    using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         AgregarParams(cmd, usuario);
                         con.Open();
                         return Convert.ToInt32(cmd.ExecuteScalar());
                     }
-
                 }
             }
             catch (NpgsqlException ex)
             {
-
                 throw new Exception($"Error BD al insertar usuario: {ex.Message}", ex);
-
             }
         }
 
         public Usuario ObtenerPorCorreo(string correo)
         {
-
             try
             {
-
-                using(var con = _conexion.ObtenerConexion())
+                using (var con = _conexion.ObtenerConexion())
                 {
-
                     string sql = $@"SELECT {Columnas} FROM usuarios WHERE correo = @Correo";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
@@ -121,82 +95,60 @@ namespace UniMarket.Datos.DAO
                         using (var r = cmd.ExecuteReader())
                             if (r.Read()) return Mapear(r);
                     }
-
                 }
-
             }
-            catch(NpgsqlException ex)
+            catch (NpgsqlException ex)
             {
-
                 throw new Exception($"Error BD al buscar por correo: {ex.Message}", ex);
-
             }
-
             return null;
-
         }
 
         public Usuario ObtenerPorId(int id)
         {
-
             try
             {
-             
-               using (var con = _conexion.ObtenerConexion())
+                using (var con = _conexion.ObtenerConexion())
                 {
-
                     string sql = $@"SELECT {Columnas} FROM usuarios WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
-
-                        cmd.Parameters.AddWithValue(@"Id", id);
+                        cmd.Parameters.AddWithValue("@Id", id);
                         con.Open();
                         using (var r = cmd.ExecuteReader())
                             if (r.Read()) return Mapear(r);
-
                     }
-
                 }
-
             }
-            catch(NpgsqlException ex)
+            catch (NpgsqlException ex)
             {
-
                 throw new Exception($"Error BD al buscar usuario: {ex.Message}", ex);
-
             }
-
             return null;
-
         }
 
         public List<Usuario> ObtenerTodos()
         {
             var lista = new List<Usuario>();
-
             try
             {
-
-                using(var con = _conexion.ObtenerConexion())
+                using (var con = _conexion.ObtenerConexion())
                 {
-
                     string sql = $@"SELECT {Columnas} FROM usuarios";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         con.Open();
                         using (var r = cmd.ExecuteReader())
                             while (r.Read())
-                            { lista.Add(Mapear(r));
+                            {
+                                lista.Add(Mapear(r));
                             }
                     }
                 }
-
             }
             catch (NpgsqlException ex)
             {
-
                 throw new Exception($"Error BD al listar usuarios: {ex.Message}");
-
             }
             return lista;
         }
@@ -255,25 +207,28 @@ namespace UniMarket.Datos.DAO
 
         public int ContarPublicaciones(int usuarioId)
         {
-            string sql = "SELECT COUNT(*) FROM publicaciones WHERE vendedor_id = @Id AND activo = TRUE";
+            string sql = @"SELECT COUNT(*) 
+                           FROM public.publicaciones pub
+                           INNER JOIN public.productos pr ON pub.producto_id = pr.id
+                           WHERE pr.propietario_id = @Id AND pub.activo = TRUE";
             return ContarPorUsuario(sql, usuarioId, "las publicaciones");
         }
 
         public int ContarCompras(int usuarioId)
         {
-            string sql = @"SELECT COUNT(*) FROM solicitudes_compra
-                   WHERE comprador_id = @Id AND estado = 'Aceptada' AND tipo = 'Compra'";
+            string sql = @"SELECT COUNT(*) FROM public.solicitudes
+                           WHERE solicitante_id = @Id AND estado = 'Aceptada' AND tipo = 'Compra'";
             return ContarPorUsuario(sql, usuarioId, "las compras");
         }
 
-        // Un trueque aceptado cuenta para quien lo propuso y para el dueño de la publicación
         public int ContarTrueques(int usuarioId)
         {
             string sql = @"SELECT COUNT(*)
-                   FROM solicitudes_compra s
-                   JOIN publicaciones p ON p.id = s.publicacion_id
-                   WHERE s.estado = 'Aceptada' AND s.tipo = 'Trueque'
-                     AND (s.comprador_id = @Id OR p.vendedor_id = @Id)";
+                           FROM public.solicitudes s
+                           INNER JOIN public.publicaciones pub ON pub.id = s.publicacion_id
+                           INNER JOIN public.productos pr ON pr.id = pub.producto_id
+                           WHERE s.estado = 'Aceptada' AND s.tipo = 'Trueque'
+                             AND (s.solicitante_id = @Id OR pr.propietario_id = @Id)";
             return ContarPorUsuario(sql, usuarioId, "los trueques");
         }
 
@@ -306,14 +261,15 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            // 1. Rechazar solicitudes pendientes (como comprador o como vendedor)
-                            string sqlSolicitudes = @"UPDATE solicitudes_compra
-                                              SET estado = 'Rechazada'
-                                              WHERE estado = 'Pendiente'
-                                                AND (comprador_id = @Id
-                                                     OR publicacion_id IN
-                                                        (SELECT id FROM publicaciones
-                                                         WHERE vendedor_id = @Id))";
+                            // 1. Rechazar solicitudes pendientes (como solicitante o como dueño del producto)
+                            string sqlSolicitudes = @"UPDATE public.solicitudes
+                                                      SET estado = 'Rechazada'
+                                                      WHERE estado = 'Pendiente'
+                                                        AND (solicitante_id = @Id
+                                                             OR publicacion_id IN
+                                                                (SELECT pub.id FROM public.publicaciones pub
+                                                                 INNER JOIN public.productos pr ON pub.producto_id = pr.id
+                                                                 WHERE pr.propietario_id = @Id))";
                             using (var cmd = new NpgsqlCommand(sqlSolicitudes, con, tx))
                             {
                                 cmd.Parameters.AddWithValue("@Id", usuarioId);
@@ -321,9 +277,10 @@ namespace UniMarket.Datos.DAO
                             }
 
                             // 2. Desactivar sus publicaciones
-                            string sqlPublicaciones = @"UPDATE publicaciones
-                                                SET activo = false
-                                                WHERE vendedor_id = @Id";
+                            string sqlPublicaciones = @"UPDATE public.publicaciones
+                                                        SET activo = false
+                                                        WHERE producto_id IN
+                                                           (SELECT id FROM public.productos WHERE propietario_id = @Id)";
                             using (var cmd = new NpgsqlCommand(sqlPublicaciones, con, tx))
                             {
                                 cmd.Parameters.AddWithValue("@Id", usuarioId);
@@ -331,9 +288,9 @@ namespace UniMarket.Datos.DAO
                             }
 
                             // 3. Desactivar la cuenta
-                            string sqlUsuario = @"UPDATE usuarios
-                                          SET activo = false
-                                          WHERE id = @Id AND activo = true";
+                            string sqlUsuario = @"UPDATE public.usuarios
+                                                  SET activo = false
+                                                  WHERE id = @Id AND activo = true";
                             using (var cmd = new NpgsqlCommand(sqlUsuario, con, tx))
                             {
                                 cmd.Parameters.AddWithValue("@Id", usuarioId);
@@ -359,29 +316,24 @@ namespace UniMarket.Datos.DAO
 
         private Usuario Mapear(NpgsqlDataReader r) => new Usuario
         {
-
             Id = Convert.ToInt32(r["id"]),
             Nombre = r["nombre"].ToString(),
-            Correo = r["Correo"].ToString(),
+            Correo = r["correo"].ToString(),
             Telefono = r["telefono"].ToString(),
             Contrasena = r["contrasena"].ToString(),
             Rol = (RolUsuario)Enum.Parse(typeof(RolUsuario), r["rol"].ToString()),
             Activo = Convert.ToBoolean(r["activo"]),
             FechaRegistro = Convert.ToDateTime(r["fecha_registro"]).ToLocalTime(),
             Foto = r.IsDBNull(r.GetOrdinal("foto")) ? null : (byte[])r["foto"]
-
         };
 
         private void AgregarParams(NpgsqlCommand cmd, Usuario usuario)
         {
-
             cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
             cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
             cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
             cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
             cmd.Parameters.AddWithValue("@Rol", usuario.Rol.ToString());
-
         }
-
     }
 }

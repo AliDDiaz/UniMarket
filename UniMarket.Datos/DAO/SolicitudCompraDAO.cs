@@ -17,20 +17,54 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"INSERT INTO solicitudes_compra (publicacion_id, comprador_id, cantidad, precio_unitario, tipo, oferta_trueque)
-                                   VALUES (@PublicacionId, @CompradorId, @Cantidad, @PrecioUnitario, @Tipo, @OfertaTrueque)
-                                   RETURNING id";
-                    using (var cmd = new NpgsqlCommand(sql, con))
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@PublicacionId", s.PublicacionId);
-                        cmd.Parameters.AddWithValue("@CompradorId", s.CompradorId);
-                        cmd.Parameters.AddWithValue("@Cantidad", s.Cantidad);
-                        cmd.Parameters.AddWithValue("@PrecioUnitario",
-                            s.Tipo == TipoSolicitud.Compra ? (object)s.PrecioUnitario : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Tipo", s.Tipo.ToString());
-                        cmd.Parameters.AddWithValue("@OfertaTrueque", (object)s.OfertaTrueque ?? DBNull.Value);
-                        con.Open();
-                        return Convert.ToInt32(cmd.ExecuteScalar());
+                        try
+                        {
+                            // 1. Insertar la solicitud en 'solicitudes'
+                            string sqlSolicitud = @"INSERT INTO public.solicitudes (publicacion_id, solicitante_id, cantidad, precio_unitario, tipo)
+                                                    VALUES (@PublicacionId, @SolicitanteId, @Cantidad, @PrecioUnitario, @Tipo)
+                                                    RETURNING id";
+                            int solicitudId;
+                            using (var cmd = new NpgsqlCommand(sqlSolicitud, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@PublicacionId", s.PublicacionId);
+                                cmd.Parameters.AddWithValue("@SolicitanteId", s.SolicitanteId);
+                                cmd.Parameters.AddWithValue("@Cantidad", s.Cantidad);
+                                cmd.Parameters.AddWithValue("@PrecioUnitario",
+                                    s.Tipo == TipoSolicitud.Compra ? (object)s.PrecioUnitario : DBNull.Value);
+                                cmd.Parameters.AddWithValue("@Tipo", s.Tipo.ToString());
+
+                                solicitudId = Convert.ToInt32(cmd.ExecuteScalar());
+                            }
+
+                            // 2. Si es Trueque, registrar el acuerdo en la tabla 'trueques'
+                            if (s.EsTrueque)
+                            {
+                                string sqlTrueque = @"INSERT INTO public.trueques (solicitud_id, producto_ofrecido_id, descripcion_oferta)
+                                                      VALUES (@SolicitudId, @ProductoOfrecidoId, @DescripcionOferta)";
+                                using (var cmdTrueque = new NpgsqlCommand(sqlTrueque, con, tx))
+                                {
+                                    cmdTrueque.Parameters.AddWithValue("@SolicitudId", solicitudId);
+                                    cmdTrueque.Parameters.AddWithValue("@ProductoOfrecidoId",
+                                        (object)s.Trueque?.ProductoOfrecidoId ?? DBNull.Value);
+                                    cmdTrueque.Parameters.AddWithValue("@DescripcionOferta",
+                                        (object)s.OfertaTrueque ?? DBNull.Value);
+
+                                    cmdTrueque.ExecuteNonQuery();
+                                }
+                            }
+
+                            tx.Commit();
+                            s.Id = solicitudId;
+                            return solicitudId;
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
                     }
                 }
             }
@@ -46,8 +80,13 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"SELECT id, publicacion_id, comprador_id, cantidad, precio_unitario, tipo, oferta_trueque, estado, fecha
-                                   FROM solicitudes_compra WHERE id = @Id";
+                    string sql = @"SELECT s.id, s.publicacion_id, s.solicitante_id, s.cantidad, s.precio_unitario, 
+                                          s.tipo, s.estado, s.fecha,
+                                          t.id AS trueque_id, t.producto_ofrecido_id, t.descripcion_oferta AS oferta_trueque,
+                                          t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega, t.fecha_confirmacion
+                                   FROM public.solicitudes s
+                                   LEFT JOIN public.trueques t ON t.solicitud_id = s.id
+                                   WHERE s.id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
@@ -71,14 +110,14 @@ namespace UniMarket.Datos.DAO
                 using (var con = _conexion.ObtenerConexion())
                 {
                     string sql = @"SELECT EXISTS (
-                                       SELECT 1 FROM solicitudes_compra
+                                       SELECT 1 FROM public.solicitudes
                                        WHERE publicacion_id = @PublicacionId
-                                         AND comprador_id = @CompradorId
+                                         AND solicitante_id = @SolicitanteId
                                          AND estado = 'Pendiente')";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@PublicacionId", publicacionId);
-                        cmd.Parameters.AddWithValue("@CompradorId", compradorId);
+                        cmd.Parameters.AddWithValue("@SolicitanteId", compradorId);
                         con.Open();
                         return Convert.ToBoolean(cmd.ExecuteScalar());
                     }
@@ -102,7 +141,7 @@ namespace UniMarket.Datos.DAO
                         try
                         {
                             // 1. Cambiar el estado, solo si todavía está pendiente
-                            string sqlEstado = @"UPDATE solicitudes_compra
+                            string sqlEstado = @"UPDATE public.solicitudes
                                                  SET estado = 'Aceptada'
                                                  WHERE id = @Id AND estado = 'Pendiente'";
                             using (var cmd = new NpgsqlCommand(sqlEstado, con, tx))
@@ -116,9 +155,9 @@ namespace UniMarket.Datos.DAO
                             }
 
                             // 2. Descontar el stock, solo si alcanza
-                            string sqlStock = @"UPDATE publicaciones p
+                            string sqlStock = @"UPDATE public.publicaciones p
                                                 SET stock = p.stock - s.cantidad
-                                                FROM solicitudes_compra s
+                                                FROM public.solicitudes s
                                                 WHERE s.id = @Id
                                                   AND p.id = s.publicacion_id
                                                   AND p.stock >= s.cantidad";
@@ -155,7 +194,7 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"UPDATE solicitudes_compra
+                    string sql = @"UPDATE public.solicitudes
                                    SET estado = 'Rechazada'
                                    WHERE id = @Id AND estado = 'Pendiente'";
                     using (var cmd = new NpgsqlCommand(sql, con))
@@ -174,32 +213,85 @@ namespace UniMarket.Datos.DAO
 
         public List<SolicitudDetalle> ObtenerRecibidas(int vendedorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario, s.tipo, s.oferta_trueque,
-                          s.estado, s.fecha,
-                          c.nombre AS contraparte,
-                          NULL::varchar AS telefono
-                   FROM solicitudes_compra s
-                   JOIN publicaciones p ON p.id = s.publicacion_id
-                   JOIN usuarios c ON c.id = s.comprador_id
-                   WHERE p.vendedor_id = @UsuarioId
-                   ORDER BY s.id DESC";
+            string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, s.precio_unitario, s.tipo, 
+                                  t.descripcion_oferta AS oferta_trueque,
+                                  s.estado, s.fecha,
+                                  c.nombre AS contraparte,
+                                  NULL::varchar AS telefono
+                           FROM public.solicitudes s
+                           INNER JOIN public.publicaciones p ON p.id = s.publicacion_id
+                           INNER JOIN public.productos pr ON pr.id = p.producto_id
+                           INNER JOIN public.usuarios c ON c.id = s.solicitante_id
+                           LEFT JOIN public.trueques t ON t.solicitud_id = s.id
+                           WHERE pr.propietario_id = @UsuarioId
+                           ORDER BY s.id DESC";
 
             return ListarDetalle(sql, vendedorId);
         }
 
         public List<SolicitudDetalle> ObtenerEnviadas(int compradorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, p.titulo, s.cantidad, s.precio_unitario, s.tipo, s.oferta_trueque,
-                          s.estado, s.fecha,
-                          CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
-                          CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
-                   FROM solicitudes_compra s
-                   JOIN publicaciones p ON p.id = s.publicacion_id
-                   JOIN usuarios v ON v.id = p.vendedor_id
-                   WHERE s.comprador_id = @UsuarioId
-                   ORDER BY s.id DESC";
+            string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, s.precio_unitario, s.tipo, 
+                                  t.descripcion_oferta AS oferta_trueque,
+                                  s.estado, s.fecha,
+                                  CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
+                                  CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
+                           FROM public.solicitudes s
+                           INNER JOIN public.publicaciones p ON p.id = s.publicacion_id
+                           INNER JOIN public.productos pr ON pr.id = p.producto_id
+                           INNER JOIN public.usuarios v ON v.id = pr.propietario_id
+                           LEFT JOIN public.trueques t ON t.solicitud_id = s.id
+                           WHERE s.solicitante_id = @UsuarioId
+                           ORDER BY s.id DESC";
 
             return ListarDetalle(sql, compradorId);
+        }
+
+        public bool ConfirmarTrueque(int solicitudId, int usuarioId)
+        {
+            try
+            {
+                using (var conn = _conexion.ObtenerConexion())
+                {
+                    if (conn.State != System.Data.ConnectionState.Open)
+                        conn.Open();
+
+                    string sql = @"
+                        UPDATE public.trueques t
+                        SET 
+                            confirmado_solicitante = CASE WHEN s.solicitante_id = @usuarioId THEN true ELSE t.confirmado_solicitante END,
+                            confirmado_dueno = CASE WHEN pr.propietario_id = @usuarioId THEN true ELSE t.confirmado_dueno END,
+                            estado_entrega = CASE 
+                                WHEN (CASE WHEN s.solicitante_id = @usuarioId THEN true ELSE t.confirmado_solicitante END) = true 
+                                 AND (CASE WHEN pr.propietario_id = @usuarioId THEN true ELSE t.confirmado_dueno END) = true 
+                                THEN 'Completado' 
+                                ELSE 'En proceso' 
+                            END,
+                            fecha_confirmacion = CASE 
+                                WHEN (CASE WHEN s.solicitante_id = @usuarioId THEN true ELSE t.confirmado_solicitante END) = true 
+                                 AND (CASE WHEN pr.propietario_id = @usuarioId THEN true ELSE t.confirmado_dueno END) = true 
+                                THEN now() 
+                                ELSE t.fecha_confirmacion 
+                            END
+                        FROM public.solicitudes s
+                        INNER JOIN public.publicaciones pub ON s.publicacion_id = pub.id
+                        INNER JOIN public.productos pr ON pub.producto_id = pr.id
+                        WHERE t.solicitud_id = s.id
+                          AND s.id = @solicitudId
+                          AND (s.solicitante_id = @usuarioId OR pr.propietario_id = @usuarioId);";
+
+                    using (var cmd = new NpgsqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@solicitudId", solicitudId);
+                        cmd.Parameters.AddWithValue("@usuarioId", usuarioId);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al confirmar trueque: {ex.Message}", ex);
+            }
         }
 
         private List<SolicitudDetalle> ListarDetalle(string sql, int usuarioId)
@@ -250,17 +342,40 @@ namespace UniMarket.Datos.DAO
             TelefonoContacto = TextoONulo(r, "telefono")
         };
 
-        private SolicitudCompra Mapear(NpgsqlDataReader r) => new SolicitudCompra
+        private SolicitudCompra Mapear(NpgsqlDataReader r)
         {
-            Id = Convert.ToInt32(r["id"]),
-            PublicacionId = Convert.ToInt32(r["publicacion_id"]),
-            CompradorId = Convert.ToInt32(r["comprador_id"]),
-            Cantidad = Convert.ToInt32(r["cantidad"]),
-            PrecioUnitario = PrecioONulo(r),
-            Tipo = (TipoSolicitud)Enum.Parse(typeof(TipoSolicitud), r["tipo"].ToString()),
-            OfertaTrueque = TextoONulo(r, "oferta_trueque"),
-            Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
-            Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime()
-        };
+            var solicitud = new SolicitudCompra
+            {
+                Id = Convert.ToInt32(r["id"]),
+                PublicacionId = Convert.ToInt32(r["publicacion_id"]),
+                SolicitanteId = Convert.ToInt32(r["solicitante_id"]),
+                Cantidad = Convert.ToInt32(r["cantidad"]),
+                PrecioUnitario = PrecioONulo(r),
+                Tipo = (TipoSolicitud)Enum.Parse(typeof(TipoSolicitud), r["tipo"].ToString()),
+                Estado = (EstadoSolicitud)Enum.Parse(typeof(EstadoSolicitud), r["estado"].ToString()),
+                Fecha = Convert.ToDateTime(r["fecha"]).ToLocalTime()
+            };
+
+            if (!r.IsDBNull(r.GetOrdinal("trueque_id")))
+            {
+                solicitud.Trueque = new AcuerdoTrueque
+                {
+                    Id = Convert.ToInt32(r["trueque_id"]),
+                    SolicitudId = solicitud.Id,
+                    ProductoOfrecidoId = r.IsDBNull(r.GetOrdinal("producto_ofrecido_id"))
+                        ? (int?)null
+                        : Convert.ToInt32(r["producto_ofrecido_id"]),
+                    DescripcionOferta = TextoONulo(r, "oferta_trueque"),
+                    ConfirmadoSolicitante = Convert.ToBoolean(r["confirmado_solicitante"]),
+                    ConfirmadoDueno = Convert.ToBoolean(r["confirmado_dueno"]),
+                    EstadoEntrega = TextoONulo(r, "estado_entrega"),
+                    FechaConfirmacion = r.IsDBNull(r.GetOrdinal("fecha_confirmacion"))
+                        ? (DateTime?)null
+                        : Convert.ToDateTime(r["fecha_confirmacion"]).ToLocalTime()
+                };
+            }
+
+            return solicitud;
+        }
     }
 }

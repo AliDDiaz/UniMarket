@@ -20,5 +20,6 @@ namespace UniMarket.Datos.Repository
         public bool Reject(int id) => _dao.Rechazar(id);
         public List<SolicitudDetalle> GetReceived(int vendedorId) => _dao.ObtenerRecibidas(vendedorId);
         public List<SolicitudDetalle> GetSent(int compradorId) => _dao.ObtenerEnviadas(compradorId);
+        public bool ConfirmarTrueque(int solicitudId, int usuarioId) => _dao.ConfirmarTrueque(solicitudId, usuarioId);
     }
 }

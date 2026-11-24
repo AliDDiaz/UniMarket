@@ -1,3 +1,20 @@
+-- Base de datos de Trueque (PostgreSQL / Supabase)
+-- Orden de creación: usuarios -> publicaciones -> solicitudes_compra -> mensajes_notificaciones
+
+CREATE TABLE usuarios (
+
+	id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	nombre         VARCHAR(100) NOT NULL,
+	correo         VARCHAR(150) NOT NULL UNIQUE,
+	telefono       VARCHAR(20)  NOT NULL,
+	contrasena     VARCHAR(200) NOT NULL,
+	rol            VARCHAR(20)  NOT NULL DEFAULT 'Estudiante' CHECK (rol IN ('Estudiante', 'Administrador')),
+	activo         BOOLEAN      NOT NULL DEFAULT TRUE,
+	fecha_registro TIMESTAMP    NOT NULL DEFAULT NOW(),
+	foto           BYTEA
+
+);
+
 CREATE TABLE publicaciones (
 
 	id            INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -36,5 +53,18 @@ CREATE TABLE solicitudes_compra (
 		CHECK ((tipo = 'Compra' AND precio_unitario > 0)
 		    OR (tipo = 'Trueque' AND precio_unitario IS NULL
 		        AND oferta_trueque IS NOT NULL AND btrim(oferta_trueque) <> ''))
+
+);
+
+CREATE TABLE mensajes_notificaciones (
+
+	id           SERIAL PRIMARY KEY,
+	usuario_id   INT          NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+	titulo       VARCHAR(100) NOT NULL,
+	mensaje      TEXT         NOT NULL,
+	tipo         VARCHAR(30)  NOT NULL,
+	solicitud_id INT,
+	leido        BOOLEAN      DEFAULT FALSE,
+	fecha        TIMESTAMP    DEFAULT NOW()
 
 );

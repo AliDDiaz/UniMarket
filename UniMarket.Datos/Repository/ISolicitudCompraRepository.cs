@@ -12,5 +12,6 @@ namespace UniMarket.Datos.Repository
         bool Reject(int id);
         List<SolicitudDetalle> GetReceived(int vendedorId);
         List<SolicitudDetalle> GetSent(int compradorId);
+        bool ConfirmarTrueque(int solicitudId, int usuarioId);
     }
 }

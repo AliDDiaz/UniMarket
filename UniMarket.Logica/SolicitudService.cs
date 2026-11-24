@@ -16,6 +16,10 @@ namespace UniMarket.Logica
         private readonly IUsuarioRepository _usuarios;
         private readonly NotificacionesService _notificaciones;
 
+        public bool ConfirmarTrueque(int solicitudId, int usuarioId)
+        {
+            return _solicitudes.ConfirmarTrueque(solicitudId, usuarioId);
+        }
         public SolicitudService(ISolicitudCompraRepository solicitudes,
                                 IPublicacionRepository publicaciones,
                                 IUsuarioRepository usuarios)
@@ -255,5 +259,6 @@ namespace UniMarket.Logica
         public List<int> Enviados { get; } = new List<int>();     // ids de las publicaciones enviadas
         public List<string> Fallidos { get; } = new List<string>(); // "Producto: motivo"
     }
+
 
 }

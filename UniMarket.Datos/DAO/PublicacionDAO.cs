@@ -8,8 +8,11 @@ namespace UniMarket.Datos.DAO
 {
     public class PublicacionDAO : IPublicacionDAO
     {
-        private const string Columnas =
-            "id, vendedor_id, titulo, descripcion, precio, stock, activo, imagen, modalidad, trueque_busca";
+        private const string SelectBase = @"
+            SELECT pub.id, pub.producto_id, pr.propietario_id, pr.titulo, pr.descripcion, 
+                   pr.imagen, pub.precio, pub.stock, pub.activo, pub.modalidad, pub.trueque_busca
+            FROM public.publicaciones pub
+            INNER JOIN public.productos pr ON pub.producto_id = pr.id";
 
         private readonly Conexion _conexion;
 
@@ -25,9 +28,9 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = $@"SELECT {Columnas} FROM publicaciones
-                                    WHERE activo = TRUE AND stock > 0
-                                    ORDER BY id DESC";
+                    string sql = $@"{SelectBase}
+                                    WHERE pub.activo = TRUE AND pub.stock > 0
+                                    ORDER BY pub.id DESC";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         con.Open();
@@ -50,10 +53,10 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = $@"SELECT {Columnas} FROM publicaciones
-                            WHERE activo = TRUE AND stock > 0
-                              AND titulo ILIKE @Texto
-                            ORDER BY id DESC";
+                    string sql = $@"{SelectBase}
+                                    WHERE pub.activo = TRUE AND pub.stock > 0
+                                      AND pr.titulo ILIKE @Texto
+                                    ORDER BY pub.id DESC";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Texto", "%" + texto + "%");
@@ -77,9 +80,9 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = $@"SELECT {Columnas} FROM publicaciones
-                                    WHERE vendedor_id = @VendedorId AND activo = TRUE
-                                    ORDER BY id DESC";
+                    string sql = $@"{SelectBase}
+                                    WHERE pr.propietario_id = @VendedorId AND pub.activo = TRUE
+                                    ORDER BY pub.id DESC";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@VendedorId", vendedorId);
@@ -102,7 +105,7 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = $"SELECT {Columnas} FROM publicaciones WHERE id = @Id";
+                    string sql = $"{SelectBase} WHERE pub.id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
@@ -125,15 +128,45 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"INSERT INTO publicaciones (vendedor_id, titulo, descripcion, precio, stock, imagen, modalidad, trueque_busca)
-                                   VALUES (@VendedorId, @Titulo, @Descripcion, @Precio, @Stock, @Imagen, @Modalidad, @TruequeBusca)
-                                   RETURNING id";
-                    using (var cmd = new NpgsqlCommand(sql, con))
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@VendedorId", publicacion.VendedorId);
-                        AgregarParams(cmd, publicacion);
-                        con.Open();
-                        return Convert.ToInt32(cmd.ExecuteScalar());
+                        try
+                        {
+                            // 1. Insertar el producto físico
+                            string sqlProd = @"INSERT INTO public.productos (propietario_id, titulo, descripcion, imagen)
+                                               VALUES (@VendedorId, @Titulo, @Descripcion, @Imagen)
+                                               RETURNING id";
+                            int productoId;
+                            using (var cmdProd = new NpgsqlCommand(sqlProd, con, tx))
+                            {
+                                cmdProd.Parameters.AddWithValue("@VendedorId", publicacion.VendedorId);
+                                AgregarParamsProducto(cmdProd, publicacion);
+                                productoId = Convert.ToInt32(cmdProd.ExecuteScalar());
+                            }
+
+                            // 2. Insertar la publicación comercial asociada
+                            string sqlPub = @"INSERT INTO public.publicaciones (producto_id, precio, stock, modalidad, trueque_busca)
+                                              VALUES (@ProductoId, @Precio, @Stock, @Modalidad, @TruequeBusca)
+                                              RETURNING id";
+                            int publicacionId;
+                            using (var cmdPub = new NpgsqlCommand(sqlPub, con, tx))
+                            {
+                                cmdPub.Parameters.AddWithValue("@ProductoId", productoId);
+                                AgregarParamsPublicacion(cmdPub, publicacion);
+                                publicacionId = Convert.ToInt32(cmdPub.ExecuteScalar());
+                            }
+
+                            tx.Commit();
+                            publicacion.ProductoId = productoId;
+                            publicacion.Id = publicacionId;
+                            return publicacionId;
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
                     }
                 }
             }
@@ -149,17 +182,41 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"UPDATE publicaciones
-                                   SET titulo = @Titulo, descripcion = @Descripcion,
-                                       precio = @Precio, stock = @Stock, imagen = @Imagen,
-                                       modalidad = @Modalidad, trueque_busca = @TruequeBusca
-                                   WHERE id = @Id";
-                    using (var cmd = new NpgsqlCommand(sql, con))
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
                     {
-                        cmd.Parameters.AddWithValue("@Id", publicacion.Id);
-                        AgregarParams(cmd, publicacion);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
+                        try
+                        {
+                            // 1. Actualizar datos del producto físico vinculado
+                            string sqlProd = @"UPDATE public.productos
+                                               SET titulo = @Titulo, descripcion = @Descripcion, imagen = @Imagen
+                                               WHERE id = (SELECT producto_id FROM public.publicaciones WHERE id = @Id)";
+                            using (var cmdProd = new NpgsqlCommand(sqlProd, con, tx))
+                            {
+                                cmdProd.Parameters.AddWithValue("@Id", publicacion.Id);
+                                AgregarParamsProducto(cmdProd, publicacion);
+                                cmdProd.ExecuteNonQuery();
+                            }
+
+                            // 2. Actualizar condiciones comerciales de la publicación
+                            string sqlPub = @"UPDATE public.publicaciones
+                                              SET precio = @Precio, stock = @Stock,
+                                                  modalidad = @Modalidad, trueque_busca = @TruequeBusca
+                                              WHERE id = @Id";
+                            using (var cmdPub = new NpgsqlCommand(sqlPub, con, tx))
+                            {
+                                cmdPub.Parameters.AddWithValue("@Id", publicacion.Id);
+                                AgregarParamsPublicacion(cmdPub, publicacion);
+                                cmdPub.ExecuteNonQuery();
+                            }
+
+                            tx.Commit();
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
                     }
                 }
             }
@@ -175,7 +232,7 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = "UPDATE publicaciones SET activo = FALSE WHERE id = @Id";
+                    string sql = "UPDATE public.publicaciones SET activo = FALSE WHERE id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
@@ -193,7 +250,8 @@ namespace UniMarket.Datos.DAO
         private Publicacion Mapear(NpgsqlDataReader r) => new Publicacion
         {
             Id = Convert.ToInt32(r["id"]),
-            VendedorId = Convert.ToInt32(r["vendedor_id"]),
+            ProductoId = Convert.ToInt32(r["producto_id"]),
+            VendedorId = Convert.ToInt32(r["propietario_id"]),
             Titulo = r["titulo"].ToString(),
             Descripcion = r.IsDBNull(r.GetOrdinal("descripcion"))
                             ? null
@@ -210,18 +268,22 @@ namespace UniMarket.Datos.DAO
                 : r["trueque_busca"].ToString()
         };
 
-        private void AgregarParams(NpgsqlCommand cmd, Publicacion publicacion)
+        private void AgregarParamsProducto(NpgsqlCommand cmd, Publicacion publicacion)
         {
             cmd.Parameters.AddWithValue("@Titulo", publicacion.Titulo);
             cmd.Parameters.AddWithValue("@Descripcion", (object)publicacion.Descripcion ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@Precio", publicacion.AceptaVenta ? (object)publicacion.Precio : DBNull.Value);
-            cmd.Parameters.AddWithValue("@Stock", publicacion.Stock);
-            cmd.Parameters.AddWithValue("@Modalidad", publicacion.Modalidad.ToString());
-            cmd.Parameters.AddWithValue("@TruequeBusca", (object)publicacion.TruequeBusca ?? DBNull.Value);
 
             var paramImagen = new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea);
             paramImagen.Value = (object)publicacion.Imagen ?? DBNull.Value;
             cmd.Parameters.Add(paramImagen);
+        }
+
+        private void AgregarParamsPublicacion(NpgsqlCommand cmd, Publicacion publicacion)
+        {
+            cmd.Parameters.AddWithValue("@Precio", publicacion.AceptaVenta ? (object)publicacion.Precio : DBNull.Value);
+            cmd.Parameters.AddWithValue("@Stock", publicacion.Stock);
+            cmd.Parameters.AddWithValue("@Modalidad", publicacion.Modalidad.ToString());
+            cmd.Parameters.AddWithValue("@TruequeBusca", publicacion.AceptaTrueque ? (object)publicacion.TruequeBusca : DBNull.Value);
         }
     }
 }

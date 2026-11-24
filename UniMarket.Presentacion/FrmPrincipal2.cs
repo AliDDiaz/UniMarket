@@ -23,6 +23,7 @@ namespace UniMarket.Presentacion
         public FrmPrincipal2(Usuario usuario)
         {
             InitializeComponent();
+   
             FormClosed += FrmPrincipal2_FormClosed;
             _usuario = usuario;
 
@@ -67,6 +68,12 @@ namespace UniMarket.Presentacion
             formularioHijo.Show();
         }
 
+        // Abre el formulario de editar publicación dentro del panel central
+        public void AbrirEdicion(Publicacion publicacion)
+        {
+            AbrirFormularioEnPanel(new FrmPublicacion(_usuario, publicacion));
+        }
+
         private async void FrmPrincipal2_Load_1(object sender, EventArgs e)
         {
             // Contadores (campana y carrito) con forma circular
@@ -107,7 +114,7 @@ namespace UniMarket.Presentacion
         // Publicar
         private void button2_Click(object sender, EventArgs e)
         {
-            AbrirFormularioEnPanel(new FrmPublicacion(_usuario.Id));
+            AbrirFormularioEnPanel(new FrmPublicacion(_usuario));
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
@@ -206,5 +213,8 @@ namespace UniMarket.Presentacion
 
             AbrirFormularioEnPanel(new FrmSolicitudes(_usuario));
         }
+
+
     }
 }
+

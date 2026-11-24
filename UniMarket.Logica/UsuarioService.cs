@@ -38,7 +38,6 @@ namespace UniMarket.Logica
                 Correo = correo,
                 Telefono = telefono,
                 Contrasena = HashContrasena.Generar(contrasena),
-                Rol = RolUsuario.Estudiante
             };
 
             return _repository.Add(usuario);

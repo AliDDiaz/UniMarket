@@ -10,9 +10,18 @@ namespace UniMarket.Datos.DAO
     {
         private const string SelectBase = @"
             SELECT pub.id, pub.producto_id, pr.propietario_id, pr.titulo, pr.descripcion, 
-                   pr.imagen, pub.precio, pub.stock, pub.activo, pub.modalidad, pub.trueque_busca
+                   fp.imagen, pv.precio, pub.stock, pub.activo, pub.modalidad, pt.trueque_busca
             FROM public.publicaciones pub
-            INNER JOIN public.productos pr ON pub.producto_id = pr.id";
+            INNER JOIN public.productos pr ON pub.producto_id = pr.id
+            LEFT JOIN public.publicaciones_venta pv ON pv.id_publicacion = pub.id
+            LEFT JOIN public.publicaciones_trueque pt ON pt.id_publicacion = pub.id
+            LEFT JOIN LATERAL (
+                SELECT imagen 
+                FROM public.fotos_productos 
+                WHERE id_producto = pr.id 
+                ORDER BY id ASC 
+                LIMIT 1
+            ) fp ON TRUE";
 
         private readonly Conexion _conexion;
 
@@ -133,28 +142,69 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            // 1. Insertar el producto físico
-                            string sqlProd = @"INSERT INTO public.productos (propietario_id, titulo, descripcion, imagen)
-                                               VALUES (@VendedorId, @Titulo, @Descripcion, @Imagen)
+                            // 1. Insertar producto base
+                            string sqlProd = @"INSERT INTO public.productos (propietario_id, titulo, descripcion)
+                                               VALUES (@VendedorId, @Titulo, @Descripcion)
                                                RETURNING id";
                             int productoId;
                             using (var cmdProd = new NpgsqlCommand(sqlProd, con, tx))
                             {
                                 cmdProd.Parameters.AddWithValue("@VendedorId", publicacion.VendedorId);
-                                AgregarParamsProducto(cmdProd, publicacion);
+                                cmdProd.Parameters.AddWithValue("@Titulo", publicacion.Titulo);
+                                cmdProd.Parameters.AddWithValue("@Descripcion", (object)publicacion.Descripcion ?? DBNull.Value);
                                 productoId = Convert.ToInt32(cmdProd.ExecuteScalar());
                             }
 
-                            // 2. Insertar la publicación comercial asociada
-                            string sqlPub = @"INSERT INTO public.publicaciones (producto_id, precio, stock, modalidad, trueque_busca)
-                                              VALUES (@ProductoId, @Precio, @Stock, @Modalidad, @TruequeBusca)
+                            // 2. Insertar foto si existe
+                            if (publicacion.Imagen != null && publicacion.Imagen.Length > 0)
+                            {
+                                string sqlFoto = @"INSERT INTO public.fotos_productos (id_producto, imagen)
+                                                   VALUES (@ProductoId, @Imagen)";
+                                using (var cmdFoto = new NpgsqlCommand(sqlFoto, con, tx))
+                                {
+                                    cmdFoto.Parameters.AddWithValue("@ProductoId", productoId);
+                                    cmdFoto.Parameters.Add(new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea) { Value = publicacion.Imagen });
+                                    cmdFoto.ExecuteNonQuery();
+                                }
+                            }
+
+                            // 3. Insertar publicación padre
+                            string sqlPub = @"INSERT INTO public.publicaciones (producto_id, stock, modalidad)
+                                              VALUES (@ProductoId, @Stock, @Modalidad)
                                               RETURNING id";
                             int publicacionId;
                             using (var cmdPub = new NpgsqlCommand(sqlPub, con, tx))
                             {
                                 cmdPub.Parameters.AddWithValue("@ProductoId", productoId);
-                                AgregarParamsPublicacion(cmdPub, publicacion);
+                                cmdPub.Parameters.AddWithValue("@Stock", publicacion.Stock);
+                                cmdPub.Parameters.AddWithValue("@Modalidad", publicacion.Modalidad.ToString());
                                 publicacionId = Convert.ToInt32(cmdPub.ExecuteScalar());
+                            }
+
+                            // 4. Insertar subtipo Venta si aplica
+                            if (publicacion.AceptaVenta)
+                            {
+                                string sqlVenta = @"INSERT INTO public.publicaciones_venta (id_publicacion, precio)
+                                                    VALUES (@IdPub, @Precio)";
+                                using (var cmdVenta = new NpgsqlCommand(sqlVenta, con, tx))
+                                {
+                                    cmdVenta.Parameters.AddWithValue("@IdPub", publicacionId);
+                                    cmdVenta.Parameters.AddWithValue("@Precio", publicacion.Precio);
+                                    cmdVenta.ExecuteNonQuery();
+                                }
+                            }
+
+                            // 5. Insertar subtipo Trueque si aplica
+                            if (publicacion.AceptaTrueque)
+                            {
+                                string sqlTrueque = @"INSERT INTO public.publicaciones_trueque (id_publicacion, trueque_busca)
+                                                      VALUES (@IdPub, @TruequeBusca)";
+                                using (var cmdTrueque = new NpgsqlCommand(sqlTrueque, con, tx))
+                                {
+                                    cmdTrueque.Parameters.AddWithValue("@IdPub", publicacionId);
+                                    cmdTrueque.Parameters.AddWithValue("@TruequeBusca", publicacion.TruequeBusca);
+                                    cmdTrueque.ExecuteNonQuery();
+                                }
                             }
 
                             tx.Commit();
@@ -187,27 +237,108 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            // 1. Actualizar datos del producto físico vinculado
+                            // 1. Actualizar producto
                             string sqlProd = @"UPDATE public.productos
-                                               SET titulo = @Titulo, descripcion = @Descripcion, imagen = @Imagen
-                                               WHERE id = (SELECT producto_id FROM public.publicaciones WHERE id = @Id)";
+                                               SET titulo = @Titulo, descripcion = @Descripcion
+                                               WHERE id = (SELECT producto_id FROM public.publicaciones WHERE id = @Id)
+                                               RETURNING id";
+                            int productoId;
                             using (var cmdProd = new NpgsqlCommand(sqlProd, con, tx))
                             {
                                 cmdProd.Parameters.AddWithValue("@Id", publicacion.Id);
-                                AgregarParamsProducto(cmdProd, publicacion);
-                                cmdProd.ExecuteNonQuery();
+                                cmdProd.Parameters.AddWithValue("@Titulo", publicacion.Titulo);
+                                cmdProd.Parameters.AddWithValue("@Descripcion", (object)publicacion.Descripcion ?? DBNull.Value);
+                                productoId = Convert.ToInt32(cmdProd.ExecuteScalar());
                             }
 
-                            // 2. Actualizar condiciones comerciales de la publicación
+                            // 2. Sincronizar foto
+                            if (publicacion.Imagen != null && publicacion.Imagen.Length > 0)
+                            {
+                                string sqlUpdFoto = @"UPDATE public.fotos_productos
+                                                      SET imagen = @Imagen
+                                                      WHERE id = (SELECT id FROM public.fotos_productos WHERE id_producto = @ProductoId ORDER BY id ASC LIMIT 1)";
+                                int filas;
+                                using (var cmdUpdFoto = new NpgsqlCommand(sqlUpdFoto, con, tx))
+                                {
+                                    cmdUpdFoto.Parameters.AddWithValue("@ProductoId", productoId);
+                                    cmdUpdFoto.Parameters.Add(new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea) { Value = publicacion.Imagen });
+                                    filas = cmdUpdFoto.ExecuteNonQuery();
+                                }
+
+                                if (filas == 0)
+                                {
+                                    string sqlInsFoto = "INSERT INTO public.fotos_productos (id_producto, imagen) VALUES (@ProductoId, @Imagen)";
+                                    using (var cmdInsFoto = new NpgsqlCommand(sqlInsFoto, con, tx))
+                                    {
+                                        cmdInsFoto.Parameters.AddWithValue("@ProductoId", productoId);
+                                        cmdInsFoto.Parameters.Add(new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea) { Value = publicacion.Imagen });
+                                        cmdInsFoto.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                using (var cmdDelFoto = new NpgsqlCommand("DELETE FROM public.fotos_productos WHERE id_producto = @ProductoId", con, tx))
+                                {
+                                    cmdDelFoto.Parameters.AddWithValue("@ProductoId", productoId);
+                                    cmdDelFoto.ExecuteNonQuery();
+                                }
+                            }
+
+                            // 3. Actualizar publicación padre
                             string sqlPub = @"UPDATE public.publicaciones
-                                              SET precio = @Precio, stock = @Stock,
-                                                  modalidad = @Modalidad, trueque_busca = @TruequeBusca
+                                              SET stock = @Stock, modalidad = @Modalidad
                                               WHERE id = @Id";
                             using (var cmdPub = new NpgsqlCommand(sqlPub, con, tx))
                             {
                                 cmdPub.Parameters.AddWithValue("@Id", publicacion.Id);
-                                AgregarParamsPublicacion(cmdPub, publicacion);
+                                cmdPub.Parameters.AddWithValue("@Stock", publicacion.Stock);
+                                cmdPub.Parameters.AddWithValue("@Modalidad", publicacion.Modalidad.ToString());
                                 cmdPub.ExecuteNonQuery();
+                            }
+
+                            // 4. Sincronizar subtipo Venta
+                            if (publicacion.AceptaVenta)
+                            {
+                                string sqlVenta = @"INSERT INTO public.publicaciones_venta (id_publicacion, precio)
+                                                    VALUES (@IdPub, @Precio)
+                                                    ON CONFLICT (id_publicacion) DO UPDATE SET precio = EXCLUDED.precio";
+                                using (var cmdVenta = new NpgsqlCommand(sqlVenta, con, tx))
+                                {
+                                    cmdVenta.Parameters.AddWithValue("@IdPub", publicacion.Id);
+                                    cmdVenta.Parameters.AddWithValue("@Precio", publicacion.Precio);
+                                    cmdVenta.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                using (var cmdDelVenta = new NpgsqlCommand("DELETE FROM public.publicaciones_venta WHERE id_publicacion = @IdPub", con, tx))
+                                {
+                                    cmdDelVenta.Parameters.AddWithValue("@IdPub", publicacion.Id);
+                                    cmdDelVenta.ExecuteNonQuery();
+                                }
+                            }
+
+                            // 5. Sincronizar subtipo Trueque
+                            if (publicacion.AceptaTrueque)
+                            {
+                                string sqlTrueque = @"INSERT INTO public.publicaciones_trueque (id_publicacion, trueque_busca)
+                                                      VALUES (@IdPub, @TruequeBusca)
+                                                      ON CONFLICT (id_publicacion) DO UPDATE SET trueque_busca = EXCLUDED.trueque_busca";
+                                using (var cmdTrueque = new NpgsqlCommand(sqlTrueque, con, tx))
+                                {
+                                    cmdTrueque.Parameters.AddWithValue("@IdPub", publicacion.Id);
+                                    cmdTrueque.Parameters.AddWithValue("@TruequeBusca", publicacion.TruequeBusca);
+                                    cmdTrueque.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                using (var cmdDelTrueque = new NpgsqlCommand("DELETE FROM public.publicaciones_trueque WHERE id_publicacion = @IdPub", con, tx))
+                                {
+                                    cmdDelTrueque.Parameters.AddWithValue("@IdPub", publicacion.Id);
+                                    cmdDelTrueque.ExecuteNonQuery();
+                                }
                             }
 
                             tx.Commit();
@@ -267,23 +398,5 @@ namespace UniMarket.Datos.DAO
                 ? null
                 : r["trueque_busca"].ToString()
         };
-
-        private void AgregarParamsProducto(NpgsqlCommand cmd, Publicacion publicacion)
-        {
-            cmd.Parameters.AddWithValue("@Titulo", publicacion.Titulo);
-            cmd.Parameters.AddWithValue("@Descripcion", (object)publicacion.Descripcion ?? DBNull.Value);
-
-            var paramImagen = new NpgsqlParameter("@Imagen", NpgsqlDbType.Bytea);
-            paramImagen.Value = (object)publicacion.Imagen ?? DBNull.Value;
-            cmd.Parameters.Add(paramImagen);
-        }
-
-        private void AgregarParamsPublicacion(NpgsqlCommand cmd, Publicacion publicacion)
-        {
-            cmd.Parameters.AddWithValue("@Precio", publicacion.AceptaVenta ? (object)publicacion.Precio : DBNull.Value);
-            cmd.Parameters.AddWithValue("@Stock", publicacion.Stock);
-            cmd.Parameters.AddWithValue("@Modalidad", publicacion.Modalidad.ToString());
-            cmd.Parameters.AddWithValue("@TruequeBusca", publicacion.AceptaTrueque ? (object)publicacion.TruequeBusca : DBNull.Value);
-        }
     }
 }

@@ -20,6 +20,7 @@ namespace UniMarket.Presentacion
             this.Controls.Add(botAyuda);
             _service = new PublicacionService();
             _usuario = usuario;
+            flpCatalogo.SizeChanged += (s, e) => AjustarTarjetas();
             CargarPublicaciones();
         }
 
@@ -65,18 +66,18 @@ namespace UniMarket.Presentacion
             CargarPublicaciones();
         }
 
-        private void btnEditar_Click(object sender, EventArgs e)
+        private void EditarPublicacion(Publicacion publicacion)
         {
-            var publicacion = ObtenerSeleccionada();
-            if (publicacion == null) return;
-
-            if (publicacion.VendedorId != _usuario.Id)
+            // El catálogo vive dentro de FrmPrincipal2: se le pide abrir la edición en su panel,
+            // así el menú de la izquierda sigue funcionando
+            var principal = Parent?.FindForm() as FrmPrincipal2;
+            if (principal != null)
             {
-                MessageBox.Show("Solo puedes editar tus propias publicaciones.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                principal.AbrirEdicion(publicacion);
                 return;
             }
 
+            // Respaldo si el catálogo se abre solo (sin la ventana principal)
             using (var frm = new FrmPublicacion(_usuario.Id, publicacion))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
@@ -84,18 +85,8 @@ namespace UniMarket.Presentacion
             }
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private void EliminarPublicacion(Publicacion publicacion)
         {
-            var publicacion = ObtenerSeleccionada();
-            if (publicacion == null) return;
-
-            if (publicacion.VendedorId != _usuario.Id)
-            {
-                MessageBox.Show("Solo puedes eliminar tus propias publicaciones.", "Atención",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
             var conf = MessageBox.Show($"¿Eliminar \"{publicacion.Titulo}\"?", "Confirmar",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (conf != DialogResult.Yes) return;
@@ -121,7 +112,7 @@ namespace UniMarket.Presentacion
                 // 1. Tarjeta blanca
                 Panel card = new Panel
                 {
-                    Width = 220,
+                    Width = CalcularAnchoTarjeta(),
                     Height = 275,
                     BackColor = Color.White,
                     Margin = new Padding(12),
@@ -238,6 +229,14 @@ namespace UniMarket.Presentacion
                     };
                 }
 
+                card.Resize += (s, e) =>
+                {
+                    int interior = card.Width - 24;
+                    pic.Width = interior;
+                    lblTitulo.Width = interior;
+                    btnAgregar.Width = interior;
+                };
+                card.Width = card.Width;   // fuerza un primer ajuste
                 card.Controls.Add(pic);
                 card.Controls.Add(lblTitulo);
                 card.Controls.Add(lblPrecio);
@@ -245,8 +244,12 @@ namespace UniMarket.Presentacion
                 if (lblAceptaTrueque != null)
                 card.Controls.Add(lblAceptaTrueque);
 
+
                 flpCatalogo.Controls.Add(card);
             }
+
+            AjustarTarjetas();
+
         }
 
         private void SeleccionarTarjeta(Panel tarjetaElegida, Publicacion pub)
@@ -261,10 +264,42 @@ namespace UniMarket.Presentacion
         {
             SeleccionarTarjeta(tarjeta, pub);
 
+            AccionDetalle accion;
             using (var detalle = new FrmDetalleProducto(pub, _usuario))
             {
                 detalle.ShowDialog(this);
+                accion = detalle.Accion;
             }
+
+            // Se ejecuta después de cerrar el detalle, para no abrir un cuadro encima de otro
+            if (accion == AccionDetalle.Editar) EditarPublicacion(pub);
+            else if (accion == AccionDetalle.Eliminar) EliminarPublicacion(pub);
+        }
+
+        // Calcula cuántas columnas caben y reparte el ancho entre ellas
+        private int CalcularAnchoTarjeta()
+        {
+            const int margen = 24;          // 12 a cada lado de la tarjeta
+            const int anchoMinimo = 230;
+
+            // Si todavía no hay barra de desplazamiento, se reserva su espacio para que no empuje las tarjetas
+            int barra = flpCatalogo.VerticalScroll.Visible ? 0 : SystemInformation.VerticalScrollBarWidth;
+            int disponible = flpCatalogo.ClientSize.Width - flpCatalogo.Padding.Horizontal - barra;
+            if (disponible < anchoMinimo + margen) return anchoMinimo;
+
+            int columnas = disponible / (anchoMinimo + margen);
+            return disponible / columnas - margen;
+        }
+
+        private void AjustarTarjetas()
+        {
+            int ancho = CalcularAnchoTarjeta();
+
+            flpCatalogo.SuspendLayout();
+            foreach (Control tarjeta in flpCatalogo.Controls)
+                if (tarjeta.Width != ancho)
+                    tarjeta.Width = ancho;
+            flpCatalogo.ResumeLayout();
         }
 
         private void picEngel_Click_1(object sender, EventArgs e)

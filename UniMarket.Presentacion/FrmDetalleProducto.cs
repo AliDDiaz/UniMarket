@@ -7,11 +7,16 @@ using UniMarket.Logica;
 
 namespace UniMarket.Presentacion
 {
+
+    public enum AccionDetalle { Ninguna, Editar, Eliminar }
+
     public partial class FrmDetalleProducto : Form
     {
         private readonly Publicacion _pub;
         private readonly Usuario _usuario;
         private readonly SolicitudService _solicitudes = new SolicitudService();
+        // Lo que el dueño eligió hacer desde el detalle (lo lee FrmPrincipal)
+        public AccionDetalle Accion { get; private set; } = AccionDetalle.Ninguna;
 
         public FrmDetalleProducto(Publicacion pub, Usuario usuario)
         {
@@ -36,6 +41,7 @@ namespace UniMarket.Presentacion
             }
 
             ConfigurarTrueque();
+            ConfigurarPropietario();
         }
 
         // El apartado de trueque solo aparece si el vendedor lo activó
@@ -192,6 +198,66 @@ namespace UniMarket.Presentacion
                 oferta = txtOferta.Text;
                 return true;
             }
+        }
+
+        // Si la publicación es del usuario, en lugar de proponer trueque ve Editar y Eliminar
+        private void ConfigurarPropietario()
+        {
+            if (!_pub.PerteneceA(_usuario.Id)) return;
+
+            btnProponerTrueque.Visible = false;
+
+            // Garantiza espacio para la fila de botones
+            if (ClientSize.Height < 470)
+                ClientSize = new Size(ClientSize.Width, 470);
+
+            int y = ClientSize.Height - 56;   // siempre a 56 px del borde de abajo
+
+            // Los dos botones se reparten el ancho del recuadro de descripción
+            int separacion = 10;
+            int ancho = (txtDescripcion.Width - separacion) / 2;
+            int x1 = txtDescripcion.Left;
+            int x2 = x1 + ancho + separacion;
+
+            var btnEditar = CrearBotonAccion("Editar", new Point(x1, y), new Size(ancho, 38),
+                Color.FromArgb(103, 58, 183), Color.White);
+            btnEditar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnEditar.Click += (s, e) =>
+            {
+                Accion = AccionDetalle.Editar;
+                DialogResult = DialogResult.OK;
+            };
+
+            var btnEliminar = CrearBotonAccion("Eliminar", new Point(x2, y), new Size(ancho, 38),
+                Color.FromArgb(254, 226, 226), Color.FromArgb(185, 28, 28));
+            btnEliminar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnEliminar.Click += (s, e) =>
+            {
+                Accion = AccionDetalle.Eliminar;
+                DialogResult = DialogResult.OK;
+            };
+
+            Controls.Add(btnEditar);
+            Controls.Add(btnEliminar);
+            btnEditar.BringToFront();
+            btnEliminar.BringToFront();
+        }
+
+        private Button CrearBotonAccion(string texto, Point ubicacion, Size tamano, Color fondo, Color letra)
+        {
+            var boton = new Button
+            {
+                Text = texto,
+                Location = ubicacion,
+                Size = tamano,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = fondo,
+                ForeColor = letra,
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            boton.FlatAppearance.BorderSize = 0;
+            return boton;
         }
 
         private void lblTitulo_Click(object sender, EventArgs e)

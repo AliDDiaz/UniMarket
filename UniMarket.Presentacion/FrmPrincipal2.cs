@@ -68,6 +68,12 @@ namespace UniMarket.Presentacion
             formularioHijo.Show();
         }
 
+        // Abre el formulario de editar publicación dentro del panel central
+        public void AbrirEdicion(Publicacion publicacion)
+        {
+            AbrirFormularioEnPanel(new FrmPublicacion(_usuario, publicacion));
+        }
+
         private async void FrmPrincipal2_Load_1(object sender, EventArgs e)
         {
             // Contadores (campana y carrito) con forma circular

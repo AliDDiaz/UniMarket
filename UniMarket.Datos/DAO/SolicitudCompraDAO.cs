@@ -22,10 +22,10 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            // 1. Insertar registro padre en 'solicitudes' (sin precio_unitario)
+                            // 1. La solicitud (datos comunes a compra y trueque)
                             string sqlSolicitud = @"INSERT INTO public.solicitudes (publicacion_id, solicitante_id, cantidad, tipo)
-                                                    VALUES (@PublicacionId, @SolicitanteId, @Cantidad, @Tipo)
-                                                    RETURNING id";
+                                            VALUES (@PublicacionId, @SolicitanteId, @Cantidad, @Tipo)
+                                            RETURNING id";
                             int solicitudId;
                             using (var cmd = new NpgsqlCommand(sqlSolicitud, con, tx))
                             {
@@ -33,36 +33,35 @@ namespace UniMarket.Datos.DAO
                                 cmd.Parameters.AddWithValue("@SolicitanteId", s.SolicitanteId);
                                 cmd.Parameters.AddWithValue("@Cantidad", s.Cantidad);
                                 cmd.Parameters.AddWithValue("@Tipo", s.Tipo.ToString());
-
                                 solicitudId = Convert.ToInt32(cmd.ExecuteScalar());
                             }
 
-                            // 2. Insertar en el subtipo correspondiente ('trueques' o 'solicitudes_compra')
+                            // 2. Si es una compra, su precio unitario
+                            if (s.Tipo == TipoSolicitud.Compra)
+                            {
+                                string sqlCompra = @"INSERT INTO public.solicitudes_compra (id_solicitud, precio_unitario)
+                                             VALUES (@SolicitudId, @PrecioUnitario)";
+                                using (var cmd = new NpgsqlCommand(sqlCompra, con, tx))
+                                {
+                                    cmd.Parameters.AddWithValue("@SolicitudId", solicitudId);
+                                    cmd.Parameters.AddWithValue("@PrecioUnitario", s.PrecioUnitario);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+
+                            // 3. Si es un trueque, el detalle de la oferta
                             if (s.EsTrueque)
                             {
                                 string sqlTrueque = @"INSERT INTO public.trueques (solicitud_id, producto_ofrecido_id, descripcion_oferta)
-                                                      VALUES (@SolicitudId, @ProductoOfrecidoId, @DescripcionOferta)";
-                                using (var cmdTrueque = new NpgsqlCommand(sqlTrueque, con, tx))
+                                              VALUES (@SolicitudId, @ProductoOfrecidoId, @DescripcionOferta)";
+                                using (var cmd = new NpgsqlCommand(sqlTrueque, con, tx))
                                 {
-                                    cmdTrueque.Parameters.AddWithValue("@SolicitudId", solicitudId);
-                                    cmdTrueque.Parameters.AddWithValue("@ProductoOfrecidoId",
+                                    cmd.Parameters.AddWithValue("@SolicitudId", solicitudId);
+                                    cmd.Parameters.AddWithValue("@ProductoOfrecidoId",
                                         (object)s.Trueque?.ProductoOfrecidoId ?? DBNull.Value);
-                                    cmdTrueque.Parameters.AddWithValue("@DescripcionOferta",
+                                    cmd.Parameters.AddWithValue("@DescripcionOferta",
                                         (object)s.OfertaTrueque ?? DBNull.Value);
-
-                                    cmdTrueque.ExecuteNonQuery();
-                                }
-                            }
-                            else
-                            {
-                                string sqlCompra = @"INSERT INTO public.solicitudes_compra (id_solicitud, precio_unitario)
-                                                     VALUES (@IdSolicitud, @PrecioUnitario)";
-                                using (var cmdCompra = new NpgsqlCommand(sqlCompra, con, tx))
-                                {
-                                    cmdCompra.Parameters.AddWithValue("@IdSolicitud", solicitudId);
-                                    cmdCompra.Parameters.AddWithValue("@PrecioUnitario", s.PrecioUnitario);
-
-                                    cmdCompra.ExecuteNonQuery();
+                                    cmd.ExecuteNonQuery();
                                 }
                             }
 
@@ -90,14 +89,14 @@ namespace UniMarket.Datos.DAO
             {
                 using (var con = _conexion.ObtenerConexion())
                 {
-                    string sql = @"SELECT s.id, s.publicacion_id, s.solicitante_id, s.cantidad, sc.precio_unitario, 
-                                          s.tipo, s.estado, s.fecha,
-                                          t.id AS trueque_id, t.producto_ofrecido_id, t.descripcion_oferta AS oferta_trueque,
-                                          t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega, t.fecha_confirmacion
-                                   FROM public.solicitudes s
-                                   LEFT JOIN public.solicitudes_compra sc ON sc.id_solicitud = s.id
-                                   LEFT JOIN public.trueques t ON t.solicitud_id = s.id
-                                   WHERE s.id = @Id";
+                    string sql = @"SELECT s.id, s.publicacion_id, s.solicitante_id, s.cantidad, sc.precio_unitario,
+                      s.tipo, s.estado, s.fecha,
+                      t.id AS trueque_id, t.producto_ofrecido_id, t.descripcion_oferta AS oferta_trueque,
+                      t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega, t.fecha_confirmacion
+               FROM public.solicitudes s
+               LEFT JOIN public.solicitudes_compra sc ON sc.id_solicitud = s.id
+               LEFT JOIN public.trueques t ON t.solicitud_id = s.id
+               WHERE s.id = @Id";
                     using (var cmd = new NpgsqlCommand(sql, con))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
@@ -222,40 +221,40 @@ namespace UniMarket.Datos.DAO
 
         public List<SolicitudDetalle> ObtenerRecibidas(int vendedorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, sc.precio_unitario, s.tipo, 
-                                  t.descripcion_oferta AS oferta_trueque,
-                                  t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega,
-                                  s.estado, s.fecha,
-                                  pc.nombre AS contraparte,
-                                  NULL::varchar AS telefono
-                           FROM public.solicitudes s
-                           INNER JOIN public.publicaciones p ON p.id = s.publicacion_id
-                           INNER JOIN public.productos pr ON pr.id = p.producto_id
-                           INNER JOIN public.perfiles_usuarios pc ON pc.id_usuario = s.solicitante_id
-                           LEFT JOIN public.solicitudes_compra sc ON sc.id_solicitud = s.id
-                           LEFT JOIN public.trueques t ON t.solicitud_id = s.id
-                           WHERE pr.propietario_id = @UsuarioId
-                           ORDER BY s.id DESC";
+            string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, sc.precio_unitario, s.tipo,
+                          t.descripcion_oferta AS oferta_trueque,
+                          t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega,
+                          s.estado, s.fecha,
+                          c.nombre AS contraparte,
+                          NULL::varchar AS telefono
+                   FROM public.solicitudes s
+                   INNER JOIN public.publicaciones p ON p.id = s.publicacion_id
+                   INNER JOIN public.productos pr ON pr.id = p.producto_id
+                   INNER JOIN public.perfiles_usuarios c ON c.id_usuario = s.solicitante_id
+                   LEFT JOIN public.solicitudes_compra sc ON sc.id_solicitud = s.id
+                   LEFT JOIN public.trueques t ON t.solicitud_id = s.id
+                   WHERE pr.propietario_id = @UsuarioId
+                   ORDER BY s.id DESC";
 
             return ListarDetalle(sql, vendedorId);
         }
 
         public List<SolicitudDetalle> ObtenerEnviadas(int compradorId)
         {
-            string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, sc.precio_unitario, s.tipo, 
-                                  t.descripcion_oferta AS oferta_trueque,
-                                  t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega,
-                                  s.estado, s.fecha,
-                                  CASE WHEN s.estado = 'Aceptada' THEN pv.nombre END AS contraparte,
-                                  CASE WHEN s.estado = 'Aceptada' THEN pv.telefono END AS telefono
-                           FROM public.solicitudes s
-                           INNER JOIN public.publicaciones p ON p.id = s.publicacion_id
-                           INNER JOIN public.productos pr ON pr.id = p.producto_id
-                           INNER JOIN public.perfiles_usuarios pv ON pv.id_usuario = pr.propietario_id
-                           LEFT JOIN public.solicitudes_compra sc ON sc.id_solicitud = s.id
-                           LEFT JOIN public.trueques t ON t.solicitud_id = s.id
-                           WHERE s.solicitante_id = @UsuarioId
-                           ORDER BY s.id DESC";
+            string sql = @"SELECT s.id, s.publicacion_id, pr.titulo, s.cantidad, sc.precio_unitario, s.tipo,
+                          t.descripcion_oferta AS oferta_trueque,
+                          t.confirmado_solicitante, t.confirmado_dueno, t.estado_entrega,
+                          s.estado, s.fecha,
+                          CASE WHEN s.estado = 'Aceptada' THEN v.nombre END AS contraparte,
+                          CASE WHEN s.estado = 'Aceptada' THEN v.telefono END AS telefono
+                   FROM public.solicitudes s
+                   INNER JOIN public.publicaciones p ON p.id = s.publicacion_id
+                   INNER JOIN public.productos pr ON pr.id = p.producto_id
+                   INNER JOIN public.perfiles_usuarios v ON v.id_usuario = pr.propietario_id
+                   LEFT JOIN public.solicitudes_compra sc ON sc.id_solicitud = s.id
+                   LEFT JOIN public.trueques t ON t.solicitud_id = s.id
+                   WHERE s.solicitante_id = @UsuarioId
+                   ORDER BY s.id DESC";
 
             return ListarDetalle(sql, compradorId);
         }

@@ -1,16 +1,17 @@
 ﻿using Npgsql;
-using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
+using NpgsqlTypes;
 using UniMarket.Entidades;
 
 namespace UniMarket.Datos.DAO
 {
     public class UsuarioDAO : IUsuarioDAO
     {
+        // La cuenta está en usuarios y los datos personales en perfiles_usuarios
         private const string SelectBase = @"
-            SELECT u.id, u.correo, u.contrasena, u.activo, u.fecha_registro,
-                   p.nombre, p.telefono, p.foto
+            SELECT u.id, p.nombre, u.correo, p.telefono, u.contrasena,
+                   u.activo, u.fecha_registro, p.foto
             FROM public.usuarios u
             INNER JOIN public.perfiles_usuarios p ON p.id_usuario = u.id";
 
@@ -19,63 +20,6 @@ namespace UniMarket.Datos.DAO
         public UsuarioDAO()
         {
             _conexion = new Conexion();
-        }
-
-        public int Insertar(Usuario usuario)
-        {
-            try
-            {
-                using (var con = _conexion.ObtenerConexion())
-                {
-                    con.Open();
-                    using (var tx = con.BeginTransaction())
-                    {
-                        try
-                        {
-                            // 1. Insertar credenciales en 'usuarios'
-                            string sqlUsuario = @"INSERT INTO public.usuarios (correo, contrasena)
-                                                  VALUES (@Correo, @Contrasena)
-                                                  RETURNING id";
-                            int usuarioId;
-                            using (var cmdUser = new NpgsqlCommand(sqlUsuario, con, tx))
-                            {
-                                cmdUser.Parameters.AddWithValue("@Correo", usuario.Correo);
-                                cmdUser.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
-                                usuarioId = Convert.ToInt32(cmdUser.ExecuteScalar());
-                            }
-
-                            // 2. Insertar datos personales en 'perfiles_usuarios'
-                            string sqlPerfil = @"INSERT INTO public.perfiles_usuarios (id_usuario, nombre, telefono, foto)
-                                                 VALUES (@IdUsuario, @Nombre, @Telefono, @Foto)";
-                            using (var cmdPerfil = new NpgsqlCommand(sqlPerfil, con, tx))
-                            {
-                                cmdPerfil.Parameters.AddWithValue("@IdUsuario", usuarioId);
-                                cmdPerfil.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                                cmdPerfil.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-
-                                var paramFoto = new NpgsqlParameter("@Foto", NpgsqlDbType.Bytea);
-                                paramFoto.Value = (object)usuario.Foto ?? DBNull.Value;
-                                cmdPerfil.Parameters.Add(paramFoto);
-
-                                cmdPerfil.ExecuteNonQuery();
-                            }
-
-                            tx.Commit();
-                            usuario.Id = usuarioId;
-                            return usuarioId;
-                        }
-                        catch
-                        {
-                            tx.Rollback();
-                            throw;
-                        }
-                    }
-                }
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new Exception($"Error BD al insertar usuario: {ex.Message}", ex);
-            }
         }
 
         public void Actualizar(Usuario usuario)
@@ -89,26 +33,26 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
-                            string sqlUsuario = @"UPDATE public.usuarios
-                                                  SET correo = @Correo, contrasena = @Contrasena
-                                                  WHERE id = @Id";
-                            using (var cmdUser = new NpgsqlCommand(sqlUsuario, con, tx))
+                            string sqlCuenta = @"UPDATE public.usuarios
+                                                 SET correo = @Correo, contrasena = @Contrasena
+                                                 WHERE id = @Id";
+                            using (var cmd = new NpgsqlCommand(sqlCuenta, con, tx))
                             {
-                                cmdUser.Parameters.AddWithValue("@Id", usuario.Id);
-                                cmdUser.Parameters.AddWithValue("@Correo", usuario.Correo);
-                                cmdUser.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
-                                cmdUser.ExecuteNonQuery();
+                                cmd.Parameters.AddWithValue("@Id", usuario.Id);
+                                cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                                cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
+                                cmd.ExecuteNonQuery();
                             }
 
                             string sqlPerfil = @"UPDATE public.perfiles_usuarios
                                                  SET nombre = @Nombre, telefono = @Telefono
                                                  WHERE id_usuario = @Id";
-                            using (var cmdPerfil = new NpgsqlCommand(sqlPerfil, con, tx))
+                            using (var cmd = new NpgsqlCommand(sqlPerfil, con, tx))
                             {
-                                cmdPerfil.Parameters.AddWithValue("@Id", usuario.Id);
-                                cmdPerfil.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                                cmdPerfil.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-                                cmdPerfil.ExecuteNonQuery();
+                                cmd.Parameters.AddWithValue("@Id", usuario.Id);
+                                cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                                cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
+                                cmd.ExecuteNonQuery();
                             }
 
                             tx.Commit();
@@ -124,81 +68,6 @@ namespace UniMarket.Datos.DAO
             catch (NpgsqlException ex)
             {
                 throw new Exception($"Error BD al actualizar usuario: {ex.Message}", ex);
-            }
-        }
-
-        public void ActualizarPerfil(Usuario usuario)
-        {
-            try
-            {
-                using (var con = _conexion.ObtenerConexion())
-                {
-                    con.Open();
-                    using (var tx = con.BeginTransaction())
-                    {
-                        try
-                        {
-                            string sqlUsuario = @"UPDATE public.usuarios
-                                                  SET correo = @Correo
-                                                  WHERE id = @Id";
-                            using (var cmdUser = new NpgsqlCommand(sqlUsuario, con, tx))
-                            {
-                                cmdUser.Parameters.AddWithValue("@Id", usuario.Id);
-                                cmdUser.Parameters.AddWithValue("@Correo", usuario.Correo);
-                                cmdUser.ExecuteNonQuery();
-                            }
-
-                            string sqlPerfil = @"UPDATE public.perfiles_usuarios
-                                                 SET nombre = @Nombre, telefono = @Telefono, foto = @Foto
-                                                 WHERE id_usuario = @Id";
-                            using (var cmdPerfil = new NpgsqlCommand(sqlPerfil, con, tx))
-                            {
-                                cmdPerfil.Parameters.AddWithValue("@Id", usuario.Id);
-                                cmdPerfil.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                                cmdPerfil.Parameters.AddWithValue("@Telefono", usuario.Telefono);
-
-                                var paramFoto = new NpgsqlParameter("@Foto", NpgsqlDbType.Bytea);
-                                paramFoto.Value = (object)usuario.Foto ?? DBNull.Value;
-                                cmdPerfil.Parameters.Add(paramFoto);
-
-                                cmdPerfil.ExecuteNonQuery();
-                            }
-
-                            tx.Commit();
-                        }
-                        catch
-                        {
-                            tx.Rollback();
-                            throw;
-                        }
-                    }
-                }
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new Exception($"Error BD al actualizar el perfil: {ex.Message}", ex);
-            }
-        }
-
-        public void ActualizarContrasena(int id, string contrasenaHash)
-        {
-            try
-            {
-                using (var con = _conexion.ObtenerConexion())
-                {
-                    string sql = "UPDATE public.usuarios SET contrasena = @Contrasena WHERE id = @Id";
-                    using (var cmd = new NpgsqlCommand(sql, con))
-                    {
-                        cmd.Parameters.AddWithValue("@Id", id);
-                        cmd.Parameters.AddWithValue("@Contrasena", contrasenaHash);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new Exception($"Error BD al cambiar la contraseña: {ex.Message}", ex);
             }
         }
 
@@ -220,6 +89,58 @@ namespace UniMarket.Datos.DAO
             catch (NpgsqlException ex)
             {
                 throw new Exception($"Error BD al eliminar usuario: {ex.Message}", ex);
+            }
+        }
+
+        public int Insertar(Usuario usuario)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            // 1. La cuenta (lo que usa el inicio de sesión)
+                            string sqlCuenta = @"INSERT INTO public.usuarios (correo, contrasena)
+                                                 VALUES (@Correo, @Contrasena)
+                                                 RETURNING id";
+                            int usuarioId;
+                            using (var cmd = new NpgsqlCommand(sqlCuenta, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                                cmd.Parameters.AddWithValue("@Contrasena", usuario.Contrasena);
+                                usuarioId = Convert.ToInt32(cmd.ExecuteScalar());
+                            }
+
+                            // 2. Su perfil (lo que se muestra en Mi cuenta)
+                            string sqlPerfil = @"INSERT INTO public.perfiles_usuarios (id_usuario, nombre, telefono)
+                                                 VALUES (@Id, @Nombre, @Telefono)";
+                            using (var cmd = new NpgsqlCommand(sqlPerfil, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuarioId);
+                                cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                                cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            tx.Commit();
+                            usuario.Id = usuarioId;
+                            return usuarioId;
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al insertar usuario: {ex.Message}", ex);
             }
         }
 
@@ -280,15 +201,92 @@ namespace UniMarket.Datos.DAO
                     {
                         con.Open();
                         using (var r = cmd.ExecuteReader())
-                            while (r.Read()) lista.Add(Mapear(r));
+                            while (r.Read())
+                            {
+                                lista.Add(Mapear(r));
+                            }
                     }
                 }
             }
             catch (NpgsqlException ex)
             {
-                throw new Exception($"Error BD al listar usuarios: {ex.Message}", ex);
+                throw new Exception($"Error BD al listar usuarios: {ex.Message}");
             }
             return lista;
+        }
+
+        public void ActualizarPerfil(Usuario usuario)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    con.Open();
+                    using (var tx = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            // El correo es parte de la cuenta
+                            using (var cmd = new NpgsqlCommand(
+                                "UPDATE public.usuarios SET correo = @Correo WHERE id = @Id", con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuario.Id);
+                                cmd.Parameters.AddWithValue("@Correo", usuario.Correo);
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // El teléfono y la foto son del perfil
+                            string sqlPerfil = @"UPDATE public.perfiles_usuarios
+                                                 SET telefono = @Telefono, foto = @Foto
+                                                 WHERE id_usuario = @Id";
+                            using (var cmd = new NpgsqlCommand(sqlPerfil, con, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@Id", usuario.Id);
+                                cmd.Parameters.AddWithValue("@Telefono", usuario.Telefono);
+
+                                var paramFoto = new NpgsqlParameter("@Foto", NpgsqlDbType.Bytea);
+                                paramFoto.Value = (object)usuario.Foto ?? DBNull.Value;
+                                cmd.Parameters.Add(paramFoto);
+
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            tx.Commit();
+                        }
+                        catch
+                        {
+                            tx.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al actualizar el perfil: {ex.Message}", ex);
+            }
+        }
+
+        public void ActualizarContrasena(int id, string contrasenaHash)
+        {
+            try
+            {
+                using (var con = _conexion.ObtenerConexion())
+                {
+                    string sql = "UPDATE public.usuarios SET contrasena = @Contrasena WHERE id = @Id";
+                    using (var cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@Contrasena", contrasenaHash);
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new Exception($"Error BD al cambiar la contraseña: {ex.Message}", ex);
+            }
         }
 
         public int ContarPublicaciones(int usuarioId)
@@ -347,6 +345,7 @@ namespace UniMarket.Datos.DAO
                     {
                         try
                         {
+                            // 1. Rechazar solicitudes pendientes (como solicitante o como dueño del producto)
                             string sqlSolicitudes = @"UPDATE public.solicitudes
                                                       SET estado = 'Rechazada'
                                                       WHERE estado = 'Pendiente'
@@ -361,6 +360,7 @@ namespace UniMarket.Datos.DAO
                                 cmd.ExecuteNonQuery();
                             }
 
+                            // 2. Desactivar sus publicaciones
                             string sqlPublicaciones = @"UPDATE public.publicaciones
                                                         SET activo = false
                                                         WHERE producto_id IN
@@ -371,6 +371,7 @@ namespace UniMarket.Datos.DAO
                                 cmd.ExecuteNonQuery();
                             }
 
+                            // 3. Desactivar la cuenta
                             string sqlUsuario = @"UPDATE public.usuarios
                                                   SET activo = false
                                                   WHERE id = @Id AND activo = true";
@@ -397,15 +398,16 @@ namespace UniMarket.Datos.DAO
             }
         }
 
+        // usuarios ya no guarda el rol: por ahora todos son estudiantes
         private Usuario Mapear(NpgsqlDataReader r) => new Usuario
         {
             Id = Convert.ToInt32(r["id"]),
+            Nombre = r["nombre"].ToString(),
             Correo = r["correo"].ToString(),
+            Telefono = r["telefono"].ToString(),
             Contrasena = r["contrasena"].ToString(),
             Activo = Convert.ToBoolean(r["activo"]),
             FechaRegistro = Convert.ToDateTime(r["fecha_registro"]).ToLocalTime(),
-            Nombre = r["nombre"].ToString(),
-            Telefono = r["telefono"].ToString(),
             Foto = r.IsDBNull(r.GetOrdinal("foto")) ? null : (byte[])r["foto"]
         };
     }

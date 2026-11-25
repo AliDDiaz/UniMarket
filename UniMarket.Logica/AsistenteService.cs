@@ -215,7 +215,7 @@ namespace UniMarket.Logica
         {
             try
             {
-                string clave = "AQ.Ab8RN6JDa6H8gw208kqRE6LrIsadRxslZp9oyfeEenr9XWAVSw";
+                string clave = "AQ.Ab8RN6LHe4fkLpy7F4pdd8_mrFDpAxW4AcUn_S6eOMJ2B7tI4g";
                 string modelo = Environment.GetEnvironmentVariable("GEMINI_MODEL");
                 if (string.IsNullOrWhiteSpace(modelo)) modelo = ModeloPorDefecto;
 

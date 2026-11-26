@@ -50,11 +50,15 @@
             this.lblTrueque = new System.Windows.Forms.Label();
             this.txtTrueque = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlConsejos = new System.Windows.Forms.Panel();
+            this.lblConsejosTitulo = new System.Windows.Forms.Label();
+            this.lblConsejosTexto = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbFoto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.panel1.SuspendLayout();
+            this.pnlConsejos.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTitulo
@@ -202,7 +206,7 @@
             // pictureBox3
             // 
             this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
             this.pictureBox3.Location = new System.Drawing.Point(30, 131);
             this.pictureBox3.Name = "pictureBox3";
@@ -214,7 +218,7 @@
             // pictureBox4
             // 
             this.pictureBox4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.pictureBox4.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
             this.pictureBox4.Location = new System.Drawing.Point(30, 188);
             this.pictureBox4.Name = "pictureBox4";
@@ -226,7 +230,7 @@
             // pictureBox5
             // 
             this.pictureBox5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.pictureBox5.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
             this.pictureBox5.Location = new System.Drawing.Point(30, 79);
             this.pictureBox5.Name = "pictureBox5";
@@ -327,6 +331,42 @@
             this.panel1.Size = new System.Drawing.Size(739, 488);
             this.panel1.TabIndex = 20;
             // 
+            // pnlConsejos
+            // 
+            this.pnlConsejos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(237)))), ((int)(((byte)(231)))), ((int)(((byte)(251)))));
+            this.pnlConsejos.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlConsejos.Controls.Add(this.lblConsejosTexto);
+            this.pnlConsejos.Controls.Add(this.lblConsejosTitulo);
+            this.pnlConsejos.Location = new System.Drawing.Point(346, 719);
+            this.pnlConsejos.Name = "pnlConsejos";
+            this.pnlConsejos.Size = new System.Drawing.Size(591, 108);
+            this.pnlConsejos.TabIndex = 22;
+            // 
+            // lblConsejosTitulo
+            // 
+            this.lblConsejosTitulo.AutoSize = true;
+            this.lblConsejosTitulo.BackColor = System.Drawing.Color.Transparent;
+            this.lblConsejosTitulo.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblConsejosTitulo.ForeColor = System.Drawing.Color.Indigo;
+            this.lblConsejosTitulo.Location = new System.Drawing.Point(20, 10);
+            this.lblConsejosTitulo.Name = "lblConsejosTitulo";
+            this.lblConsejosTitulo.Size = new System.Drawing.Size(260, 25);
+            this.lblConsejosTitulo.TabIndex = 0;
+            this.lblConsejosTitulo.Text = "Consejos para vender mejor";
+            // 
+            // lblConsejosTexto
+            // 
+            this.lblConsejosTexto.AutoSize = true;
+            this.lblConsejosTexto.BackColor = System.Drawing.Color.Transparent;
+            this.lblConsejosTexto.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblConsejosTexto.ForeColor = System.Drawing.Color.Indigo;
+            this.lblConsejosTexto.Location = new System.Drawing.Point(20, 38);
+            this.lblConsejosTexto.Name = "lblConsejosTexto";
+            this.lblConsejosTexto.Size = new System.Drawing.Size(410, 63);
+            this.lblConsejosTexto.TabIndex = 1;
+            this.lblConsejosTexto.Text = "• Usa una foto clara y bien iluminada.\n• Describe el estado del producto y sus ca" +
+    "racterísticas.\n• Si aceptas trueque, di exactamente qué buscas a cambio.";
+            // 
             // FrmPublicacion
             // 
             this.AcceptButton = this.btnGuardar;
@@ -336,6 +376,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1680, 944);
+            this.Controls.Add(this.pnlConsejos);
             this.Controls.Add(this.btnSubirFoto);
             this.Controls.Add(this.pbFoto);
             this.Controls.Add(this.label2);
@@ -355,6 +396,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.pnlConsejos.ResumeLayout(false);
+            this.pnlConsejos.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -383,5 +426,8 @@
         private System.Windows.Forms.Label lblTrueque;
         private System.Windows.Forms.TextBox txtTrueque;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlConsejos;
+        private System.Windows.Forms.Label lblConsejosTexto;
+        private System.Windows.Forms.Label lblConsejosTitulo;
     }
 }

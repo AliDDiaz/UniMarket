@@ -28,7 +28,7 @@ namespace UniMarket.Presentacion
             _usuario = usuario;
 
 
-            ConfigurarHover(button1, button2, btnHistorial, btnMycuenta, btnSalir);
+            ConfigurarHover(button1, btnPublicar, btnHistorial, btnMycuenta, btnSalir);
             AbrirFormularioEnPanel(new FrmPrincipal(_usuario));
         }
 
@@ -214,7 +214,10 @@ namespace UniMarket.Presentacion
             AbrirFormularioEnPanel(new FrmSolicitudes(_usuario));
         }
 
+        private void panelContenedor_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
     }
 }
 

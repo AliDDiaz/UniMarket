@@ -244,7 +244,7 @@ namespace UniMarket.Presentacion
                 if (lblAceptaTrueque != null)
                 card.Controls.Add(lblAceptaTrueque);
 
-
+                ActivarHover(card);
                 flpCatalogo.Controls.Add(card);
             }
 
@@ -260,6 +260,37 @@ namespace UniMarket.Presentacion
 
             tarjetaElegida.BackColor = Color.FromArgb(237, 231, 255);
         }
+
+        // Efecto al pasar el mouse: la tarjeta se tiñe de lila suave
+        private static readonly Color ColorTarjetaHover = Color.FromArgb(238, 232, 252);
+
+        private void ActivarHover(Panel card)
+        {
+            EventHandler entrar = (s, e) =>
+            {
+                if (card.BackColor == Color.White)          // la seleccionada no cambia
+                    card.BackColor = ColorTarjetaHover;
+            };
+
+            EventHandler salir = (s, e) =>
+            {
+                // Pasar de la tarjeta a uno de sus hijos no cuenta como salir
+                if (card.ClientRectangle.Contains(card.PointToClient(Cursor.Position)))
+                    return;
+
+                if (card.BackColor == ColorTarjetaHover)
+                    card.BackColor = Color.White;
+            };
+
+            card.MouseEnter += entrar;
+            card.MouseLeave += salir;
+            foreach (Control hijo in card.Controls)
+            {
+                hijo.MouseEnter += entrar;
+                hijo.MouseLeave += salir;
+            }
+        }
+
         private void VerDetalleProducto(Panel tarjeta, Publicacion pub)
         {
             SeleccionarTarjeta(tarjeta, pub);

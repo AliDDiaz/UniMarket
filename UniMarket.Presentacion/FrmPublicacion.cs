@@ -65,6 +65,49 @@ namespace UniMarket.Presentacion
             }
         }
 
+        private void CrearPanelConsejos()
+        {
+            const int margen = 16;
+            const int alto = 108;
+
+            int arriba = panel1.Bottom + margen;
+
+            // Si no cabe completo en la ventana, mejor no mostrarlo que verlo cortado
+            if (ClientSize.Height - arriba - margen < alto) return;
+
+            var panel = new Panel
+            {
+                BackColor = Color.FromArgb(237, 231, 251),
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(panel1.Left, arriba),
+                Size = new Size((int)(panel1.Width * 0.8), alto)   // más angosto que la tarjeta
+            };
+
+            panel.Controls.Add(new Label
+            {
+                Text = "Consejos para vender mejor",
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                ForeColor = Color.Indigo,
+                BackColor = Color.Transparent,
+                AutoSize = true,
+                Location = new Point(20, 10)
+            });
+
+            panel.Controls.Add(new Label
+            {
+                Text = "• Usa una foto clara y bien iluminada." + Environment.NewLine +
+                       "• Describe el estado del producto y sus características." + Environment.NewLine +
+                       "• Si aceptas trueque, di exactamente qué buscas a cambio.",
+                Font = new Font("Segoe UI", 9.5F),
+                ForeColor = Color.Indigo,
+                BackColor = Color.Transparent,
+                AutoSize = true,
+                Location = new Point(20, 38)
+            });
+
+            Controls.Add(panel);
+        }
+
         // ----- Modalidad -----
 
         private static int IndiceDeModalidad(ModalidadPublicacion modalidad)
@@ -214,7 +257,7 @@ namespace UniMarket.Presentacion
 
         private void FrmPublicacion_Load(object sender, EventArgs e)
         {
-
+            CrearPanelConsejos();
         }
     }
 }

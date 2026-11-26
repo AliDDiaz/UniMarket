@@ -167,13 +167,12 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
-            this.label1.Location = new System.Drawing.Point(549, 66);
+            this.label1.Location = new System.Drawing.Point(499, 72);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(360, 54);
+            this.label1.Size = new System.Drawing.Size(498, 60);
             this.label1.TabIndex = 11;
             this.label1.Text = "Publicar Producto";
             // 
@@ -181,11 +180,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.label2.Location = new System.Drawing.Point(508, 146);
+            this.label2.Location = new System.Drawing.Point(463, 160);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(397, 20);
+            this.label2.Size = new System.Drawing.Size(499, 25);
             this.label2.TabIndex = 12;
             this.label2.Text = "Completa la información del artículo que deseas publicar";
             // 

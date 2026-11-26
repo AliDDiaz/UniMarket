@@ -51,14 +51,16 @@
             this.txtTrueque = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlConsejos = new System.Windows.Forms.Panel();
-            this.lblConsejosTitulo = new System.Windows.Forms.Label();
             this.lblConsejosTexto = new System.Windows.Forms.Label();
+            this.lblConsejosTitulo = new System.Windows.Forms.Label();
+            this.picFondo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbFoto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.panel1.SuspendLayout();
             this.pnlConsejos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picFondo)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitulo
@@ -159,13 +161,13 @@
             this.btnGuardar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
             this.btnGuardar.FlatAppearance.BorderSize = 0;
             this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGuardar.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGuardar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.btnGuardar.Location = new System.Drawing.Point(285, 390);
+            this.btnGuardar.Location = new System.Drawing.Point(213, 389);
             this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(92, 46);
+            this.btnGuardar.Size = new System.Drawing.Size(272, 53);
             this.btnGuardar.TabIndex = 8;
-            this.btnGuardar.Text = "Guardar";
+            this.btnGuardar.Text = "Publicar Producto";
             this.btnGuardar.UseVisualStyleBackColor = false;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
@@ -176,7 +178,7 @@
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(31)))), ((int)(((byte)(154)))));
             this.label1.Location = new System.Drawing.Point(499, 72);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(498, 60);
+            this.label1.Size = new System.Drawing.Size(537, 60);
             this.label1.TabIndex = 11;
             this.label1.Text = "Publicar Producto";
             // 
@@ -342,18 +344,6 @@
             this.pnlConsejos.Size = new System.Drawing.Size(591, 108);
             this.pnlConsejos.TabIndex = 22;
             // 
-            // lblConsejosTitulo
-            // 
-            this.lblConsejosTitulo.AutoSize = true;
-            this.lblConsejosTitulo.BackColor = System.Drawing.Color.Transparent;
-            this.lblConsejosTitulo.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblConsejosTitulo.ForeColor = System.Drawing.Color.Indigo;
-            this.lblConsejosTitulo.Location = new System.Drawing.Point(20, 10);
-            this.lblConsejosTitulo.Name = "lblConsejosTitulo";
-            this.lblConsejosTitulo.Size = new System.Drawing.Size(260, 25);
-            this.lblConsejosTitulo.TabIndex = 0;
-            this.lblConsejosTitulo.Text = "Consejos para vender mejor";
-            // 
             // lblConsejosTexto
             // 
             this.lblConsejosTexto.AutoSize = true;
@@ -367,13 +357,35 @@
             this.lblConsejosTexto.Text = "• Usa una foto clara y bien iluminada.\n• Describe el estado del producto y sus ca" +
     "racterísticas.\n• Si aceptas trueque, di exactamente qué buscas a cambio.";
             // 
+            // lblConsejosTitulo
+            // 
+            this.lblConsejosTitulo.AutoSize = true;
+            this.lblConsejosTitulo.BackColor = System.Drawing.Color.Transparent;
+            this.lblConsejosTitulo.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblConsejosTitulo.ForeColor = System.Drawing.Color.Indigo;
+            this.lblConsejosTitulo.Location = new System.Drawing.Point(20, 10);
+            this.lblConsejosTitulo.Name = "lblConsejosTitulo";
+            this.lblConsejosTitulo.Size = new System.Drawing.Size(260, 25);
+            this.lblConsejosTitulo.TabIndex = 0;
+            this.lblConsejosTitulo.Text = "Consejos para vender mejor";
+            // 
+            // picFondo
+            // 
+            this.picFondo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picFondo.Image = ((System.Drawing.Image)(resources.GetObject("picFondo.Image")));
+            this.picFondo.Location = new System.Drawing.Point(0, 0);
+            this.picFondo.Name = "picFondo";
+            this.picFondo.Size = new System.Drawing.Size(1680, 944);
+            this.picFondo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picFondo.TabIndex = 23;
+            this.picFondo.TabStop = false;
+            // 
             // FrmPublicacion
             // 
             this.AcceptButton = this.btnGuardar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkOrchid;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1680, 944);
             this.Controls.Add(this.pnlConsejos);
@@ -382,6 +394,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.picFondo);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
@@ -398,6 +411,7 @@
             this.panel1.PerformLayout();
             this.pnlConsejos.ResumeLayout(false);
             this.pnlConsejos.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picFondo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -429,5 +443,6 @@
         private System.Windows.Forms.Panel pnlConsejos;
         private System.Windows.Forms.Label lblConsejosTexto;
         private System.Windows.Forms.Label lblConsejosTitulo;
+        private System.Windows.Forms.PictureBox picFondo;
     }
 }

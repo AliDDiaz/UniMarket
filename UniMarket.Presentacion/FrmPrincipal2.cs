@@ -19,6 +19,7 @@ namespace UniMarket.Presentacion
         private Form formularioActivo = null;
         private int _ultimoIdNotificado = 0;
         private bool _revisandoNotificaciones = false;
+        private Button botonActivo;
 
         public FrmPrincipal2(Usuario usuario)
         {
@@ -32,7 +33,7 @@ namespace UniMarket.Presentacion
             AbrirFormularioEnPanel(new FrmPrincipal(_usuario));
         }
 
-        // Aplica el efecto hover del menú a todos los botones que reciba
+        
         private void ConfigurarHover(params Button[] botones)
         {
             foreach (var boton in botones)
@@ -40,16 +41,24 @@ namespace UniMarket.Presentacion
                 boton.MouseEnter += (s, e) =>
                 {
                     boton.BackColor = ColorHover;
-                    boton.ForeColor = Color.White;
                 };
+
                 boton.MouseLeave += (s, e) =>
                 {
-                    boton.BackColor = ColorNormal;
-                    boton.ForeColor = Color.White;
+                    if (boton != botonActivo)
+                        boton.BackColor = ColorNormal;
+                };
+
+                boton.Click += (s, e) =>
+                {
+                    if (botonActivo != null)
+                        botonActivo.BackColor = ColorNormal;
+
+                    botonActivo = boton;
+                    botonActivo.BackColor = ColorHover;
                 };
             }
         }
-
         // Carga un formulario hijo dentro del panel central
         private void AbrirFormularioEnPanel(Form formularioHijo)
         {

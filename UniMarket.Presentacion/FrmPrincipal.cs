@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
 using UniMarket.Entidades;
@@ -14,15 +15,20 @@ namespace UniMarket.Presentacion
         private Publicacion _publicacionSeleccionada;
         private readonly Usuario _usuario;
         private BotAyuda botAyuda = new BotAyuda();
+        private static bool bienvenidaMostrada = false;
         public FrmPrincipal(Usuario usuario)
         {
             InitializeComponent();
-            this.Controls.Add(botAyuda);
+            this.Controls.Add(botAyuda); 
             _service = new PublicacionService();
             _usuario = usuario;
             flpCatalogo.SizeChanged += (s, e) => AjustarTarjetas();
             CargarPublicaciones();
+            RedondearControl(picEngel, 100);
+            RedondearControl(btnBuscar, 12);
+            RedondearControl(pnlBuscar, 18);
         }
+
 
         private void CargarPublicaciones()
         {
@@ -232,11 +238,23 @@ namespace UniMarket.Presentacion
                 card.Resize += (s, e) =>
                 {
                     int interior = card.Width - 24;
+
                     pic.Width = interior;
                     lblTitulo.Width = interior;
                     btnAgregar.Width = interior;
+
+                    RedondearControl(card, 18);
+                    RedondearControl(pic, 12);
+                    RedondearControl(btnAgregar, 12);
                 };
-                card.Width = card.Width;   // fuerza un primer ajuste
+
+                pic.Width = card.Width - 24;
+                lblTitulo.Width = card.Width - 24;
+                btnAgregar.Width = card.Width - 24;
+
+                RedondearControl(card, 18);
+                RedondearControl(pic, 12);
+                RedondearControl(btnAgregar, 12);
                 card.Controls.Add(pic);
                 card.Controls.Add(lblTitulo);
                 card.Controls.Add(lblPrecio);
@@ -339,6 +357,51 @@ namespace UniMarket.Presentacion
         }
 
         private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void RedondearControl(Control control, int radio)
+        {
+            int d = Math.Min(radio * 2,
+                Math.Min(control.Width, control.Height));
+
+            if (d <= 0) return;
+
+            using (GraphicsPath ruta = new GraphicsPath())
+            {
+                ruta.AddArc(0, 0, d, d, 180, 90);
+
+                ruta.AddArc(control.Width - d,
+                    0, d, d, 270, 90);
+
+                ruta.AddArc(control.Width - d,
+                    control.Height - d, d, d, 0, 90);
+
+                ruta.AddArc(0,
+                    control.Height - d, d, d, 90, 90);
+
+                ruta.CloseFigure();
+
+                Region anterior = control.Region;
+                control.Region = new Region(ruta);
+                anterior?.Dispose();
+            }
+        }
+
+        private void FrmPrincipal_Shown(object sender, EventArgs e)
+        {
+            if (!bienvenidaMostrada)
+            {
+                bienvenidaMostrada = true;
+
+                using (FrmBienvenida bienvenida = new FrmBienvenida())
+                {
+                    bienvenida.ShowDialog(this);
+                }
+            }
+        }
+
+        private void FrmPrincipal_Load(object sender, EventArgs e)
         {
 
         }

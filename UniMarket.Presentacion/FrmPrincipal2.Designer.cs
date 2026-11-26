@@ -50,8 +50,10 @@
             this.panelContenedor = new System.Windows.Forms.Panel();
             this.timerBot = new System.Windows.Forms.Timer(this.components);
             this.notifyIconBot = new System.Windows.Forms.NotifyIcon(this.components);
+            this.picMascot = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMascot)).BeginInit();
             this.SuspendLayout();
             // 
             // btnPublicar
@@ -76,6 +78,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Indigo;
+            this.panel1.Controls.Add(this.picMascot);
             this.panel1.Controls.Add(this.panel7);
             this.panel1.Controls.Add(this.panel6);
             this.panel1.Controls.Add(this.panel5);
@@ -243,11 +246,11 @@
             this.btnHistorial.ForeColor = System.Drawing.Color.White;
             this.btnHistorial.Image = ((System.Drawing.Image)(resources.GetObject("btnHistorial.Image")));
             this.btnHistorial.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHistorial.Location = new System.Drawing.Point(0, 428);
+            this.btnHistorial.Location = new System.Drawing.Point(0, 427);
             this.btnHistorial.Name = "btnHistorial";
             this.btnHistorial.Size = new System.Drawing.Size(225, 60);
             this.btnHistorial.TabIndex = 2;
-            this.btnHistorial.Text = "    MIS SOLICITUDES";
+            this.btnHistorial.Text = "      MIS SOLICITUDES";
             this.btnHistorial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnHistorial.UseVisualStyleBackColor = true;
             this.btnHistorial.Click += new System.EventHandler(this.btnHistorial_Click);
@@ -309,6 +312,18 @@
             this.notifyIconBot.Text = "notifyIcon1";
             this.notifyIconBot.Visible = true;
             // 
+            // picMascot
+            // 
+            this.picMascot.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.picMascot.BackColor = System.Drawing.Color.Transparent;
+            this.picMascot.Image = ((System.Drawing.Image)(resources.GetObject("picMascot.Image")));
+            this.picMascot.Location = new System.Drawing.Point(3, 448);
+            this.picMascot.Name = "picMascot";
+            this.picMascot.Size = new System.Drawing.Size(207, 236);
+            this.picMascot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picMascot.TabIndex = 15;
+            this.picMascot.TabStop = false;
+            // 
             // FrmPrincipal2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -317,10 +332,12 @@
             this.Controls.Add(this.panelContenedor);
             this.Controls.Add(this.panel1);
             this.Name = "FrmPrincipal2";
-            this.Text = "UniMarket";
+            this.Text = "Trueque - Tu tienda de confianza";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmPrincipal2_Load_1);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMascot)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -347,5 +364,6 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btnPublicar;
+        private System.Windows.Forms.PictureBox picMascot;
     }
 }

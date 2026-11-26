@@ -35,7 +35,11 @@
             this.chkMisPublicaciones = new System.Windows.Forms.CheckBox();
             this.flpCatalogo = new System.Windows.Forms.FlowLayoutPanel();
             this.picEngel = new System.Windows.Forms.PictureBox();
+            this.pnlBuscar = new System.Windows.Forms.Panel();
+            this.picLupa = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picEngel)).BeginInit();
+            this.pnlBuscar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLupa)).BeginInit();
             this.SuspendLayout();
             // 
             // lblBuscar
@@ -44,7 +48,7 @@
             this.lblBuscar.BackColor = System.Drawing.Color.Transparent;
             this.lblBuscar.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBuscar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(63)))), ((int)(((byte)(214)))));
-            this.lblBuscar.Location = new System.Drawing.Point(31, 24);
+            this.lblBuscar.Location = new System.Drawing.Point(71, 32);
             this.lblBuscar.Name = "lblBuscar";
             this.lblBuscar.Size = new System.Drawing.Size(113, 23);
             this.lblBuscar.TabIndex = 1;
@@ -52,11 +56,12 @@
             // 
             // txtBuscar
             // 
-            this.txtBuscar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBuscar.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBuscar.Location = new System.Drawing.Point(166, 20);
+            this.txtBuscar.BackColor = System.Drawing.Color.White;
+            this.txtBuscar.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBuscar.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.txtBuscar.Location = new System.Drawing.Point(46, 5);
             this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(400, 31);
+            this.txtBuscar.Size = new System.Drawing.Size(294, 25);
             this.txtBuscar.TabIndex = 2;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
             // 
@@ -67,9 +72,9 @@
             this.btnBuscar.FlatAppearance.BorderSize = 0;
             this.btnBuscar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(124)))), ((int)(((byte)(77)))), ((int)(((byte)(255)))));
             this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnBuscar.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBuscar.ForeColor = System.Drawing.Color.White;
-            this.btnBuscar.Location = new System.Drawing.Point(596, 19);
+            this.btnBuscar.Location = new System.Drawing.Point(579, 24);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(110, 36);
             this.btnBuscar.TabIndex = 3;
@@ -118,6 +123,27 @@
             this.picEngel.TabStop = false;
             this.picEngel.Click += new System.EventHandler(this.picEngel_Click_1);
             // 
+            // pnlBuscar
+            // 
+            this.pnlBuscar.BackColor = System.Drawing.Color.White;
+            this.pnlBuscar.Controls.Add(this.picLupa);
+            this.pnlBuscar.Controls.Add(this.txtBuscar);
+            this.pnlBuscar.Location = new System.Drawing.Point(218, 24);
+            this.pnlBuscar.Name = "pnlBuscar";
+            this.pnlBuscar.Size = new System.Drawing.Size(343, 35);
+            this.pnlBuscar.TabIndex = 0;
+            // 
+            // picLupa
+            // 
+            this.picLupa.BackColor = System.Drawing.Color.Transparent;
+            this.picLupa.Image = ((System.Drawing.Image)(resources.GetObject("picLupa.Image")));
+            this.picLupa.Location = new System.Drawing.Point(3, 0);
+            this.picLupa.Name = "picLupa";
+            this.picLupa.Size = new System.Drawing.Size(37, 32);
+            this.picLupa.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLupa.TabIndex = 17;
+            this.picLupa.TabStop = false;
+            // 
             // FrmPrincipal
             // 
             this.AcceptButton = this.btnBuscar;
@@ -126,17 +152,22 @@
             this.BackColor = System.Drawing.Color.Lavender;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1404, 806);
+            this.Controls.Add(this.pnlBuscar);
             this.Controls.Add(this.picEngel);
             this.Controls.Add(this.flpCatalogo);
             this.Controls.Add(this.chkMisPublicaciones);
             this.Controls.Add(this.btnBuscar);
-            this.Controls.Add(this.txtBuscar);
             this.Controls.Add(this.lblBuscar);
             this.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "6";
+            this.Text = "Trueque - Tu tienda de confianza";
+            this.Load += new System.EventHandler(this.FrmPrincipal_Load);
+            this.Shown += new System.EventHandler(this.FrmPrincipal_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.picEngel)).EndInit();
+            this.pnlBuscar.ResumeLayout(false);
+            this.pnlBuscar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLupa)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,10 +175,12 @@
 
         #endregion
         private System.Windows.Forms.Label lblBuscar;
-        private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.CheckBox chkMisPublicaciones;
         private System.Windows.Forms.FlowLayoutPanel flpCatalogo;
         private System.Windows.Forms.PictureBox picEngel;
+        private System.Windows.Forms.Panel pnlBuscar;
+        private System.Windows.Forms.PictureBox picLupa;
+        public System.Windows.Forms.TextBox txtBuscar;
     }
 }

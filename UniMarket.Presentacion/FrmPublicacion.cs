@@ -26,9 +26,15 @@ namespace UniMarket.Presentacion
         public FrmPublicacion(int usuarioId, Publicacion publicacion = null)
         {
             InitializeComponent();
+            label1.Parent = picFondo;
+            label1.BackColor = Color.Transparent;
+
+            label2.Parent = picFondo;
+            label2.BackColor = Color.Transparent;
             _service = new PublicacionService();
             _usuarioId = usuarioId;
             _publicacion = publicacion;
+
 
             cmbModalidad.Items.AddRange(new object[]
             {

@@ -307,6 +307,9 @@ namespace UniMarket.Presentacion
             botAyuda.Alternar();
         }
 
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }

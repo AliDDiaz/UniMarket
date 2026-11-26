@@ -42,21 +42,23 @@
             // 
             // picProducto
             // 
-            this.picProducto.Location = new System.Drawing.Point(25, 61);
+            this.picProducto.BackColor = System.Drawing.Color.White;
+            this.picProducto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picProducto.Location = new System.Drawing.Point(30, 30);
             this.picProducto.Name = "picProducto";
-            this.picProducto.Size = new System.Drawing.Size(243, 284);
+            this.picProducto.Size = new System.Drawing.Size(250, 362);
             this.picProducto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picProducto.TabIndex = 0;
             this.picProducto.TabStop = false;
             // 
             // lblTitulo
             // 
-            this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.AutoEllipsis = true;
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Indigo;
-            this.lblTitulo.Location = new System.Drawing.Point(274, 44);
+            this.lblTitulo.Location = new System.Drawing.Point(305, 28);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(216, 28);
+            this.lblTitulo.Size = new System.Drawing.Size(340, 30);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Nombre del producto";
             this.lblTitulo.Click += new System.EventHandler(this.lblTitulo_Click);
@@ -64,11 +66,11 @@
             // lblPrecio
             // 
             this.lblPrecio.AutoSize = true;
-            this.lblPrecio.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPrecio.ForeColor = System.Drawing.Color.Magenta;
-            this.lblPrecio.Location = new System.Drawing.Point(317, 72);
+            this.lblPrecio.Font = new System.Drawing.Font("Segoe UI", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrecio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(103)))), ((int)(((byte)(58)))), ((int)(((byte)(183)))));
+            this.lblPrecio.Location = new System.Drawing.Point(305, 62);
             this.lblPrecio.Name = "lblPrecio";
-            this.lblPrecio.Size = new System.Drawing.Size(30, 23);
+            this.lblPrecio.Size = new System.Drawing.Size(40, 31);
             this.lblPrecio.TabIndex = 2;
             this.lblPrecio.Text = "$0";
             // 
@@ -76,18 +78,19 @@
             // 
             this.lblDescripcion.AutoSize = true;
             this.lblDescripcion.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescripcion.Location = new System.Drawing.Point(305, 138);
+            this.lblDescripcion.ForeColor = System.Drawing.Color.Indigo;
+            this.lblDescripcion.Location = new System.Drawing.Point(305, 106);
             this.lblDescripcion.Name = "lblDescripcion";
             this.lblDescripcion.Size = new System.Drawing.Size(103, 23);
             this.lblDescripcion.TabIndex = 3;
-            this.lblDescripcion.Text = "Descripcion";
+            this.lblDescripcion.Text = "Descripción";
             // 
             // lblCantidad
             // 
             this.lblCantidad.AutoSize = true;
             this.lblCantidad.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCantidad.ForeColor = System.Drawing.Color.DarkMagenta;
-            this.lblCantidad.Location = new System.Drawing.Point(305, 288);
+            this.lblCantidad.Location = new System.Drawing.Point(305, 230);
             this.lblCantidad.Name = "lblCantidad";
             this.lblCantidad.Size = new System.Drawing.Size(123, 23);
             this.lblCantidad.TabIndex = 4;
@@ -97,12 +100,12 @@
             // 
             this.txtDescripcion.BackColor = System.Drawing.Color.White;
             this.txtDescripcion.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtDescripcion.Location = new System.Drawing.Point(309, 164);
+            this.txtDescripcion.Location = new System.Drawing.Point(305, 130);
             this.txtDescripcion.Multiline = true;
             this.txtDescripcion.Name = "txtDescripcion";
             this.txtDescripcion.ReadOnly = true;
             this.txtDescripcion.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDescripcion.Size = new System.Drawing.Size(302, 109);
+            this.txtDescripcion.Size = new System.Drawing.Size(340, 90);
             this.txtDescripcion.TabIndex = 5;
             this.txtDescripcion.TabStop = false;
             // 
@@ -111,7 +114,7 @@
             this.lblTrueque.AutoSize = true;
             this.lblTrueque.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold);
             this.lblTrueque.ForeColor = System.Drawing.Color.Indigo;
-            this.lblTrueque.Location = new System.Drawing.Point(305, 318);
+            this.lblTrueque.Location = new System.Drawing.Point(305, 264);
             this.lblTrueque.Name = "lblTrueque";
             this.lblTrueque.Size = new System.Drawing.Size(270, 23);
             this.lblTrueque.TabIndex = 6;
@@ -121,12 +124,12 @@
             // 
             this.txtTrueque.BackColor = System.Drawing.Color.White;
             this.txtTrueque.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtTrueque.Location = new System.Drawing.Point(309, 346);
+            this.txtTrueque.Location = new System.Drawing.Point(305, 288);
             this.txtTrueque.Multiline = true;
             this.txtTrueque.Name = "txtTrueque";
             this.txtTrueque.ReadOnly = true;
             this.txtTrueque.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtTrueque.Size = new System.Drawing.Size(302, 56);
+            this.txtTrueque.Size = new System.Drawing.Size(340, 56);
             this.txtTrueque.TabIndex = 7;
             this.txtTrueque.TabStop = false;
             // 
@@ -138,9 +141,9 @@
             this.btnProponerTrueque.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProponerTrueque.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
             this.btnProponerTrueque.ForeColor = System.Drawing.Color.White;
-            this.btnProponerTrueque.Location = new System.Drawing.Point(309, 414);
+            this.btnProponerTrueque.Location = new System.Drawing.Point(305, 354);
             this.btnProponerTrueque.Name = "btnProponerTrueque";
-            this.btnProponerTrueque.Size = new System.Drawing.Size(200, 38);
+            this.btnProponerTrueque.Size = new System.Drawing.Size(340, 38);
             this.btnProponerTrueque.TabIndex = 8;
             this.btnProponerTrueque.Text = "Proponer trueque";
             this.btnProponerTrueque.UseVisualStyleBackColor = false;
